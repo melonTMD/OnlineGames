@@ -1,0 +1,59 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>网页游戏</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            background-color: #f0f0f0;
+            margin: 0;
+            padding: 0;
+        }
+        .container {
+            display: flex;
+            flex-wrap: wrap;
+            justify-content: center;
+            padding: 20px;
+        }
+        .card {
+            width: 200px;
+            background-color: #fff;
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+            margin: 10px;
+            padding: 20px;
+            text-align: left; /* 游戏名居左 */
+        }
+        .card img {
+            width: 100px;
+            height: 100px;
+            margin-bottom: 10px;
+        }
+        .card a {
+            text-decoration: none;
+            color: #333;
+            font-weight: bold;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="card">
+            <img src="game1.jpg" alt="Game 1">
+            <h3><a href="game1.html">拆弹游戏</a></h3>
+            <p>拆弹游戏，一名玩家设置密码，另一个玩家破解密码。</p>
+        </div>
+        <div class="card">
+            <img src="game2.jpg" alt="Game 2">
+            <h3><a href="game2.html">多人飞行游戏</a></h3>
+            <p>和其他玩家一起飞行！</p>
+        </div>
+        <div class="card">
+            <img src="game3.jpg" alt="Game 3">
+            <h3><a href="game3.html">黑暗迷宫</a></h3>
+            <p>在游戏中逃离黑暗迷宫，玩家只有一点可见范围。</p>
+        </div>
+    </div>
+</body>
+</html>
