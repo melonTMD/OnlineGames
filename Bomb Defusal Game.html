@@ -1,0 +1,207 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Bomb Defusal Game</title>
+    <style>
+        .keypad {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 10px;
+            width: 180px;
+        }
+    
+        .key {
+            width: 60px;
+            height: 60px; /* Square button */
+            font-size: 20px;
+            text-align: center;
+            line-height: 60px;
+            border: 1px solid #ccc;
+            cursor: pointer;
+            transition: border-color 0.6s ease, background-color 0.6s ease; /* Add transition effect */
+            user-select: none; /* Disable text selection */
+        }
+    
+        .key:hover {
+            border-color: rgb(255, 0, 0); /* Red border on hover */
+            background-color: rgb(255, 173, 173); /* Light red background on hover */
+        }
+    
+        .key:nth-child(-n+3) { /* Select buttons in the first row */
+            margin-top: 10px; /* Move down by 10 pixels */
+        }
+    
+        #inputField {
+            width: 199px;
+            height: 20px;
+            margin-top: -20px;
+        }
+        
+        .red-background {
+            background-color: red; /* Red background after setting the code */
+        }
+    </style>
+    
+</head>
+<body>
+    <input type="text" id="inputField" readonly>
+    <div class="keypad">
+        <div class="key" onclick="appendToCode('1'); playButtonClickSound();">1</div>
+        <div class="key" onclick="appendToCode('2'); playButtonClickSound();">2</div>
+        <div class="key" onclick="appendToCode('3'); playButtonClickSound();">3</div>
+        <div class="key" onclick="appendToCode('4'); playButtonClickSound();">4</div>
+        <div class="key" onclick="appendToCode('5'); playButtonClickSound();">5</div>
+        <div class="key" onclick="appendToCode('6'); playButtonClickSound();">6</div>
+        <div class="key" onclick="appendToCode('7'); playButtonClickSound();">7</div>
+        <div class="key" onclick="appendToCode('8'); playButtonClickSound();">8</div>
+        <div class="key" onclick="appendToCode('9'); playButtonClickSound();">9</div>
+        <div class="key" onclick="clearCode(); playButtonClickSound();">C</div>
+        <div class="key" onclick="appendToCode('0'); playButtonClickSound();">0</div>
+        <div class="key" onclick="defuseBomb(); playButtonClickSound();">Set</div>
+    </div>
+
+    <script>
+        var bombCode = ''; // Bomb code
+        var currentCode = ''; // Current input code
+        var isSettingCode = true; // Whether in code setting mode
+        var countdownTimer; // Countdown timer
+        var minutes = 2; // Initial minutes
+        var seconds = 0; // Initial seconds
+        var attempts = 5; // Remaining attempts
+
+        // Create button click sound
+        var audioContext = new (window.AudioContext || window.webkitAudioContext)();
+        var oscillator = null;
+
+        function playButtonClickSound() {
+            if (oscillator) {
+                oscillator.stop();
+            }
+            oscillator = audioContext.createOscillator();
+            oscillator.type = 'sine';
+            oscillator.frequency.setValueAtTime(800, audioContext.currentTime); // Set frequency
+            oscillator.connect(audioContext.destination);
+            oscillator.start();
+            oscillator.stop(audioContext.currentTime + 0.1); // Play for 0.1 seconds
+        }
+
+        function playBeepSound() {
+            if (audioContext) {
+                var beepOscillator = audioContext.createOscillator();
+                beepOscillator.type = 'sine';
+                beepOscillator.frequency.setValueAtTime(440, audioContext.currentTime); // Set frequency
+                beepOscillator.connect(audioContext.destination);
+                beepOscillator.start();
+                beepOscillator.stop(audioContext.currentTime + 0.1); // Play for 0.1 seconds
+            }
+        }
+
+        function startTimer() {
+            countdownTimer = setInterval(function () {
+                // Play beep sound every second
+                playBeepSound();
+
+                if (seconds === 0) {
+                    if (minutes === 0) {
+                        clearInterval(countdownTimer);
+                        alert('Time is up! The bomb exploded.');
+                        resetGame();
+                        return;
+                    } else {
+                        minutes--;
+                        seconds = 59;
+                    }
+                } else {
+                    seconds--;
+                }
+                
+                var displayMinutes = (minutes < 10 ? "0" : "") + minutes;
+                var displaySeconds = (seconds < 10 ? "0" : "") + seconds;
+
+                document.getElementById('timer').innerHTML = 'Time Left: ' + displayMinutes + ':' + displaySeconds;
+
+                if (attempts === 0) {
+                    clearInterval(countdownTimer);
+                    alert('Out of attempts, the bomb exploded! Game over.');
+                    resetGame();
+                }
+            }, 1000);
+        }
+
+        function resetGame() {
+            bombCode = '';
+            currentCode = '';
+            isSettingCode = true;
+            clearInterval(countdownTimer);
+            minutes = 2; // Reset minutes to 2
+            seconds = 0; // Reset seconds to 0
+            attempts = 5; // Reset remaining attempts
+            document.getElementById('timer').innerHTML = 'Time Left: 02:00';
+            document.getElementById('attempts').innerHTML = 'Remaining Attempts: ' + attempts;
+            updateDisplay();
+        }
+
+        function appendToCode(value) {
+            if (isSettingCode && bombCode.length < 4) {
+                bombCode += value;
+                updateDisplay();
+            } else if (!isSettingCode && currentCode.length < 4) {
+                currentCode += value;
+                updateDisplay();
+            }
+        }
+
+        function clearCode() {
+            if (isSettingCode) {
+                bombCode = '';
+            } else {
+                currentCode = '';
+            }
+            updateDisplay();
+        }
+
+        function updateDisplay() {
+            if (isSettingCode) {
+                document.getElementById('inputField').value = 'Set Code: ' + bombCode;
+                document.querySelector('.key:last-child').innerHTML = 'Set'; // Change button text to "Set"
+            } else {
+                document.getElementById('inputField').value = 'Defusal Code: ' + currentCode;
+                document.querySelector('.key:last-child').innerHTML = 'Defuse'; // Change button text to "Defuse"
+            }
+            
+            if (!isSettingCode) {
+                document.getElementById('inputField').classList.add('red-background');
+            } else {
+                document.getElementById('inputField').classList.remove('red-background');
+            }
+        }
+
+        function defuseBomb() {
+            if (isSettingCode) {
+                isSettingCode = false;
+                clearCode();
+                updateDisplay();
+                startTimer(); // Start countdown
+            } else {
+                if (currentCode === bombCode) {
+                    clearInterval(countdownTimer); // Stop the timer
+                    alert('Bomb defused successfully! You win.');
+                    resetGame();
+                } else {
+                    attempts--;
+                    document.getElementById('attempts').innerHTML = 'Remaining Attempts: ' + attempts;
+                    clearCode(); // Clear the code
+                    updateDisplay();
+                    if (attempts === 0) {
+                        clearInterval(countdownTimer); // Stop the timer
+                        alert('Out of attempts, the bomb exploded! Game over.');
+                        resetGame();
+                    }
+                }
+            }
+        }
+    </script>
+    <div id="timer">Time Left: 02:00</div>
+    <div id="attempts">Remaining Attempts: 5</div>
+</body>
+</html>
