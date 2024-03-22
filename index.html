@@ -19,16 +19,25 @@
         }
         .card {
             width: 200px;
+            border: 1px solid rgb(60, 60, 63); /* 添加黑色边框 */
             background-color: #fff;
             box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
             margin: 10px;
             padding: 20px;
             text-align: left; /* 游戏名居左 */
+            transition: transform 0.2s; /* 添加过渡效果 */
         }
         .card img {
             width: 200px;
             height: 200px;
             margin-bottom: 10px;
+            transition: transform 0.2s; /* 添加过渡效果 */
+        }
+        .card:hover {
+            transform: scale(1.07); /* 鼠标悬停时放大 */
+        }
+        .card:hover img {
+            transform: scale(1.005);  /* 鼠标悬停时放大 */
         }
         .card a {
             text-decoration: none;
@@ -39,21 +48,34 @@
 </head>
 <body>
     <div class="container">
-        <div class="card">
+
+        <div class="card" onclick="openGame('BombDefusalGame.html')">
             <img src="game1.jpg" alt="Game 1">
             <h3><a href="BombDefusalGame.html">拆弹游戏</a></h3>
+            <hr> <!-- 添加分割线 -->
             <p>拆弹游戏，一名玩家设置密码，另一个玩家破解密码。</p>
         </div>
-        <div class="card">
+
+        <div class="card" onclick="openGame('MultiplayerFlightGame.html')">
             <img src="png/MultiplayerFlightGame.png" alt="Game 2">
             <h3><a href="MultiplayerFlightGame.html">多人飞行游戏</a></h3>
+            <hr> <!-- 添加分割线 -->
             <p>和其他玩家一起飞行！</p>
         </div>
-        <div class="card">
+
+        <div class="card" onclick="openGame('game3.html')">
             <img src="game3.jpg" alt="Game 3">
             <h3><a href="game3.html">黑暗迷宫</a></h3>
+            <hr> <!-- 添加分割线 -->
             <p>在游戏中逃离黑暗迷宫，玩家只有一点可见范围。</p>
         </div>
+
     </div>
+
+    <script>
+        function openGame(url) {
+            window.location.href = url; // 在当前窗口中加载游戏链接
+        }
+    </script>
 </body>
 </html>
