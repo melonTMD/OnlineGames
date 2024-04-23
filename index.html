@@ -13,7 +13,8 @@
             padding: 0;
         }
         .container {
-            z-index: 1;
+            position: relative;
+            z-index: 1; /* 确保内容位于背景上方 */
             display: flex;
             flex-wrap: wrap;
             justify-content: left;
@@ -107,6 +108,38 @@
         function openGame(url) {
             window.location.href = url; // 在当前窗口中加载游戏链接
         }
+
+
+    // 获取方块元素
+    var box = document.getElementById("box");
+
+    // 初始化方块位置、速度和重力加速度
+    var positionX = 0;
+    var positionY = 0;
+    var velocityX = 3;
+    var velocityY = 0; // 初始竖直方向速度为0
+    var gravity = 0.1; // 重力加速度
+
+    // 更新方块位置
+    function updateBoxPosition() {
+        velocityY += gravity; // 根据重力更新竖直方向速度
+        positionX += velocityX;
+        positionY += velocityY;
+        box.style.left = positionX + "px";
+        box.style.top = positionY + "px";
+
+        // 碰撞检测
+        var container = document.getElementById("container");
+        if (positionX <= 0 || positionX >= container.offsetWidth - box.offsetWidth) {
+            velocityX = -velocityX;
+        }
+        if (positionY <= 0 || positionY >= container.offsetHeight - box.offsetHeight) {
+            velocityY = -velocityY * 1;
+        }
+    }
+
+    // 每隔一定时间更新方块位置
+    setInterval(updateBoxPosition, 30);
     </script>
 </body>
 </html>
