@@ -139,9 +139,33 @@
         }
 
         .menu-btn.workshop:hover {
+            position: relative;
             background: rgba(34, 197, 94, 0.20);
             border-color: rgba(34, 197, 94, 0.5);
             box-shadow: 0 0 30px rgba(34, 197, 94, 0.06);
+        }
+
+        .menu-btn.workshop.gotospace {
+            height: 30px;
+            width: 400px;
+            box-shadow: none !important;
+            overflow: visible;
+        }
+
+        .menu-btn.workshop.gotospace::after {
+            content: '';
+            position: absolute;
+            transition: all 0.25 ease;
+            top: 0;
+            left: 0;
+            width: 400px;
+            height: 30px;
+            background: linear-gradient(to left, #00000000, #1F1F1F);
+        }
+
+        .menu-btn.workshop.gotospace:hover::after {
+            top: -1px;
+            height: 30px;
         }
 
         .menu-btn.workshop .icon {
@@ -1597,8 +1621,8 @@
                             <div class="settings-row">
                                 <span class="label"><i class="fas fa-volume-up"></i> 音效音量</span>
                                 <div class="volume-control">
-                                    <input type="range" id="volumeSlider" min="0" max="100" value="60">
-                                    <input type="number" id="volumeInput" min="0" max="100" value="60" step="1">
+                                    <input type="range" id="volumeSlider" min="0" max="100" value="100">
+                                    <input type="number" id="volumeInput" min="0" max="100" value="100" step="1">
                                 </div>
                             </div>
 
@@ -1620,6 +1644,14 @@
                         </div>
                     </div>
                 </div>
+
+                <button class="menu-btn workshop gotospace"
+                    onclick="window.location.href = 'https://melontmd.github.io/OnlineGames/GravoCar/Editor.html'">
+                    <span>
+                        前往创意工坊工作区
+                        <span class="icon"><i class="fas fa-external-link-alt"></i></span>
+                    </span>
+                </button>
 
             </div>
 

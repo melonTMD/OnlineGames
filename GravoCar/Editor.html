@@ -4,9 +4,283 @@
 <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>🎮 引力小车 · 关卡编辑器</title>
+    <title>🧪 引力小车 · 关卡集编辑器 (.gcms)</title>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css" />
     <style>
+        /* ===== 全屏菜单（从主游戏扣） ===== */
+        .menu-overlay {
+            position: absolute;
+            inset: 0;
+            z-index: 1000;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            background: #1F1F1F;
+            box-shadow: 0 0 0 100px hsl(0, 0%, 12%);
+            transition: opacity 0.6s ease, scale 0.6s ease;
+            pointer-events: auto;
+            overflow: hidden;
+        }
+
+        .menu-overlay.hidden {
+            opacity: 0;
+            scale: 1.05;
+            pointer-events: none;
+        }
+
+        .menu-buttons {
+            flex: 1.5;
+            display: flex;
+            flex-direction: column;
+            width: 100%;
+            align-items: flex-end;
+        }
+
+        .menu-btn {
+            width: 40%;
+            display: flex;
+            align-items: right;
+            justify-content: right;
+            gap: 14px;
+            padding: 0px 24px;
+            align-items: center;
+            border: 0px solid rgba(255, 255, 255, 0.06);
+            border-left-width: 0px !important;
+            font-size: 18px;
+            font-weight: 600;
+            color: #d0d8f0;
+            background: rgba(255, 255, 255, 0.03);
+            cursor: pointer;
+            transition: all 0.25s ease;
+            position: relative;
+            overflow: hidden;
+            letter-spacing: 0.5px;
+            height: 56px;
+        }
+
+        .menu-btn:hover {
+            border-width: 1px;
+            border-color: rgba(255, 255, 255, 0.2);
+            background: rgba(255, 255, 255, 0.06);
+        }
+
+        .menu-btn:active {
+            filter: brightness(1.2);
+            height: 50px;
+        }
+
+        .menu-btn .icon {
+            font-size: 20px;
+            width: 28px;
+            text-align: center;
+            flex-shrink: 0;
+        }
+
+        .menu-btn.primary {
+            background: rgba(26, 136, 232, 0.15);
+            border-color: rgba(26, 136, 232, 0.35);
+            color: #88ccff;
+        }
+
+        .menu-btn.primary:hover {
+            background: rgba(26, 136, 232, 0.25);
+            border-color: rgba(26, 136, 232, 0.6);
+            box-shadow: 0 0 30px rgba(26, 136, 232, 0.08);
+        }
+
+        .menu-btn.primary .icon {
+            color: #4a9eff;
+        }
+
+        .menu-btn.workshop {
+            background: rgba(34, 197, 94, 0.10);
+            border-color: rgba(34, 197, 94, 0.25);
+            color: #86efac;
+        }
+
+        .menu-btn.workshop::before {
+            content: '';
+            position: absolute;
+            inset: 0;
+            background: repeating-linear-gradient(-45deg,
+                    transparent,
+                    transparent 8px,
+                    #4ade8049 8px,
+                    #4ade8049 16px);
+            background-size: 200% 200%;
+            pointer-events: none;
+        }
+
+        .menu-btn.workshop:hover {
+            background: rgba(34, 197, 94, 0.20);
+            border-color: rgba(34, 197, 94, 0.5);
+            box-shadow: 0 0 30px rgba(34, 197, 94, 0.06);
+        }
+
+        .menu-btn.workshop .icon {
+            color: #4ade80;
+        }
+
+        .menu-btn.workshop.gotospace {
+            height: 30px;
+            width: 400px;
+            box-shadow: none !important;
+            overflow: visible;
+        }
+
+        .menu-btn.workshop.gotospace::after {
+            content: '';
+            position: absolute;
+            transition: all 0.25 ease;
+            top: 0;
+            left: 0;
+            width: 400px;
+            height: 30px;
+            background: linear-gradient(to left, #00000000, #1F1F1F);
+        }
+
+        .menu-btn.workshop.gotospace:hover::after {
+            top: -1px;
+            height: 30px;
+        }
+
+        .menu-btn.settings {
+            background: rgba(255, 255, 255, 0.02);
+            border-color: rgba(255, 255, 255, 0.06);
+            color: #8a8aaa;
+        }
+
+        .menu-btn.settings:hover {
+            background: rgba(255, 255, 255, 0.05);
+            border-color: rgba(255, 255, 255, 0.12);
+            color: #b0b0d0;
+        }
+
+        .menu-btn.settings .icon {
+            color: #6a6a8a;
+        }
+
+        .submenu-mask {
+            background: #434343;
+            overflow: hidden;
+            position: relative;
+            width: 100%;
+            height: 0px;
+            pointer-events: none;
+            transition: all 0.3s ease;
+        }
+
+        .submenu-mask.open {
+            background: #232323;
+            height: 130px;
+            pointer-events: auto;
+        }
+
+        /* ========== 文件操作面板 ========== */
+
+        .submenu-mask:has(.filework-overlay) {
+            background: #208244;
+        }
+
+        .submenu-mask.open:has(.filework-overlay) {
+            background: #1E2F25;
+        }
+
+        /* 子菜单容器 */
+        .filework-overlay {
+            position: absolute;
+            bottom: 0;
+            right: 0;
+            height: 130px;
+            padding: 5px;
+            gap: 5px;
+            width: 100%;
+            z-index: 1000;
+            display: flex;
+            justify-content: flex-end;
+        }
+
+        .workspaceaction-overlay {
+            position: absolute;
+            bottom: 0;
+            right: 0;
+            height: 130px;
+            padding: 5px;
+            gap: 5px;
+            width: 100%;
+            z-index: 1000;
+            display: flex;
+            justify-content: flex-end;
+        }
+
+        /* 子菜单按钮 */
+        .submenu-btn {
+            width: 120px;
+            height: 120px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            flex-direction: column;
+            gap: 10px;
+            border: 0px solid rgba(255, 255, 255, 0.06);
+            font-size: 15px;
+            font-weight: 500;
+            color: #b0b8c8;
+            background: rgba(255, 255, 255, 0.01);
+            cursor: pointer;
+            transition: all 0.2s ease;
+            letter-spacing: 0.3px;
+            font-family: inherit;
+            text-align: right;
+        }
+
+        .filework-overlay .submenu-btn {
+            background: #1F3F2B;
+            border: 1px solid #208244;
+        }
+
+        .submenu-btn:hover {
+            border-width: 1px;
+            border-color: rgba(255, 255, 255, 0.1);
+            background: rgba(255, 255, 255, 0.04);
+            color: #d0d8f0;
+        }
+
+        .filework-overlay .submenu-btn:hover {
+            background: #254e35;
+            border: 1px solid #23ad56;
+        }
+
+        .submenu-btn:active {
+            filter: brightness(1.2);
+        }
+
+        .submenu-btn i {
+            width: 20px;
+            text-align: center;
+            font-size: 14px;
+            flex-shrink: 0;
+        }
+
+        .submenu-btn.danger {
+            color: #fca5a5;
+        }
+
+        .submenu-btn.danger:hover {
+            background: rgba(200, 30, 30, 0.08);
+            border-color: rgba(200, 60, 60, 0.15);
+        }
+
+        .submenu-btn.success {
+            color: #86efac;
+        }
+
+        .submenu-btn.success:hover {
+            background: rgba(34, 197, 94, 0.08);
+            border-color: rgba(34, 197, 94, 0.15);
+        }
+
+        /* ===== 气凝胶 · 硬脆 · 低饱和 · 三标签页 · 带音效 ===== */
         * {
             margin: 0;
             padding: 0;
@@ -15,9 +289,9 @@
         }
 
         body {
-            background: #0d0d1a;
+            background: #0d0d0d;
             font-family: 'Segoe UI', 'PingFang SC', Roboto, Arial, sans-serif;
-            color: #e0e0f0;
+            color: #d0d8e0;
             height: 100vh;
             overflow: hidden;
             display: flex;
@@ -29,89 +303,83 @@
             display: flex;
             align-items: center;
             justify-content: space-between;
-            padding: 8px 20px;
-            background: #141425;
-            border-bottom: 1px solid #244775;
+            padding: 4px 14px;
+            background: #1F3F2B;
+            border-bottom: 1px solid #208244;
             flex-shrink: 0;
-            flex-wrap: wrap;
-            gap: 8px;
+            flex-wrap: nowrap;
+            gap: 6px;
+            min-height: 40px;
+            position: relative;
+            z-index: 10;
+        }
+
+        .header::after {
+            content: '';
+            position: absolute;
+            inset: 0;
+            background: repeating-linear-gradient(-45deg,
+                    transparent,
+                    transparent 8px,
+                    #4ade8049 8px,
+                    #4ade8049 16px);
+            background-size: 200% 200%;
+            pointer-events: none;
         }
 
         .header .title {
-            font-size: 20px;
+            font-size: 17px;
             font-weight: 700;
-            letter-spacing: 1px;
             display: flex;
             align-items: center;
-            gap: 10px;
+            gap: 6px;
+            flex-shrink: 0;
+            white-space: nowrap;
+            color: #d0d8e0;
+            z-index: 1;
         }
 
-        .header .title i {
-            color: #fbbf24;
+        .workspace-logo {
+            margin-left: 6px;
+            transform: scale(1.4);
+            height: 28px;
+            width: auto;
+            vertical-align: middle;
+            filter: brightness(0.9) contrast(1.1);
         }
 
         .header-actions {
             display: flex;
             align-items: center;
-            gap: 8px;
-            flex-wrap: wrap;
+            gap: 4px;
+            flex-shrink: 0;
+            position: relative;
+            z-index: 1;
         }
 
-        .header-actions button,
-        .header-actions .file-label {
-            padding: 6px 14px;
-            border: 1px solid #2a2a40;
-            background: #1a1a30;
-            color: #c0c0d0;
-            border-radius: 4px;
-            font-size: 13px;
-            font-weight: 600;
+        .menu-toggle {
+            background: #1f3f2f94;
+            border: 1px solid #208244;
+            color: #aab2c0;
+            border-radius: 2px;
+            padding: 3px 10px;
+            font-size: 16px;
             cursor: pointer;
             transition: 0.15s;
             display: flex;
             align-items: center;
-            gap: 6px;
+            gap: 4px;
             font-family: inherit;
         }
 
-        .header-actions button:hover,
-        .header-actions .file-label:hover {
-            background: #222244;
-            border-color: #3a3a5a;
+        .menu-toggle:hover {
+            background: #27533894;
+            border-color: #179b48;
+            color: #c8d0dc;
         }
 
-        .header-actions button.primary {
-            background: #1a88e850;
-            border-color: #1a88e8;
-            color: #fff;
-        }
-
-        .header-actions button.primary:hover {
-            background: #1a88e870;
-        }
-
-        .header-actions button.danger {
-            background: #8a1a1a50;
-            border-color: #8a3a3a;
-            color: #fca5a5;
-        }
-
-        .header-actions button.danger:hover {
-            background: #8a1a1a70;
-        }
-
-        .header-actions button.success {
-            background: #1a8a3a50;
-            border-color: #2a8a4a;
-            color: #86efac;
-        }
-
-        .header-actions button.success:hover {
-            background: #1a8a3a70;
-        }
-
-        .header-actions input[type="file"] {
-            display: none;
+        .menu-toggle:active {
+            transform: scale(0.97);
         }
 
         /* ===== 主体 ===== */
@@ -123,26 +391,40 @@
 
         /* ===== 左侧工具栏 ===== */
         .toolbar {
-            width: 60px;
-            background: #141425;
-            border-right: 1px solid #1a1a30;
+            width: 54px;
+            background: #141414;
+            border-right: 1px solid rgba(255, 255, 255, 0.04);
             display: flex;
             flex-direction: column;
             align-items: center;
-            padding: 8px 4px;
-            gap: 4px;
+            padding: 6px 3px;
+            gap: 3px;
             flex-shrink: 0;
             overflow-y: auto;
+            position: relative;
+        }
+
+        .toolbar::after {
+            content: '';
+            position: absolute;
+            inset: 0;
+            background: repeating-linear-gradient(45deg,
+                    transparent,
+                    transparent 4px,
+                    rgba(255, 255, 255, 0.01) 4px,
+                    rgba(255, 255, 255, 0.01) 8px);
+            pointer-events: none;
+            opacity: 0.3;
         }
 
         .toolbar .tool-btn {
-            width: 48px;
-            height: 48px;
-            border: 1px solid #1a1a30;
-            background: #0d0d1a;
-            color: #6a6a8a;
-            border-radius: 6px;
-            font-size: 18px;
+            width: 44px;
+            height: 44px;
+            border: 1px solid rgba(255, 255, 255, 0.04);
+            background: rgba(255, 255, 255, 0.01);
+            color: #5a6a7a;
+            border-radius: 2px;
+            font-size: 16px;
             cursor: pointer;
             transition: 0.15s;
             display: flex;
@@ -152,28 +434,27 @@
         }
 
         .toolbar .tool-btn:hover {
-            background: #1a1a30;
-            border-color: #2a2a40;
-            color: #c0c0d0;
+            background: rgba(255, 255, 255, 0.04);
+            border-color: rgba(255, 255, 255, 0.08);
+            color: #aab2c0;
         }
 
         .toolbar .tool-btn.active {
-            background: #1a88e830;
-            border-color: #1a88e8;
+            background: rgba(26, 136, 232, 0.08);
+            border-color: rgba(26, 136, 232, 0.30);
             color: #88ccff;
-            box-shadow: 0 0 20px rgba(26, 136, 232, 0.1);
         }
 
         .toolbar .tool-btn .badge {
             position: absolute;
-            top: -4px;
-            right: -4px;
-            font-size: 9px;
+            top: -3px;
+            right: -3px;
+            font-size: 8px;
             background: #1a88e8;
             color: #fff;
             border-radius: 50%;
-            width: 18px;
-            height: 18px;
+            width: 16px;
+            height: 16px;
             display: flex;
             align-items: center;
             justify-content: center;
@@ -181,28 +462,20 @@
         }
 
         .toolbar .tool-divider {
-            width: 36px;
+            width: 30px;
             height: 1px;
-            background: #1a1a30;
-            margin: 4px 0;
+            background: rgba(255, 255, 255, 0.04);
+            margin: 3px 0;
         }
 
-        .toolbar .tool-label {
-            font-size: 8px;
-            color: #4a4a6a;
-            text-align: center;
-            line-height: 1.2;
-            margin-top: 2px;
-        }
-
-        /* ===== 画布容器 ===== */
+        /* ===== 画布 ===== */
         .canvas-wrap {
             flex: 1;
             display: flex;
             align-items: center;
             justify-content: center;
-            background: #0a0a12;
-            padding: 12px;
+            background: #0a0a0a;
+            padding: 10px;
             min-height: 0;
             position: relative;
         }
@@ -210,156 +483,433 @@
         .canvas-wrap canvas {
             display: block;
             background: #2d5a2d;
-            border-radius: 6px;
-            box-shadow: 0 0 40px rgba(0, 0, 0, 0.5);
+            border-radius: 2px;
+            box-shadow: 0 0 30px rgba(0, 0, 0, 0.6);
             image-rendering: pixelated;
         }
 
-        /* ===== 右侧属性面板 ===== */
+        /* ==============================================================
+           右侧面板 · 三标签页
+           ============================================================== */
         .panel {
-            width: 260px;
-            background: #141425;
-            border-left: 1px solid #1a1a30;
-            padding: 12px 14px;
+            width: 270px;
+            background: #141414;
+            border-left: 1px solid rgba(255, 255, 255, 0.04);
+            display: flex;
+            flex-direction: column;
             flex-shrink: 0;
-            overflow-y: auto;
+            overflow: hidden;
+            position: relative;
+        }
+
+        .panel::before {
+            content: '';
+            position: absolute;
+            inset: 0;
+            background: repeating-linear-gradient(-45deg,
+                    transparent,
+                    transparent 6px,
+                    rgba(255, 255, 255, 0.01) 6px,
+                    rgba(255, 255, 255, 0.01) 12px);
+            pointer-events: none;
+            opacity: 0.2;
+            z-index: 0;
+        }
+
+        /* ---- 标签页头 ---- */
+        .tab-header {
             display: flex;
-            flex-direction: column;
-            gap: 10px;
+            flex-shrink: 0;
+            border-bottom: 1px solid rgba(255, 255, 255, 0.04);
+            position: relative;
+            z-index: 1;
+            background: #141414;
         }
 
-        .panel .panel-title {
-            font-size: 13px;
-            font-weight: 700;
-            color: #8a8aaa;
-            letter-spacing: 0.5px;
-            text-transform: uppercase;
-            border-bottom: 1px solid #1a1a30;
-            padding-bottom: 8px;
-        }
-
-        .panel .info-row {
-            display: flex;
-            justify-content: space-between;
-            font-size: 13px;
-            color: #8a8aaa;
-            padding: 2px 0;
-        }
-
-        .panel .info-row .val {
-            color: #c0c0d0;
-            font-weight: 600;
-        }
-
-        .panel .prop-group {
-            display: flex;
-            flex-direction: column;
-            gap: 4px;
-            padding: 6px 0;
-            border-bottom: 1px solid #0d0d1a;
-        }
-
-        .panel .prop-group .prop-label {
+        .tab-header .tab-btn {
+            flex: 1;
+            padding: 6px 6px 5px 6px;
+            background: transparent;
+            border: none;
+            border-bottom: 2px solid transparent;
+            color: #5a6a7a;
             font-size: 11px;
-            font-weight: 600;
-            color: #6a6a8a;
+            font-weight: 700;
             text-transform: uppercase;
-            letter-spacing: 0.3px;
+            letter-spacing: 0.4px;
+            cursor: pointer;
+            transition: 0.15s;
+            font-family: inherit;
+            text-align: center;
+            position: relative;
         }
 
-        .panel .prop-group .prop-row {
+        .tab-header .tab-btn:hover {
+            color: #8a9aaa;
+            background: rgba(255, 255, 255, 0.02);
+        }
+
+        .tab-header .tab-btn.active {
+            color: #c0d0dc;
+            border-bottom-color: #1a88e8;
+        }
+
+        .tab-header .tab-btn .badge-tab {
+            font-size: 8px;
+            background: rgba(26, 136, 232, 0.15);
+            color: #88ccff;
+            border-radius: 10px;
+            padding: 0 6px;
+            margin-left: 3px;
+            font-weight: 600;
+        }
+
+        /* ---- 标签页内容容器 ---- */
+        .tab-content {
+            flex: 1;
+            overflow-y: auto;
+            padding: 8px 10px;
+            position: relative;
+            z-index: 1;
+            display: flex;
+            flex-direction: column;
+            gap: 6px;
+        }
+
+        .tab-content.hidden {
+            display: none;
+        }
+
+        /* ---- 关卡列表（标签页1） ---- */
+        .level-list-area {
+            display: flex;
+            flex-direction: column;
+            gap: 3px;
+            flex: 1;
+            overflow-y: auto;
+            background: rgba(0, 0, 0, 0.2);
+            border-radius: 2px;
+            padding: 3px 2px;
+            border: 1px solid rgba(255, 255, 255, 0.03);
+        }
+
+        .level-list-area .list-item {
             display: flex;
             align-items: center;
-            gap: 8px;
-        }
-
-        .panel .prop-group .prop-row label {
-            font-size: 12px;
-            color: #8a8aaa;
-            min-width: 36px;
-        }
-
-        .panel .prop-group .prop-row input[type="range"] {
-            flex: 1;
-            height: 4px;
-            -webkit-appearance: none;
-            background: #1a1a30;
+            justify-content: space-between;
+            padding: 3px 6px;
             border-radius: 2px;
-            outline: none;
-        }
-
-        .panel .prop-group .prop-row input[type="range"]::-webkit-slider-thumb {
-            -webkit-appearance: none;
-            width: 14px;
-            height: 14px;
-            border-radius: 50%;
-            background: #1a88e8;
             cursor: pointer;
-        }
-
-        .panel .prop-group .prop-row .val-display {
-            font-size: 13px;
+            background: transparent;
+            color: #7a8a9a;
+            font-size: 12px;
             font-weight: 600;
-            color: #c0c0d0;
-            min-width: 32px;
-            text-align: right;
+            transition: 0.1s;
+            border-left: 2px solid transparent;
         }
 
-        .panel .prop-group .prop-row input[type="number"] {
-            width: 56px;
-            padding: 2px 6px;
-            background: #0d0d1a;
-            border: 1px solid #1a1a30;
-            border-radius: 3px;
-            color: #c0c0d0;
-            font-size: 12px;
-            font-family: inherit;
-            outline: none;
+        .level-list-area .list-item:hover {
+            background: rgba(255, 255, 255, 0.03);
+            color: #b0bcc8;
         }
 
-        .panel .prop-group .prop-row input[type="number"]:focus {
-            border-color: #1a88e8;
+        .level-list-area .list-item.active {
+            background: rgba(26, 136, 232, 0.06);
+            border-left-color: #1a88e8;
+            color: #88ccff;
         }
 
-        .panel .prop-group .prop-row .coord {
-            font-size: 12px;
-            color: #6a6a8a;
-            font-family: monospace;
+        .level-list-area .list-item .item-name {
+            flex: 1;
+            overflow: hidden;
+            text-overflow: ellipsis;
+            white-space: nowrap;
+            margin-right: 4px;
         }
 
-        .panel .empty-state {
-            color: #4a4a6a;
-            font-size: 13px;
-            text-align: center;
-            padding: 20px 0;
-            line-height: 1.6;
+        .level-list-area .list-item .item-close {
+            background: none;
+            border: none;
+            color: #3a4a5a;
+            font-size: 11px;
+            cursor: pointer;
+            padding: 0 2px;
+            border-radius: 2px;
+            line-height: 1;
+            transition: 0.1s;
         }
 
-        .panel .empty-state i {
-            font-size: 28px;
-            display: block;
-            margin-bottom: 10px;
-            opacity: 0.4;
-        }
-
-        .panel .btn-delete {
-            padding: 6px 12px;
-            border: 1px solid #8a3a3a;
-            background: #1a0a0a;
+        .level-list-area .list-item .item-close:hover {
+            background: rgba(200, 30, 30, 0.15);
             color: #f87171;
-            border-radius: 4px;
-            font-size: 12px;
+        }
+
+        .level-list-area .list-item.dragging {
+            opacity: 0.3;
+            background: rgba(26, 136, 232, 0.04);
+        }
+
+        .level-list-area .list-item.drag-over {
+            border-top: 2px solid #1a88e8;
+        }
+
+        .level-list-area .add-level-btn {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 4px;
+            padding: 3px 6px;
+            border: 1px dashed rgba(255, 255, 255, 0.06);
+            border-radius: 2px;
+            background: transparent;
+            color: #5a6a7a;
+            font-size: 11px;
             font-weight: 600;
             cursor: pointer;
             transition: 0.15s;
             font-family: inherit;
-            margin-top: 4px;
+            margin-top: 2px;
+            flex-shrink: 0;
+        }
+
+        .level-list-area .add-level-btn:hover {
+            background: rgba(255, 255, 255, 0.02);
+            border-color: rgba(255, 255, 255, 0.10);
+            color: #8a9aaa;
+        }
+
+        /* ---- 元素属性（标签页2） ---- */
+        .prop-content {
+            display: flex;
+            flex-direction: column;
+            gap: 6px;
+            flex: 1;
+        }
+
+        .prop-content .info-row {
+            display: flex;
+            justify-content: space-between;
+            font-size: 12px;
+            color: #6a7a8a;
+            padding: 2px 0;
+        }
+
+        .prop-content .info-row .val {
+            color: #b0bcc8;
+            font-weight: 600;
+        }
+
+        .prop-content .prop-group {
+            display: flex;
+            flex-direction: column;
+            gap: 3px;
+            padding: 4px 0;
+            border-bottom: 1px solid rgba(255, 255, 255, 0.03);
+        }
+
+        .prop-content .prop-group .prop-label {
+            font-size: 10px;
+            font-weight: 600;
+            color: #5a6a7a;
+            text-transform: uppercase;
+            letter-spacing: 0.3px;
+        }
+
+        .prop-content .prop-group .prop-row {
+            display: flex;
+            align-items: center;
+            gap: 6px;
+        }
+
+        .prop-content .prop-group .prop-row label {
+            font-size: 11px;
+            color: #6a7a8a;
+            min-width: 28px;
+        }
+
+        .prop-content .prop-group .prop-row input[type="range"] {
+            flex: 1;
+            height: 3px;
+            -webkit-appearance: none;
+            background: rgba(255, 255, 255, 0.06);
+            border-radius: 1px;
+            outline: none;
+        }
+
+        .prop-content .prop-group .prop-row input[type="range"]::-webkit-slider-thumb {
+            -webkit-appearance: none;
+            width: 12px;
+            height: 12px;
+            border-radius: 50%;
+            background: #1a88e8;
+            cursor: pointer;
+            border: none;
+        }
+
+        .prop-content .prop-group .prop-row .val-display {
+            font-size: 12px;
+            font-weight: 600;
+            color: #b0bcc8;
+            min-width: 28px;
+            text-align: right;
+        }
+
+        .prop-content .prop-group .prop-row input[type="number"] {
+            width: 48px;
+            padding: 2px 4px;
+            background: rgba(0, 0, 0, 0.3);
+            border: 1px solid rgba(255, 255, 255, 0.04);
+            border-radius: 2px;
+            color: #b0bcc8;
+            font-size: 11px;
+            font-family: inherit;
+            outline: none;
+        }
+
+        .prop-content .prop-group .prop-row input[type="number"]:focus {
+            border-color: #1a88e8;
+        }
+
+        .prop-content .prop-group .prop-row .coord {
+            font-size: 11px;
+            color: #4a5a6a;
+            font-family: monospace;
+        }
+
+        .prop-content .prop-group input[type="text"],
+        .prop-content .prop-group input[type="url"] {
+            width: 100%;
+            padding: 3px 6px;
+            background: rgba(0, 0, 0, 0.3);
+            border: 1px solid rgba(255, 255, 255, 0.04);
+            border-radius: 2px;
+            color: #b0bcc8;
+            font-size: 12px;
+            font-family: inherit;
+            outline: none;
+        }
+
+        .prop-content .prop-group input[type="text"]:focus,
+        .prop-content .prop-group input[type="url"]:focus {
+            border-color: #1a88e8;
+        }
+
+        .prop-content .empty-state {
+            color: #4a5a6a;
+            font-size: 12px;
+            text-align: center;
+            padding: 16px 0;
+            line-height: 1.5;
+            flex: 1;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .prop-content .empty-state i {
+            font-size: 24px;
+            display: block;
+            margin-bottom: 8px;
+            opacity: 0.3;
+        }
+
+        .prop-content .btn-delete {
+            padding: 4px 10px;
+            border: 1px solid rgba(180, 60, 60, 0.20);
+            background: rgba(26, 10, 10, 0.3);
+            color: #f87171;
+            border-radius: 2px;
+            font-size: 11px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: 0.15s;
+            font-family: inherit;
+            margin-top: 3px;
             width: 100%;
         }
 
-        .panel .btn-delete:hover {
-            background: #2a0a0a;
-            border-color: #aa4a4a;
+        .prop-content .btn-delete:hover {
+            background: rgba(42, 10, 10, 0.5);
+            border-color: rgba(200, 70, 70, 0.30);
+        }
+
+        /* ---- 通用按钮：重命名（属性面板 + 元数据标签页） ---- */
+        .btn-rename {
+            padding: 4px 10px;
+            border: 1px solid rgba(58, 90, 138, 0.15);
+            background: rgba(10, 26, 42, 0.3);
+            color: #88ccff;
+            border-radius: 2px;
+            font-size: 11px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: 0.15s;
+            font-family: inherit;
+            margin-top: 3px;
+            width: 100%;
+        }
+
+        .btn-rename:hover {
+            background: rgba(10, 42, 74, 0.5);
+            border-color: rgba(74, 122, 170, 0.25);
+        }
+
+        .btn-rename:active {
+            transform: scale(0.97);
+        }
+
+        /* ---- 元数据（标签页3） ---- */
+        .meta-content {
+            display: flex;
+            flex-direction: column;
+            gap: 6px;
+            flex: 1;
+        }
+
+        .meta-content .meta-field {
+            display: flex;
+            flex-direction: column;
+            gap: 2px;
+        }
+
+        .meta-content .meta-field label {
+            font-size: 10px;
+            font-weight: 600;
+            color: #5a6a7a;
+            text-transform: uppercase;
+            letter-spacing: 0.3px;
+        }
+
+        .meta-content .meta-field input[type="text"],
+        .meta-content .meta-field input[type="url"] {
+            width: 100%;
+            padding: 3px 6px;
+            background: rgba(0, 0, 0, 0.3);
+            border: 1px solid rgba(255, 255, 255, 0.04);
+            border-radius: 2px;
+            color: #b0bcc8;
+            font-size: 12px;
+            font-family: inherit;
+            outline: none;
+        }
+
+        .meta-content .meta-field input[type="text"]:focus,
+        .meta-content .meta-field input[type="url"]:focus {
+            border-color: #1a88e8;
+        }
+
+        .meta-content .meta-field .hint {
+            font-size: 9px;
+            color: #4a5a6a;
+            font-weight: 400;
+            text-transform: none;
+        }
+
+        .meta-content .meta-divider {
+            border: none;
+            border-top: 1px solid rgba(255, 255, 255, 0.04);
+            margin: 4px 0;
         }
 
         /* ===== 状态栏 ===== */
@@ -367,23 +917,23 @@
             display: flex;
             align-items: center;
             justify-content: space-between;
-            padding: 4px 20px;
-            background: #0d0d1a;
-            border-top: 1px solid #1a1a30;
+            padding: 3px 16px;
+            background: #0d0d0d;
+            border-top: 1px solid rgba(255, 255, 255, 0.03);
             flex-shrink: 0;
-            font-size: 12px;
-            color: #4a4a6a;
+            font-size: 11px;
+            color: #4a5a6a;
         }
 
         .status-bar .status-left {
             display: flex;
-            gap: 16px;
+            gap: 12px;
             align-items: center;
         }
 
         .status-bar .status-left .dot {
-            width: 8px;
-            height: 8px;
+            width: 7px;
+            height: 7px;
             border-radius: 50%;
             display: inline-block;
         }
@@ -392,13 +942,10 @@
             background: #34d399;
         }
 
-        .status-bar .status-left .dot.editing {
-            background: #fbbf24;
-        }
-
         .status-bar .status-right {
             font-family: monospace;
-            font-size: 11px;
+            font-size: 10px;
+            color: #3a4a5a;
         }
 
         /* ===== 模态框 ===== */
@@ -410,7 +957,6 @@
             align-items: center;
             justify-content: center;
             z-index: 1000;
-            backdrop-filter: blur(2px);
         }
 
         .modal-overlay.open {
@@ -418,43 +964,60 @@
         }
 
         .modal-box {
-            background: #1a1a30;
-            border: 1px solid #2a2a40;
-            border-radius: 8px;
-            padding: 20px 24px;
+            background: #1a1a1a;
+            border: 1px solid rgba(255, 255, 255, 0.06);
+            border-radius: 2px;
+            padding: 16px 20px;
             max-width: 700px;
             width: 90%;
             max-height: 80vh;
             display: flex;
             flex-direction: column;
-            box-shadow: 0 10px 40px rgba(0, 0, 0, 0.6);
+            box-shadow: 0 12px 48px rgba(0, 0, 0, 0.7);
+            position: relative;
+            overflow: hidden;
+        }
+
+        .modal-box::before {
+            content: '';
+            position: absolute;
+            inset: 0;
+            background: repeating-linear-gradient(-45deg,
+                    transparent,
+                    transparent 6px,
+                    rgba(255, 255, 255, 0.01) 6px,
+                    rgba(255, 255, 255, 0.01) 12px);
+            pointer-events: none;
+            opacity: 0.2;
         }
 
         .modal-box .modal-header {
             display: flex;
             justify-content: space-between;
             align-items: center;
-            margin-bottom: 12px;
+            margin-bottom: 10px;
             flex-shrink: 0;
+            position: relative;
+            z-index: 1;
         }
 
         .modal-box .modal-header h3 {
-            font-size: 18px;
+            font-size: 17px;
             font-weight: 700;
-            color: #e0e0f0;
+            color: #d0d8e0;
         }
 
         .modal-box .modal-header .close-btn {
             background: none;
             border: none;
-            color: #6a6a8a;
-            font-size: 24px;
+            color: #4a5a6a;
+            font-size: 22px;
             cursor: pointer;
-            transition: 0.15s;
+            transition: 0.1s;
         }
 
         .modal-box .modal-header .close-btn:hover {
-            color: #c0c0d0;
+            color: #8a9aaa;
         }
 
         .modal-box .modal-body {
@@ -462,19 +1025,21 @@
             overflow-y: auto;
             display: flex;
             flex-direction: column;
-            gap: 10px;
+            gap: 8px;
+            position: relative;
+            z-index: 1;
         }
 
         .modal-box .modal-body textarea {
             width: 100%;
-            height: 300px;
-            background: #0d0d1a;
-            border: 1px solid #1a1a30;
-            border-radius: 4px;
-            color: #c0c0d0;
+            height: 280px;
+            background: rgba(0, 0, 0, 0.4);
+            border: 1px solid rgba(255, 255, 255, 0.04);
+            border-radius: 2px;
+            color: #b0bcc8;
             font-family: 'Courier New', monospace;
-            font-size: 13px;
-            padding: 10px;
+            font-size: 12px;
+            padding: 8px;
             resize: vertical;
             outline: none;
             line-height: 1.5;
@@ -486,19 +1051,19 @@
 
         .modal-box .modal-body .btn-row {
             display: flex;
-            gap: 10px;
+            gap: 8px;
             justify-content: flex-end;
             flex-shrink: 0;
-            padding-top: 8px;
+            padding-top: 6px;
         }
 
         .modal-box .modal-body .btn-row button {
-            padding: 6px 16px;
-            border: 1px solid #2a2a40;
-            background: #1a1a30;
-            color: #c0c0d0;
-            border-radius: 4px;
-            font-size: 13px;
+            padding: 4px 14px;
+            border: 1px solid rgba(255, 255, 255, 0.04);
+            background: rgba(255, 255, 255, 0.02);
+            color: #aab2c0;
+            border-radius: 2px;
+            font-size: 12px;
             font-weight: 600;
             cursor: pointer;
             transition: 0.15s;
@@ -506,117 +1071,70 @@
         }
 
         .modal-box .modal-body .btn-row button:hover {
-            background: #222244;
-            border-color: #3a3a5a;
+            background: rgba(255, 255, 255, 0.05);
+            border-color: rgba(255, 255, 255, 0.08);
         }
 
         .modal-box .modal-body .btn-row button.primary {
-            background: #1a88e850;
-            border-color: #1a88e8;
-            color: #fff;
+            background: rgba(26, 136, 232, 0.10);
+            border-color: rgba(26, 136, 232, 0.20);
+            color: #88ccff;
         }
 
         .modal-box .modal-body .btn-row button.primary:hover {
-            background: #1a88e870;
+            background: rgba(26, 136, 232, 0.20);
         }
 
         .modal-box .modal-body .btn-row button.success {
-            background: #1a8a3a50;
-            border-color: #2a8a4a;
+            background: rgba(34, 197, 94, 0.08);
+            border-color: rgba(34, 197, 94, 0.15);
             color: #86efac;
         }
 
         .modal-box .modal-body .btn-row button.success:hover {
-            background: #1a8a3a70;
+            background: rgba(34, 197, 94, 0.16);
         }
 
-        /* ===== 滚动条 ===== */
-        ::-webkit-scrollbar {
-            width: 4px;
-        }
-
-        ::-webkit-scrollbar-track {
-            background: #0d0d1a;
-        }
-
-        ::-webkit-scrollbar-thumb {
-            background: #2a2a40;
-            border-radius: 2px;
-        }
-
-        ::-webkit-scrollbar-thumb:hover {
-            background: #3a3a5a;
-        }
-
-        /* ===== Toast ===== */
-        .toast {
+        /* ===== Toast（完全照搬主游戏） ===== */
+        .toast-msg {
             position: fixed;
-            bottom: 60px;
-            left: 50%;
-            transform: translateX(-50%);
-            background: #1a1a30;
-            color: #e0e0f0;
-            padding: 10px 24px;
-            border: 1px solid #2a2a40;
-            border-radius: 6px;
-            font-size: 14px;
+            right: 5px;
+            color: #e0e8f0;
+            background: rgba(0, 0, 0, 0.6);
+            padding: 8px 14px;
+            font-family: 'Segoe UI', 'PingFang SC', Arial, sans-serif;
+            font-size: 15px;
             font-weight: 600;
-            z-index: 999;
-            opacity: 0;
-            transition: opacity 0.3s ease, transform 0.3s ease;
+            z-index: 9999;
             pointer-events: none;
-        }
-
-        .toast.show {
             opacity: 1;
-            transform: translateX(-50%) translateY(-10px);
+            letter-spacing: 0.3px;
+            border-radius: 2px;
+            transition: bottom 0.35s cubic-bezier(0.26, 1.5, 0.71, 1.06), opacity 0.3s ease, transform 0.3s cubic-bezier(0.26, 1.5, 0.71, 1.06);
+            animation: jumpOut 0.3s cubic-bezier(0.26, 1.5, 0.71, 1.06);
+            white-space: nowrap;
+            border: 1px solid rgba(255, 255, 255, 0.06);
         }
 
-        /* ===== 响应式 ===== */
-        @media (max-width: 900px) {
-            .panel {
-                width: 200px;
-                padding: 8px 10px;
+        .toast-msg.hide {
+            opacity: 0;
+            transform: translateX(100px);
+        }
+
+        @keyframes jumpOut {
+            0% {
+                transform: translateX(100px) translateY(30px);
             }
-            .toolbar {
-                width: 48px;
-            }
-            .toolbar .tool-btn {
-                width: 40px;
-                height: 40px;
-                font-size: 15px;
-            }
-            .header .title {
-                font-size: 16px;
+
+            100% {
+                transform: translateX(0px) translateY(0px);
             }
         }
 
-        @media (max-width: 700px) {
-            .panel {
-                width: 160px;
-                font-size: 12px;
-            }
-            .toolbar {
-                width: 40px;
-            }
-            .toolbar .tool-btn {
-                width: 34px;
-                height: 34px;
-                font-size: 13px;
-            }
-            .header {
-                padding: 4px 10px;
-            }
-            .header-actions button {
-                padding: 4px 10px;
-                font-size: 11px;
-            }
-            .modal-box {
-                padding: 14px;
-            }
-            .modal-box .modal-body textarea {
-                height: 200px;
-            }
+        .logo {
+            position: absolute;
+            top: 20px;
+            left: 20px;
         }
     </style>
 </head>
@@ -626,22 +1144,69 @@
     <!-- ===== HEADER ===== -->
     <header class="header">
         <div class="title">
-            <i class="fas fa-pen-ruler"></i>
-            关卡编辑器
-            <span style="font-size:13px;font-weight:400;color:#6a6a8a;margin-left:6px;">引力小车</span>
+            <img src="assets/workspace_logo.svg" alt="Workspace" class="workspace-logo" />
         </div>
         <div class="header-actions">
-            <button class="primary" onclick="exportLevel()"><i class="fas fa-download"></i> 导出</button>
-            <label class="file-label" for="importFile"><i class="fas fa-upload"></i> 导入</label>
-            <input type="file" id="importFile" accept=".json" onchange="importLevel(event)" />
-            <button onclick="showImportTextModal()" title="从文本粘贴JSON导入"><i class="fas fa-file-import"></i> 文本导入</button>
-            <button onclick="showPreviewModal()" title="预览当前关卡JSON"><i class="fas fa-code"></i> 预览JSON</button>
-            <button class="danger" onclick="clearAll()"><i class="fas fa-trash"></i> 清空</button>
-            <button class="success" onclick="resetToDefault()"><i class="fas fa-undo"></i> 重置示例</button>
+            <button class="menu-toggle" onclick="toggleMenu()"><i class="fas fa-bars"></i></button>
         </div>
     </header>
 
-    <!-- ===== MAIN ===== -->
+    <!-- ===== 全屏主菜单 ===== -->
+    <div class="menu-overlay" id="menuOverlay">
+
+        <img class="logo" src="assets/workspace_logo.svg">
+
+        <div class="menu-buttons">
+            <!-- 继续编辑 -->
+            <button class="menu-btn primary" id="btnContinueEdit">
+                <span>继续编辑 <span class="icon"><i class="fas fa-arrow-left"></i></span></span>
+            </button>
+
+            <!-- 文件操作 -->
+            <button class="menu-btn workshop" id="btnFileOps">
+                <span>文件操作 <span class="icon"><i class="fas fa-folder"></i></span></span>
+            </button>
+            <div class="submenu-mask" id="fileSubmenu">
+                <div class="filework-overlay">
+                    <button class="submenu-btn" onclick="exportSet(); closeMenu();"><i class="fas fa-download"></i> 导出
+                        .gcms</button>
+                    <label class="submenu-btn" for="importFile" style="cursor:pointer;"><i class="fas fa-upload"></i> 导入
+                        .gcms</label>
+                    <input type="file" id="importFile" accept=".gcms,.json" style="display:none;"
+                        onchange="importSet(event); closeMenu();" />
+                    <button class="submenu-btn" onclick="showImportTextModal(); closeMenu();"><i
+                            class="fas fa-file-import"></i> 文本导入</button>
+                </div>
+            </div>
+
+            <!-- 编辑器操作 -->
+            <button class="menu-btn settings" id="btnEditorOps">
+                <span>编辑器操作 <span class="icon"><i class="fas fa-cubes"></i></span></span>
+            </button>
+            <div class="submenu-mask" id="editorSubmenu">
+                <div class="workspaceaction-overlay">
+                    <button class="submenu-btn" onclick="showPreviewModal(); closeMenu();"><i class="fas fa-code"></i>
+                        预览
+                        JSON</button>
+                    <button class="submenu-btn danger"
+                        onclick="if(confirm('确定要清空所有关卡数据吗？')){clearAll();closeMenu();}"><i class="fas fa-trash"></i>
+                        清空全集</button>
+                    <button class="submenu-btn success" onclick="resetToDefault(); closeMenu();"><i
+                            class="fas fa-undo"></i>
+                        重置示例</button>
+                </div>
+            </div>
+            <button class="menu-btn workshop gotospace"
+                onclick="window.location.href = 'https://melontmd.github.io/OnlineGames/GravoCar/'">
+                <span>
+                    返回游戏
+                    <span class="icon"><i class="fas fa-external-link-alt"></i></span>
+                </span>
+            </button>
+        </div>
+    </div>
+
+    <!-- ===== 原有的编辑器内容（画布、工具栏、面板等） ===== -->
     <div class="main-body">
         <!-- 左侧工具栏 -->
         <div class="toolbar" id="toolbar">
@@ -685,24 +1250,75 @@
             <canvas id="editorCanvas" width="1000" height="620"></canvas>
         </div>
 
-        <!-- 右侧属性面板 -->
+        <!-- 右侧面板 -->
         <div class="panel" id="panel">
-            <div class="panel-title"><i class="fas fa-sliders-h"></i> 属性</div>
-            <div id="panelContent">
-                <div class="empty-state">
-                    <i class="fas fa-mouse-pointer"></i>
-                    点击画布上的元素<br />查看和编辑属性
+            <div class="tab-header" id="tabHeader">
+                <button class="tab-btn active" data-tab="levels" onclick="switchTab('levels')">
+                    <i class="fas fa-list"></i> 关卡 <span class="badge-tab" id="levelCountBadge">0</span>
+                </button>
+                <button class="tab-btn" data-tab="props" onclick="switchTab('props')">
+                    <i class="fas fa-sliders-h"></i> 属性
+                </button>
+                <button class="tab-btn" data-tab="meta" onclick="switchTab('meta')">
+                    <i class="fas fa-info-circle"></i> 元数据
+                </button>
+            </div>
+
+            <div class="tab-content" id="tabLevels">
+                <div class="level-list-area" id="levelListContainer"></div>
+            </div>
+
+            <div class="tab-content hidden" id="tabProps">
+                <div class="prop-content" id="propContent">
+                    <div class="empty-state">
+                        <i class="fas fa-mouse-pointer"></i>
+                        点击画布上的元素<br />查看和编辑属性
+                    </div>
+                </div>
+            </div>
+
+            <div class="tab-content hidden" id="tabMeta">
+                <div class="meta-content" id="metaContent">
+                    <div class="meta-field">
+                        <label>名称 <span class="hint">(levelsName)</span></label>
+                        <input type="text" id="metaLevelsName" placeholder="美好的一天"
+                            onchange="updateMeta('levelsName', this.value)" />
+                    </div>
+                    <div class="meta-field">
+                        <label>作者</label>
+                        <input type="text" id="metaAuthor" placeholder="张三"
+                            onchange="updateMeta('author', this.value)" />
+                    </div>
+                    <div class="meta-field">
+                        <label>作者链接</label>
+                        <input type="url" id="metaAuthorLink" placeholder="https://baike.baidu.com/item/张三"
+                            onchange="updateMeta('author_link', this.value)" />
+                    </div>
+                    <div class="meta-field">
+                        <label>描述</label>
+                        <input type="text" id="metaDescription" placeholder="不小心开车撞死撒，完了倒车又撞死两个"
+                            onchange="updateMeta('levelsDescription', this.value)" />
+                    </div>
+                    <hr class="meta-divider" />
+                    <div class="meta-field" style="margin-top:2px;">
+                        <label>当前关卡名</label>
+                        <div style="display:flex;gap:4px;">
+                            <input type="text" id="currentLevelNameInput" placeholder="未命名" style="flex:1;" />
+                            <button class="btn-rename" style="flex-shrink:0;width:auto;padding:3px 10px;margin-top:0;"
+                                onclick="renameLevel(document.getElementById('currentLevelNameInput').value)">重命名</button>
+                        </div>
+                    </div>
                 </div>
             </div>
         </div>
     </div>
 
-    <!-- ===== STATUS BAR ===== -->
+    <!-- ===== 状态栏 ===== -->
     <div class="status-bar">
         <div class="status-left">
             <span class="dot ready" id="statusDot"></span>
             <span id="statusText">就绪</span>
-            <span id="toolStatus" style="color:#6a6a8a;">工具: 选择</span>
+            <span id="toolStatus" style="color:#5a6a7a;">工具: 选择</span>
         </div>
         <div class="status-right" id="coordStatus">x: 0, y: 0</div>
     </div>
@@ -711,12 +1327,12 @@
     <div class="modal-overlay" id="importTextModal">
         <div class="modal-box">
             <div class="modal-header">
-                <h3><i class="fas fa-file-import"></i> 从文本导入</h3>
+                <h3><i class="fas fa-file-import"></i> 从文本导入全集</h3>
                 <button class="close-btn" onclick="closeModal('importTextModal')">&times;</button>
             </div>
             <div class="modal-body">
-                <p style="color:#8a8aaa;font-size:13px;">粘贴完整的关卡 JSON 数据：</p>
-                <textarea id="importTextArea" placeholder='{"name":"我的关卡","start":{"x":140,"y":310},...}'></textarea>
+                <p style="color:#6a7a8a;font-size:12px;">粘贴完整的关卡集 JSON 数据（包含 levels 数组）：</p>
+                <textarea id="importTextArea" placeholder='{"levelsName":"ExampleLevelset","levels":[...]}'></textarea>
                 <div class="btn-row">
                     <button onclick="closeModal('importTextModal')">取消</button>
                     <button class="primary" onclick="importFromText()"><i class="fas fa-check"></i> 应用</button>
@@ -729,12 +1345,12 @@
     <div class="modal-overlay" id="previewModal">
         <div class="modal-box">
             <div class="modal-header">
-                <h3><i class="fas fa-code"></i> 预览 JSON</h3>
+                <h3><i class="fas fa-code"></i> 预览全集 JSON</h3>
                 <button class="close-btn" onclick="closeModal('previewModal')">&times;</button>
             </div>
             <div class="modal-body">
-                <p style="color:#8a8aaa;font-size:13px;">当前关卡数据（可复制）：</p>
-                <textarea id="previewTextArea" readonly style="height:350px;"></textarea>
+                <p style="color:#6a7a8a;font-size:12px;">当前关卡集数据（可复制）：</p>
+                <textarea id="previewTextArea" readonly style="height:320px;"></textarea>
                 <div class="btn-row">
                     <button onclick="closeModal('previewModal')">关闭</button>
                     <button class="success" onclick="copyPreview()"><i class="fas fa-copy"></i> 复制</button>
@@ -743,24 +1359,138 @@
         </div>
     </div>
 
-    <!-- ===== TOAST ===== -->
-    <div class="toast" id="toast"></div>
-
     <script>
         // ================================================================
-        //  关卡编辑器 · 完整逻辑 (鼠标偏移已修复)
+        //  SoundManager · 与主游戏完全一致
+        // ================================================================
+        const SoundManager = {
+            sounds: {},
+            ctx: null,
+            initialized: false,
+            globalVolume: 1.0,
+
+            init() {
+                try {
+                    this.ctx = new (window.AudioContext || window.webkitAudioContext)();
+                    this.loadSound('click', 'assets/sounds/click.wav');
+                    this.loadSound('clickAlt', 'assets/sounds/click-alt.wav');
+                    this.loadSound('showToast', 'assets/sounds/message.wav');
+                    this.initialized = true;
+                } catch (e) {
+                    console.warn('⚠️ 音效初始化失败:', e);
+                }
+            },
+
+            loadSound(name, url) {
+                if (!this.ctx) return;
+                fetch(url)
+                    .then(res => res.arrayBuffer())
+                    .then(buffer => this.ctx.decodeAudioData(buffer))
+                    .then(decoded => { this.sounds[name] = decoded; })
+                    .catch(err => console.warn(`加载音效 ${name} 失败:`, err));
+            },
+
+            setGlobalVolume(vol) {
+                this.globalVolume = Math.max(0, Math.min(1, vol));
+            },
+
+            play(name, volume = 0.6) {
+                if (!this.initialized || !this.ctx || this.ctx.state === 'suspended') {
+                    if (this.ctx && this.ctx.state === 'suspended') {
+                        this.ctx.resume().catch(() => { });
+                    }
+                    return;
+                }
+                const buffer = this.sounds[name];
+                if (!buffer) return;
+                try {
+                    const source = this.ctx.createBufferSource();
+                    const gain = this.ctx.createGain();
+                    source.buffer = buffer;
+                    const finalVol = volume * this.globalVolume;
+                    gain.gain.value = finalVol;
+                    source.connect(gain);
+                    gain.connect(this.ctx.destination);
+                    source.start(0);
+                } catch (e) { }
+            }
+        };
+
+        document.addEventListener('click', () => {
+            if (SoundManager.ctx && SoundManager.ctx.state === 'suspended') {
+                SoundManager.ctx.resume().catch(() => { });
+            }
+        }, { once: false });
+
+        // ================================================================
+        //  关卡集编辑器核心逻辑
         // ================================================================
 
         // ---------- DOM ----------
         const canvas = document.getElementById('editorCanvas');
         const ctx = canvas.getContext('2d');
-        const panelContent = document.getElementById('panelContent');
+        const wrap = document.getElementById('canvasWrap');
         const statusText = document.getElementById('statusText');
         const toolStatus = document.getElementById('toolStatus');
         const coordStatus = document.getElementById('coordStatus');
-        const toast = document.getElementById('toast');
-        const wrap = document.getElementById('canvasWrap');
+        const levelListContainer = document.getElementById('levelListContainer');
+        const propContent = document.getElementById('propContent');
 
+        const metaLevelsName = document.getElementById('metaLevelsName');
+        const metaAuthor = document.getElementById('metaAuthor');
+        const metaAuthorLink = document.getElementById('metaAuthorLink');
+        const metaDescription = document.getElementById('metaDescription');
+        const currentLevelNameInput = document.getElementById('currentLevelNameInput');
+        const levelCountBadge = document.getElementById('levelCountBadge');
+
+        // ---------- 全屏菜单控制 ----------
+        const menuOverlay = document.getElementById('menuOverlay');
+        const btnContinueEdit = document.getElementById('btnContinueEdit');
+        const btnFileOps = document.getElementById('btnFileOps');
+        const btnEditorOps = document.getElementById('btnEditorOps');
+        const fileSubmenu = document.getElementById('fileSubmenu');
+        const editorSubmenu = document.getElementById('editorSubmenu');
+
+        function toggleMenu() {
+            SoundManager.play('click');
+            menuOverlay.classList.toggle('hidden');
+            if (!menuOverlay.classList.contains('hidden')) {
+                fileSubmenu.classList.remove('open');
+                editorSubmenu.classList.remove('open');
+            }
+        }
+
+        function closeMenu() {
+            menuOverlay.classList.add('hidden');
+            fileSubmenu.classList.remove('open');
+            editorSubmenu.classList.remove('open');
+        }
+
+        btnContinueEdit.addEventListener('click', closeMenu);
+
+        btnFileOps.addEventListener('click', function (e) {
+            e.stopPropagation();
+            SoundManager.play('click');
+            editorSubmenu.classList.remove('open');
+            fileSubmenu.classList.toggle('open');
+        });
+
+        btnEditorOps.addEventListener('click', function (e) {
+            e.stopPropagation();
+            SoundManager.play('click');
+            fileSubmenu.classList.remove('open');
+            editorSubmenu.classList.toggle('open');
+        });
+
+        menuOverlay.addEventListener('click', function (e) {
+            if (e.target === menuOverlay) closeMenu();
+        });
+
+        document.addEventListener('keydown', function (e) {
+            if (e.key === 'Escape' && menuOverlay.classList.contains('open')) closeMenu();
+        });
+
+        // ---------- 常量 ----------
         const W = 1000,
             H = 620;
         const PATH_WIDTH = 28;
@@ -768,20 +1498,62 @@
         const MIN_RADIUS = 8;
         const MAX_RADIUS = 120;
 
+        // ---------- Toast ----------
+        const BASE_BOTTOM = 30;
+        const GAP = 2;
+        const TOAST_HEIGHT = 40;
+        let activeToasts = [];
+
+        function updatePositions() {
+            activeToasts.forEach((el, index) => {
+                const bottom = BASE_BOTTOM + index * (TOAST_HEIGHT + GAP);
+                el.style.bottom = bottom + 'px';
+            });
+        }
+
+        function showToast(msg, duration = 2000) {
+            SoundManager.play('showToast');
+            const div = document.createElement('div');
+            div.className = 'toast-msg';
+            div.innerHTML = msg;
+            document.body.appendChild(div);
+            activeToasts.unshift(div);
+            updatePositions();
+            const timer = setTimeout(() => { hideToast(div); }, duration);
+            div._timer = timer;
+        }
+
+        function hideToast(el) {
+            if (!el || el._hidden) return;
+            el._hidden = true;
+            el.classList.add('hide');
+            const onTransitionEnd = () => {
+                el.removeEventListener('transitionend', onTransitionEnd);
+                const index = activeToasts.indexOf(el);
+                if (index !== -1) activeToasts.splice(index, 1);
+                updatePositions();
+                el.remove();
+            };
+            el.addEventListener('transitionend', onTransitionEnd);
+            setTimeout(() => {
+                if (el.parentNode) {
+                    const idx = activeToasts.indexOf(el);
+                    if (idx !== -1) activeToasts.splice(idx, 1);
+                    updatePositions();
+                    el.remove();
+                }
+            }, 500);
+        }
+
         // ---------- 数据 ----------
-        let levelData = {
-            name: '新关卡',
-            start: { x: 140, y: 310 },
-            end: { x: 860, y: 310 },
-            path: [
-                { x: 140, y: 310 }, { x: 280, y: 280 }, { x: 420, y: 240 },
-                { x: 560, y: 260 }, { x: 700, y: 320 }, { x: 860, y: 310 }
-            ],
-            checkpoints: [],
-            enemies: [],
-            boostZones: [],
-            brakeZones: []
+        let levelSet = {
+            levelsName: '美好的一天',
+            author: '张三',
+            author_link: 'https://baike.baidu.com/item/%E5%BC%A0%E4%B8%89',
+            levelsDescription: '不小心开车撞死撒，完了倒车又撞死两个',
+            levels: []
         };
+        let currentLevelIndex = 0;
 
         // ---------- 状态 ----------
         let currentTool = 'select';
@@ -792,6 +1564,7 @@
         let dragTargetId = null;
         let nextIds = { path: 0, cp: 0, enemy: 0, boost: 0, brake: 0 };
         let hoveredId = null;
+        let activeTab = 'levels';
 
         // ---------- 辅助 ----------
         function distance(x1, y1, x2, y2) {
@@ -800,18 +1573,6 @@
 
         function clamp(v, min, max) {
             return Math.max(min, Math.min(max, v));
-        }
-
-        function distToSegment(px, py, p1, p2) {
-            const dx = p2.x - p1.x,
-                dy = p2.y - p1.y;
-            const len2 = dx * dx + dy * dy;
-            if (len2 === 0) return distance(px, py, p1.x, p1.y);
-            let t = ((px - p1.x) * dx + (py - p1.y) * dy) / len2;
-            t = clamp(t, 0, 1);
-            const projx = p1.x + t * dx,
-                projy = p1.y + t * dy;
-            return distance(px, py, projx, projy);
         }
 
         function pointToKey(type, index) {
@@ -823,148 +1584,194 @@
             return { type: parts[0], index: parseInt(parts[1], 10) };
         }
 
+        function getCurrentLevel() {
+            if (!levelSet.levels || levelSet.levels.length === 0) {
+                levelSet.levels = [createDefaultLevel()];
+                currentLevelIndex = 0;
+            }
+            if (currentLevelIndex >= levelSet.levels.length) {
+                currentLevelIndex = levelSet.levels.length - 1;
+            }
+            return levelSet.levels[currentLevelIndex];
+        }
+
+        function createDefaultLevel(name = '新关卡') {
+            return {
+                name: name,
+                start: { x: 140, y: 310 },
+                end: { x: 860, y: 310 },
+                path: [
+                    { x: 140, y: 310 }, { x: 280, y: 280 }, { x: 420, y: 240 },
+                    { x: 560, y: 260 }, { x: 700, y: 320 }, { x: 860, y: 310 }
+                ],
+                checkpoints: [],
+                enemies: [],
+                boostZones: [],
+                brakeZones: []
+            };
+        }
+
         // ---------- 查找元素 ----------
         function findElement(key) {
-            if (key === 'start') return { type: 'start', ref: levelData.start };
-            if (key === 'end') return { type: 'end', ref: levelData.end };
+            const level = getCurrentLevel();
+            if (key === 'start') return { type: 'start', ref: level.start };
+            if (key === 'end') return { type: 'end', ref: level.end };
             const parsed = parseKey(key);
             switch (parsed.type) {
                 case 'path':
-                    if (parsed.index < levelData.path.length) return { type: 'path', ref: levelData.path[parsed.index],
-                        index: parsed.index };
+                    if (parsed.index < level.path.length) return {
+                        type: 'path', ref: level.path[parsed.index],
+                        index: parsed.index
+                    };
                     break;
                 case 'cp':
-                    if (parsed.index < levelData.checkpoints.length) return { type: 'cp', ref: levelData.checkpoints[parsed
-                            .index], index: parsed.index };
+                    if (parsed.index < level.checkpoints.length) return {
+                        type: 'cp', ref: level.checkpoints[parsed
+                            .index], index: parsed.index
+                    };
                     break;
                 case 'enemy':
-                    if (parsed.index < levelData.enemies.length) return { type: 'enemy', ref: levelData.enemies[parsed
-                            .index], index: parsed.index };
+                    if (parsed.index < level.enemies.length) return {
+                        type: 'enemy', ref: level.enemies[parsed
+                            .index], index: parsed.index
+                    };
                     break;
                 case 'boost':
-                    if (parsed.index < levelData.boostZones.length) return { type: 'boost', ref: levelData.boostZones[
-                            parsed.index], index: parsed.index };
+                    if (parsed.index < level.boostZones.length) return {
+                        type: 'boost', ref: level.boostZones[
+                            parsed.index], index: parsed.index
+                    };
                     break;
                 case 'brake':
-                    if (parsed.index < levelData.brakeZones.length) return { type: 'brake', ref: levelData.brakeZones[
-                            parsed.index], index: parsed.index };
+                    if (parsed.index < level.brakeZones.length) return {
+                        type: 'brake', ref: level.brakeZones[
+                            parsed.index], index: parsed.index
+                    };
                     break;
             }
             return null;
         }
 
         function getElementAt(mx, my) {
-            // 检查路径点 (从后往前，优先选中最后添加的)
-            for (let i = levelData.path.length - 1; i >= 0; i--) {
-                const p = levelData.path[i];
+            const level = getCurrentLevel();
+            for (let i = level.path.length - 1; i >= 0; i--) {
+                const p = level.path[i];
                 if (distance(mx, my, p.x, p.y) < 14) {
                     return { key: pointToKey('path', i), type: 'path', ref: p, index: i };
                 }
             }
-            // 检查检查点
-            for (let i = levelData.checkpoints.length - 1; i >= 0; i--) {
-                const cp = levelData.checkpoints[i];
+            for (let i = level.checkpoints.length - 1; i >= 0; i--) {
+                const cp = level.checkpoints[i];
                 if (distance(mx, my, cp.x, cp.y) < cp.radius + 6) {
                     return { key: pointToKey('cp', i), type: 'cp', ref: cp, index: i };
                 }
             }
-            // 检查敌人
-            for (let i = levelData.enemies.length - 1; i >= 0; i--) {
-                const en = levelData.enemies[i];
+            for (let i = level.enemies.length - 1; i >= 0; i--) {
+                const en = level.enemies[i];
                 if (distance(mx, my, en.x, en.y) < en.radius + 6) {
                     return { key: pointToKey('enemy', i), type: 'enemy', ref: en, index: i };
                 }
             }
-            // 检查加速区
-            for (let i = levelData.boostZones.length - 1; i >= 0; i--) {
-                const b = levelData.boostZones[i];
+            for (let i = level.boostZones.length - 1; i >= 0; i--) {
+                const b = level.boostZones[i];
                 if (distance(mx, my, b.cx, b.cy) < b.radius + 6) {
                     return { key: pointToKey('boost', i), type: 'boost', ref: b, index: i };
                 }
             }
-            // 检查刹车区
-            for (let i = levelData.brakeZones.length - 1; i >= 0; i--) {
-                const b = levelData.brakeZones[i];
+            for (let i = level.brakeZones.length - 1; i >= 0; i--) {
+                const b = level.brakeZones[i];
                 if (distance(mx, my, b.cx, b.cy) < b.radius + 6) {
                     return { key: pointToKey('brake', i), type: 'brake', ref: b, index: i };
                 }
             }
-            // 起点 / 终点
-            if (distance(mx, my, levelData.start.x, levelData.start.y) < 20) {
-                return { key: 'start', type: 'start', ref: levelData.start };
+            if (distance(mx, my, level.start.x, level.start.y) < 20) {
+                return { key: 'start', type: 'start', ref: level.start };
             }
-            if (distance(mx, my, levelData.end.x, levelData.end.y) < 20) {
-                return { key: 'end', type: 'end', ref: levelData.end };
+            if (distance(mx, my, level.end.x, level.end.y) < 20) {
+                return { key: 'end', type: 'end', ref: level.end };
             }
             return null;
         }
 
         // ---------- 选中 ----------
         function selectElement(key) {
+            SoundManager.play('click');
             selectedId = key;
-            updatePanel();
+            renderProps();
             render();
             updateStatus();
+            if (activeTab !== 'props') switchTab('props');
         }
 
         function clearSelection() {
             selectedId = null;
-            updatePanel();
+            renderProps();
             render();
             updateStatus();
         }
 
         // ---------- 添加/删除 ----------
         function addPathPoint(x, y) {
-            levelData.path.push({ x: clamp(x, 0, W), y: clamp(y, 0, H) });
+            const level = getCurrentLevel();
+            level.path.push({ x: clamp(x, 0, W), y: clamp(y, 0, H) });
             nextIds.path++;
             updateCounters();
             render();
             updateStatus();
-            showToast(`➕ 路径点 #${levelData.path.length}`);
+            SoundManager.play('click');
+            showToast(`➕ 路径点 #${level.path.length}`);
         }
 
         function addCheckpoint(x, y) {
+            const level = getCurrentLevel();
             const cp = { x: clamp(x, 0, W), y: clamp(y, 0, H), radius: DEFAULT_RADIUS };
-            levelData.checkpoints.push(cp);
+            level.checkpoints.push(cp);
             nextIds.cp++;
             updateCounters();
             render();
             updateStatus();
-            showToast(`🚩 检查点 #${levelData.checkpoints.length}`);
+            SoundManager.play('click');
+            showToast(`🚩 检查点 #${level.checkpoints.length}`);
         }
 
         function addEnemy(x, y) {
+            const level = getCurrentLevel();
             const en = { x: clamp(x, 0, W), y: clamp(y, 0, H), radius: 22, speed: 0.8 };
-            levelData.enemies.push(en);
+            level.enemies.push(en);
             nextIds.enemy++;
             updateCounters();
             render();
             updateStatus();
-            showToast(`💀 敌人 #${levelData.enemies.length}`);
+            SoundManager.play('click');
+            showToast(`💀 敌人 #${level.enemies.length}`);
         }
 
         function addBoostZone(x, y) {
+            const level = getCurrentLevel();
             const b = { cx: clamp(x, 0, W), cy: clamp(y, 0, H), radius: DEFAULT_RADIUS };
-            levelData.boostZones.push(b);
+            level.boostZones.push(b);
             nextIds.boost++;
             updateCounters();
             render();
             updateStatus();
-            showToast(`⚡ 加速区 #${levelData.boostZones.length}`);
+            SoundManager.play('click');
+            showToast(`⚡ 加速区 #${level.boostZones.length}`);
         }
 
         function addBrakeZone(x, y) {
+            const level = getCurrentLevel();
             const b = { cx: clamp(x, 0, W), cy: clamp(y, 0, H), radius: DEFAULT_RADIUS };
-            levelData.brakeZones.push(b);
+            level.brakeZones.push(b);
             nextIds.brake++;
             updateCounters();
             render();
             updateStatus();
-            showToast(`🛑 刹车区 #${levelData.brakeZones.length}`);
+            SoundManager.play('click');
+            showToast(`🛑 刹车区 #${level.brakeZones.length}`);
         }
 
         function deleteElement(key) {
+            const level = getCurrentLevel();
             if (key === 'start' || key === 'end') {
                 showToast('⚠️ 不能删除起点/终点', 1200);
                 return;
@@ -972,46 +1779,51 @@
             const parsed = parseKey(key);
             switch (parsed.type) {
                 case 'path':
-                    if (levelData.path.length <= 2) { showToast('⚠️ 至少保留2个路径点', 1200); return; }
-                    levelData.path.splice(parsed.index, 1);
-                    showToast(`🗑️ 删除路径点 #${parsed.index + 1}`);
+                    if (level.path.length <= 2) { showToast('⚠️ 至少保留2个路径点', 1200); return; }
+                    level.path.splice(parsed.index, 1);
                     break;
                 case 'cp':
-                    levelData.checkpoints.splice(parsed.index, 1);
-                    showToast(`🗑️ 删除检查点 #${parsed.index + 1}`);
+                    level.checkpoints.splice(parsed.index, 1);
                     break;
                 case 'enemy':
-                    levelData.enemies.splice(parsed.index, 1);
-                    showToast(`🗑️ 删除敌人 #${parsed.index + 1}`);
+                    level.enemies.splice(parsed.index, 1);
                     break;
                 case 'boost':
-                    levelData.boostZones.splice(parsed.index, 1);
-                    showToast(`🗑️ 删除加速区 #${parsed.index + 1}`);
+                    level.boostZones.splice(parsed.index, 1);
                     break;
                 case 'brake':
-                    levelData.brakeZones.splice(parsed.index, 1);
-                    showToast(`🗑️ 删除刹车区 #${parsed.index + 1}`);
+                    level.brakeZones.splice(parsed.index, 1);
                     break;
                 default:
                     return;
             }
+            SoundManager.play('click');
             if (selectedId === key) clearSelection();
             updateCounters();
             render();
             updateStatus();
+            showToast(`🗑️ 已删除 ${typeLabel(parsed.type)} #${parsed.index + 1}`);
+        }
+
+        function typeLabel(type) {
+            const map = { path: '路径点', cp: '检查点', enemy: '敌人', boost: '加速区', brake: '刹车区' };
+            return map[type] || type;
         }
 
         // ---------- 更新计数 ----------
         function updateCounters() {
-            document.getElementById('pathCount').textContent = levelData.path.length;
-            document.getElementById('cpCount').textContent = levelData.checkpoints.length;
-            document.getElementById('enemyCount').textContent = levelData.enemies.length;
-            document.getElementById('boostCount').textContent = levelData.boostZones.length;
-            document.getElementById('brakeCount').textContent = levelData.brakeZones.length;
+            const level = getCurrentLevel();
+            document.getElementById('pathCount').textContent = level.path.length;
+            document.getElementById('cpCount').textContent = level.checkpoints.length;
+            document.getElementById('enemyCount').textContent = level.enemies.length;
+            document.getElementById('boostCount').textContent = level.boostZones.length;
+            document.getElementById('brakeCount').textContent = level.brakeZones.length;
+            levelCountBadge.textContent = levelSet.levels.length;
         }
 
         // ---------- 工具切换 ----------
         function setTool(tool) {
+            SoundManager.play('click');
             currentTool = tool;
             document.querySelectorAll('.toolbar .tool-btn').forEach(btn => {
                 btn.classList.toggle('active', btn.dataset.tool === tool);
@@ -1034,10 +1846,25 @@
             render();
         }
 
-        // ---------- 画布缩放 (修复偏移) ----------
+        // ---------- 标签页切换 ----------
+        function switchTab(tab) {
+            SoundManager.play('click');
+            activeTab = tab;
+            document.querySelectorAll('.tab-header .tab-btn').forEach(btn => {
+                btn.classList.toggle('active', btn.dataset.tab === tab);
+            });
+            document.getElementById('tabLevels').classList.toggle('hidden', tab !== 'levels');
+            document.getElementById('tabProps').classList.toggle('hidden', tab !== 'props');
+            document.getElementById('tabMeta').classList.toggle('hidden', tab !== 'meta');
+            if (tab === 'props') renderProps();
+            if (tab === 'meta') renderMeta();
+            if (tab === 'levels') renderLevelList();
+        }
+
+        // ---------- 画布缩放 ----------
         function resizeCanvas() {
             const rect = wrap.getBoundingClientRect();
-            const pad = 12; // padding
+            const pad = 10;
             const availW = rect.width - pad * 2;
             const availH = rect.height - pad * 2;
             const ratio = W / H;
@@ -1053,7 +1880,7 @@
             canvas.style.height = displayH + 'px';
         }
 
-        // ---------- 鼠标坐标转换 (使用 getBoundingClientRect) ----------
+        // ---------- 鼠标坐标 ----------
         function getMousePos(e) {
             const rect = canvas.getBoundingClientRect();
             const scaleX = canvas.width / rect.width;
@@ -1072,7 +1899,6 @@
             ctx.fillStyle = '#2d5a2d';
             ctx.fillRect(0, 0, W, H);
 
-            // ---- 网格 ----
             ctx.strokeStyle = 'rgba(255,255,255,0.04)';
             ctx.lineWidth = 1;
             for (let x = 0; x <= W; x += 50) {
@@ -1088,12 +1914,12 @@
                 ctx.stroke();
             }
 
-            // ---- 道路 ----
-            if (levelData.path.length > 1) {
+            const level = getCurrentLevel();
+            if (level.path.length > 1) {
                 ctx.beginPath();
-                ctx.moveTo(levelData.path[0].x, levelData.path[0].y);
-                for (let i = 1; i < levelData.path.length; i++) {
-                    ctx.lineTo(levelData.path[i].x, levelData.path[i].y);
+                ctx.moveTo(level.path[0].x, level.path[0].y);
+                for (let i = 1; i < level.path.length; i++) {
+                    ctx.lineTo(level.path[i].x, level.path[i].y);
                 }
                 ctx.strokeStyle = '#1a3a1a';
                 ctx.lineWidth = PATH_WIDTH * 2 + 8;
@@ -1102,9 +1928,9 @@
                 ctx.stroke();
 
                 ctx.beginPath();
-                ctx.moveTo(levelData.path[0].x, levelData.path[0].y);
-                for (let i = 1; i < levelData.path.length; i++) {
-                    ctx.lineTo(levelData.path[i].x, levelData.path[i].y);
+                ctx.moveTo(level.path[0].x, level.path[0].y);
+                for (let i = 1; i < level.path.length; i++) {
+                    ctx.lineTo(level.path[i].x, level.path[i].y);
                 }
                 ctx.strokeStyle = '#3a5a3a';
                 ctx.lineWidth = PATH_WIDTH * 2;
@@ -1116,16 +1942,15 @@
                 ctx.lineWidth = 2;
                 ctx.setLineDash([8, 12]);
                 ctx.beginPath();
-                ctx.moveTo(levelData.path[0].x, levelData.path[0].y);
-                for (let i = 1; i < levelData.path.length; i++) {
-                    ctx.lineTo(levelData.path[i].x, levelData.path[i].y);
+                ctx.moveTo(level.path[0].x, level.path[0].y);
+                for (let i = 1; i < level.path.length; i++) {
+                    ctx.lineTo(level.path[i].x, level.path[i].y);
                 }
                 ctx.stroke();
                 ctx.setLineDash([]);
             }
 
-            // ---- 起点 ----
-            const s = levelData.start;
+            const s = level.start;
             ctx.font = '900 20px "Font Awesome 6 Free"';
             ctx.fillStyle = '#fbbf24';
             ctx.textAlign = 'center';
@@ -1145,8 +1970,7 @@
                 ctx.setLineDash([]);
             }
 
-            // ---- 终点 ----
-            const e = levelData.end;
+            const e = level.end;
             const grd = ctx.createRadialGradient(e.x, e.y, 0, e.x, e.y, 40);
             grd.addColorStop(0, 'rgba(96, 165, 250, 0.2)');
             grd.addColorStop(1, 'rgba(96, 165, 250, 0)');
@@ -1176,9 +2000,8 @@
                 ctx.setLineDash([]);
             }
 
-            // ---- 检查点 ----
-            for (let i = 0; i < levelData.checkpoints.length; i++) {
-                const cp = levelData.checkpoints[i];
+            for (let i = 0; i < level.checkpoints.length; i++) {
+                const cp = level.checkpoints[i];
                 const isSelected = selectedId === pointToKey('cp', i);
                 const isHovered = hoveredId === pointToKey('cp', i);
                 const r = cp.radius;
@@ -1189,7 +2012,6 @@
                 ctx.beginPath();
                 ctx.arc(cp.x, cp.y, r * 2, 0, Math.PI * 2);
                 ctx.fill();
-
                 ctx.strokeStyle = isSelected ? '#60a5fa' : (isHovered ? 'rgba(96,165,250,0.8)' : 'rgba(96,165,250,0.5)');
                 ctx.lineWidth = isSelected ? 3 : 2;
                 ctx.setLineDash(isSelected ? [] : [4, 6]);
@@ -1197,18 +2019,15 @@
                 ctx.arc(cp.x, cp.y, r, 0, Math.PI * 2);
                 ctx.stroke();
                 ctx.setLineDash([]);
-
                 ctx.fillStyle = 'rgba(96,165,250,0.7)';
                 ctx.beginPath();
                 ctx.arc(cp.x, cp.y, 5, 0, Math.PI * 2);
                 ctx.fill();
-
                 ctx.font = '9px "Segoe UI", monospace';
                 ctx.fillStyle = 'rgba(255,255,255,0.3)';
                 ctx.textAlign = 'center';
                 ctx.textBaseline = 'top';
                 ctx.fillText(`CP${i + 1}`, cp.x, cp.y + r + 6);
-
                 if (isSelected) {
                     ctx.strokeStyle = 'rgba(96,165,250,0.3)';
                     ctx.lineWidth = 1;
@@ -1220,9 +2039,8 @@
                 }
             }
 
-            // ---- 敌人 ----
-            for (let i = 0; i < levelData.enemies.length; i++) {
-                const en = levelData.enemies[i];
+            for (let i = 0; i < level.enemies.length; i++) {
+                const en = level.enemies[i];
                 const isSelected = selectedId === pointToKey('enemy', i);
                 const isHovered = hoveredId === pointToKey('enemy', i);
                 const r = en.radius;
@@ -1234,7 +2052,7 @@
                 ctx.arc(en.x, en.y, r * pulse, 0, Math.PI * 2);
                 ctx.fill();
                 ctx.shadowBlur = 0;
-                ctx.font = `900 ${16}px "Font Awesome 6 Free"`;
+                ctx.font = `900 16px "Font Awesome 6 Free"`;
                 ctx.fillStyle = 'rgba(255,255,255,0.8)';
                 ctx.textAlign = 'center';
                 ctx.textBaseline = 'middle';
@@ -1254,9 +2072,8 @@
                 }
             }
 
-            // ---- 加速区 ----
-            for (let i = 0; i < levelData.boostZones.length; i++) {
-                const b = levelData.boostZones[i];
+            for (let i = 0; i < level.boostZones.length; i++) {
+                const b = level.boostZones[i];
                 const isSelected = selectedId === pointToKey('boost', i);
                 const isHovered = hoveredId === pointToKey('boost', i);
                 const r = b.radius;
@@ -1294,9 +2111,8 @@
                 }
             }
 
-            // ---- 刹车区 ----
-            for (let i = 0; i < levelData.brakeZones.length; i++) {
-                const b = levelData.brakeZones[i];
+            for (let i = 0; i < level.brakeZones.length; i++) {
+                const b = level.brakeZones[i];
                 const isSelected = selectedId === pointToKey('brake', i);
                 const isHovered = hoveredId === pointToKey('brake', i);
                 const r = b.radius;
@@ -1334,18 +2150,15 @@
                 }
             }
 
-            // ---- 路径点 ----
-            for (let i = 0; i < levelData.path.length; i++) {
-                const p = levelData.path[i];
+            for (let i = 0; i < level.path.length; i++) {
+                const p = level.path[i];
                 const isSelected = selectedId === pointToKey('path', i);
                 const isHovered = hoveredId === pointToKey('path', i);
                 const isFirst = i === 0;
-                const isLast = i === levelData.path.length - 1;
-
+                const isLast = i === level.path.length - 1;
                 let color = isSelected ? '#88ccff' : (isHovered ? '#88ccff' : 'rgba(255,255,255,0.5)');
                 if (isFirst) color = '#fbbf24';
                 if (isLast) color = '#60a5fa';
-
                 ctx.fillStyle = color;
                 ctx.shadowColor = isSelected ? 'rgba(136,204,255,0.3)' : 'transparent';
                 ctx.shadowBlur = isSelected ? 12 : 0;
@@ -1353,7 +2166,6 @@
                 ctx.arc(p.x, p.y, isSelected ? 8 : 6, 0, Math.PI * 2);
                 ctx.fill();
                 ctx.shadowBlur = 0;
-
                 if (isSelected) {
                     ctx.strokeStyle = 'rgba(136,204,255,0.4)';
                     ctx.lineWidth = 1;
@@ -1363,9 +2175,8 @@
                     ctx.stroke();
                     ctx.setLineDash([]);
                 }
-
-                if (i < levelData.path.length - 1) {
-                    const next = levelData.path[i + 1];
+                if (i < level.path.length - 1) {
+                    const next = level.path[i + 1];
                     ctx.strokeStyle = 'rgba(255,255,255,0.1)';
                     ctx.lineWidth = 1;
                     ctx.setLineDash([2, 4]);
@@ -1377,8 +2188,7 @@
                 }
             }
 
-            // ---- 显示提示 ----
-            if (levelData.path.length < 2) {
+            if (level.path.length < 2) {
                 ctx.fillStyle = 'rgba(255,255,255,0.1)';
                 ctx.font = '16px "Segoe UI", Arial, sans-serif';
                 ctx.textAlign = 'center';
@@ -1389,10 +2199,11 @@
             updateStatus();
         }
 
-        // ---------- 属性面板 ----------
-        function updatePanel() {
+        // ---------- 渲染属性面板 ----------
+        function renderProps() {
+            const level = getCurrentLevel();
             if (!selectedId) {
-                panelContent.innerHTML = `
+                propContent.innerHTML = `
                     <div class="empty-state">
                         <i class="fas fa-mouse-pointer"></i>
                         点击画布上的元素<br />查看和编辑属性
@@ -1403,7 +2214,7 @@
 
             const el = findElement(selectedId);
             if (!el) {
-                panelContent.innerHTML = `<div class="empty-state">元素不存在</div>`;
+                propContent.innerHTML = `<div class="empty-state">元素不存在</div>`;
                 return;
             }
 
@@ -1475,21 +2286,31 @@
                 html += `<button class="btn-delete" onclick="deleteElement('${selectedId}')"><i class="fas fa-trash"></i> 删除刹车区</button>`;
             }
 
-            panelContent.innerHTML = html;
+            propContent.innerHTML = html;
         }
 
-        function typeLabel(type) {
-            const map = { start: '起点', end: '终点', path: '路径点', cp: '检查点', enemy: '敌人', boost: '加速区', brake: '刹车区' };
-            return map[type] || type;
-        }
-
-        // ---------- 更新属性 ----------
         function updateProp(key, prop, value) {
             const el = findElement(key);
             if (!el) return;
             el.ref[prop] = value;
             render();
-            updatePanel();
+            renderProps();
+        }
+
+        // ---------- 元数据 ----------
+        function renderMeta() {
+            metaLevelsName.value = levelSet.levelsName || '';
+            metaAuthor.value = levelSet.author || '';
+            metaAuthorLink.value = levelSet.author_link || '';
+            metaDescription.value = levelSet.levelsDescription || '';
+            const level = getCurrentLevel();
+            currentLevelNameInput.value = level.name || '未命名';
+        }
+
+        function updateMeta(field, value) {
+            levelSet[field] = value;
+            SoundManager.play('click');
+            showToast(`✏️ 已更新 ${field}`);
         }
 
         // ---------- 鼠标事件 ----------
@@ -1534,7 +2355,6 @@
                 return;
             }
 
-            // 添加模式
             const addActions = {
                 'path': addPathPoint,
                 'checkpoint': addCheckpoint,
@@ -1547,17 +2367,20 @@
                 return;
             }
 
-            // 设置起点/终点
             if (currentTool === 'start') {
-                levelData.start.x = clamp(mx, 0, W);
-                levelData.start.y = clamp(my, 0, H);
+                const level = getCurrentLevel();
+                level.start.x = clamp(mx, 0, W);
+                level.start.y = clamp(my, 0, H);
+                SoundManager.play('click');
                 render();
                 showToast('📍 起点已更新');
                 return;
             }
             if (currentTool === 'end') {
-                levelData.end.x = clamp(mx, 0, W);
-                levelData.end.y = clamp(my, 0, H);
+                const level = getCurrentLevel();
+                level.end.x = clamp(mx, 0, W);
+                level.end.y = clamp(my, 0, H);
+                SoundManager.play('click');
                 render();
                 showToast('🏁 终点已更新');
                 return;
@@ -1571,7 +2394,6 @@
                 my = pos.y;
             coordStatus.textContent = `x: ${Math.round(mx)}, y: ${Math.round(my)}`;
 
-            // 悬停检测
             if (currentTool === 'select' || currentTool === 'delete') {
                 const hit = getElementAt(mx, my);
                 const newHover = hit ? hit.key : null;
@@ -1600,7 +2422,7 @@
                         el.ref.y = newY;
                     }
                     render();
-                    updatePanel();
+                    renderProps();
                 }
             }
         }
@@ -1611,7 +2433,7 @@
                 dragTargetId = null;
                 canvas.style.cursor = 'default';
                 render();
-                updatePanel();
+                renderProps();
             }
         }
 
@@ -1652,53 +2474,179 @@
             }
         }
 
+        // ---------- 关卡列表 ----------
+        function renderLevelList() {
+            levelListContainer.innerHTML = '';
+            levelSet.levels.forEach((level, idx) => {
+                const item = document.createElement('div');
+                item.className = 'list-item' + (idx === currentLevelIndex ? ' active' : '');
+                item.draggable = true;
+                item.dataset.index = idx;
+
+                const nameSpan = document.createElement('span');
+                nameSpan.className = 'item-name';
+                nameSpan.textContent = `${idx + 1}. ${level.name || '未命名'}`;
+                item.appendChild(nameSpan);
+
+                const closeBtn = document.createElement('button');
+                closeBtn.className = 'item-close';
+                closeBtn.innerHTML = '<i class="fas fa-times"></i>';
+                closeBtn.title = '删除此关卡';
+                closeBtn.addEventListener('click', (e) => {
+                    e.stopPropagation();
+                    deleteLevel(idx);
+                });
+                item.appendChild(closeBtn);
+
+                item.addEventListener('click', () => {
+                    if (idx !== currentLevelIndex) {
+                        switchLevel(idx);
+                    }
+                });
+
+                item.addEventListener('dragstart', (e) => {
+                    e.dataTransfer.setData('text/plain', idx);
+                    item.classList.add('dragging');
+                });
+                item.addEventListener('dragend', () => {
+                    item.classList.remove('dragging');
+                    document.querySelectorAll('.list-item.drag-over').forEach(el => el.classList.remove('drag-over'));
+                });
+                item.addEventListener('dragover', (e) => {
+                    e.preventDefault();
+                    document.querySelectorAll('.list-item.drag-over').forEach(el => el.classList.remove('drag-over'));
+                    item.classList.add('drag-over');
+                });
+                item.addEventListener('dragleave', () => {
+                    item.classList.remove('drag-over');
+                });
+                item.addEventListener('drop', (e) => {
+                    e.preventDefault();
+                    item.classList.remove('drag-over');
+                    const fromIdx = parseInt(e.dataTransfer.getData('text/plain'), 10);
+                    if (fromIdx === idx) return;
+                    const [removed] = levelSet.levels.splice(fromIdx, 1);
+                    levelSet.levels.splice(idx, 0, removed);
+                    if (currentLevelIndex === fromIdx) currentLevelIndex = idx;
+                    else if (currentLevelIndex > fromIdx && currentLevelIndex <= idx) currentLevelIndex--;
+                    else if (currentLevelIndex < fromIdx && currentLevelIndex >= idx) currentLevelIndex++;
+                    SoundManager.play('click');
+                    renderLevelList();
+                    clearSelection();
+                    updateCounters();
+                    render();
+                    updateStatus();
+                    showToast('↕️ 已移动关卡');
+                });
+
+                levelListContainer.appendChild(item);
+            });
+
+            const addBtn = document.createElement('button');
+            addBtn.className = 'add-level-btn';
+            addBtn.innerHTML = '<i class="fas fa-plus"></i> 添加关卡';
+            addBtn.addEventListener('click', addLevel);
+            levelListContainer.appendChild(addBtn);
+
+            levelCountBadge.textContent = levelSet.levels.length;
+        }
+
+        // ---------- 关卡管理 ----------
+        function switchLevel(index) {
+            if (index < 0 || index >= levelSet.levels.length) return;
+            currentLevelIndex = index;
+            SoundManager.play('click');
+            clearSelection();
+            updateCounters();
+            render();
+            updateStatus();
+            renderLevelList();
+            renderMeta();
+            showToast(`📂 切换至: ${levelSet.levels[index].name || '未命名'}`);
+        }
+
+        function addLevel() {
+            const newLevel = createDefaultLevel(`关卡 ${levelSet.levels.length + 1}`);
+            levelSet.levels.push(newLevel);
+            currentLevelIndex = levelSet.levels.length - 1;
+            SoundManager.play('click');
+            renderLevelList();
+            clearSelection();
+            updateCounters();
+            render();
+            updateStatus();
+            renderMeta();
+            showToast(`✅ 添加新关卡: ${newLevel.name}`);
+        }
+
+        function deleteLevel(index) {
+            if (levelSet.levels.length <= 1) {
+                showToast('⚠️ 至少保留一个关卡', 1200);
+                return;
+            }
+            const name = levelSet.levels[index].name || '未命名';
+            if (!confirm(`确定删除关卡 "${name}" 吗？`)) return;
+            levelSet.levels.splice(index, 1);
+            if (currentLevelIndex >= levelSet.levels.length) currentLevelIndex = levelSet.levels.length - 1;
+            if (index < currentLevelIndex) currentLevelIndex--;
+            SoundManager.play('click');
+            renderLevelList();
+            clearSelection();
+            updateCounters();
+            render();
+            updateStatus();
+            renderMeta();
+            showToast(`🗑️ 已删除关卡: ${name}`);
+        }
+
+        function renameLevel(newName) {
+            if (!newName || newName.trim() === '') return;
+            const level = getCurrentLevel();
+            level.name = newName.trim();
+            SoundManager.play('click');
+            renderLevelList();
+            renderMeta();
+            render();
+            showToast(`✏️ 已重命名为: ${level.name}`);
+        }
+
         // ---------- 导出 / 导入 ----------
-        function exportLevel() {
-            const data = {
-                name: levelData.name || '新关卡',
-                start: { ...levelData.start },
-                end: { ...levelData.end },
-                path: levelData.path.map(p => ({ ...p })),
-                checkpoints: levelData.checkpoints.map(c => ({ ...c })),
-                enemies: levelData.enemies.map(e => ({ ...e })),
-                boostZones: levelData.boostZones.map(b => ({ ...b })),
-                brakeZones: levelData.brakeZones.map(b => ({ ...b }))
-            };
-            const json = JSON.stringify(data, null, 2);
-            const blob = new Blob([json], { type: 'application/json' });
+        function exportSet() {
+            const data = JSON.stringify(levelSet, null, 2);
+            const blob = new Blob([data], { type: 'application/json' });
             const url = URL.createObjectURL(blob);
             const a = document.createElement('a');
             a.href = url;
-            a.download = `level_${data.name.replace(/\s/g, '_')}.json`;
+            a.download = `levelset_${levelSet.levelsName || 'gravocar'}.gcms`;
             a.click();
             URL.revokeObjectURL(url);
-            showToast(`✅ 已导出: ${a.download}`);
+            SoundManager.play('click');
+            showToast(`✅ 已导出 .gcms: ${a.download}`);
         }
 
-        function importLevel(event) {
+        function importSet(event) {
             const file = event.target.files[0];
             if (!file) return;
             const reader = new FileReader();
             reader.onload = (e) => {
                 try {
                     const data = JSON.parse(e.target.result);
-                    if (!data.start || !data.end || !data.path || !Array.isArray(data.path)) {
-                        throw new Error('数据格式不完整');
+                    if (!data.levels || !Array.isArray(data.levels)) {
+                        throw new Error('缺少 levels 数组');
                     }
-                    levelData.name = data.name || '导入关卡';
-                    levelData.start = { ...data.start };
-                    levelData.end = { ...data.end };
-                    levelData.path = data.path.map(p => ({ ...p }));
-                    levelData.checkpoints = (data.checkpoints || []).map(c => ({ ...c }));
-                    levelData.enemies = (data.enemies || []).map(e => ({ ...e }));
-                    levelData.boostZones = (data.boostZones || []).map(b => ({ ...b }));
-                    levelData.brakeZones = (data.brakeZones || []).map(b => ({ ...b }));
-                    nextIds = { path: 0, cp: 0, enemy: 0, boost: 0, brake: 0 };
+                    levelSet = data;
+                    if (levelSet.levels.length === 0) {
+                        levelSet.levels = [createDefaultLevel()];
+                    }
+                    currentLevelIndex = 0;
+                    SoundManager.play('click');
+                    renderLevelList();
                     clearSelection();
                     updateCounters();
                     render();
                     updateStatus();
-                    showToast(`📂 已导入: ${levelData.name}`);
+                    renderMeta();
+                    showToast(`📂 已导入 .gcms: ${levelSet.levelsName || '未命名'}`);
                 } catch (err) {
                     showToast(`❌ 导入失败: ${err.message}`, 2000);
                     console.error(err);
@@ -1708,18 +2656,13 @@
             event.target.value = '';
         }
 
-        // ================================================================
-        //  ★ 新增：文本导入 & 预览JSON
-        // ================================================================
-
-        /** 显示文本导入模态框 */
         function showImportTextModal() {
+            SoundManager.play('click');
             document.getElementById('importTextModal').classList.add('open');
             document.getElementById('importTextArea').value = '';
             document.getElementById('importTextArea').focus();
         }
 
-        /** 从文本导入 */
         function importFromText() {
             const text = document.getElementById('importTextArea').value.trim();
             if (!text) {
@@ -1728,23 +2671,22 @@
             }
             try {
                 const data = JSON.parse(text);
-                if (!data.start || !data.end || !data.path || !Array.isArray(data.path)) {
-                    throw new Error('缺少必要字段 (start, end, path)');
+                if (!data.levels || !Array.isArray(data.levels)) {
+                    throw new Error('缺少 levels 数组');
                 }
-                levelData.name = data.name || '导入关卡';
-                levelData.start = { ...data.start };
-                levelData.end = { ...data.end };
-                levelData.path = data.path.map(p => ({ ...p }));
-                levelData.checkpoints = (data.checkpoints || []).map(c => ({ ...c }));
-                levelData.enemies = (data.enemies || []).map(e => ({ ...e }));
-                levelData.boostZones = (data.boostZones || []).map(b => ({ ...b }));
-                levelData.brakeZones = (data.brakeZones || []).map(b => ({ ...b }));
-                nextIds = { path: 0, cp: 0, enemy: 0, boost: 0, brake: 0 };
+                levelSet = data;
+                if (levelSet.levels.length === 0) {
+                    levelSet.levels = [createDefaultLevel()];
+                }
+                currentLevelIndex = 0;
+                SoundManager.play('click');
+                renderLevelList();
                 clearSelection();
                 updateCounters();
                 render();
                 updateStatus();
-                showToast(`✅ 文本导入成功: ${levelData.name}`);
+                renderMeta();
+                showToast(`✅ 文本导入成功: ${levelSet.levelsName || '未命名'}`);
                 closeModal('importTextModal');
             } catch (err) {
                 showToast(`❌ 解析失败: ${err.message}`, 2000);
@@ -1752,31 +2694,18 @@
             }
         }
 
-        /** 显示预览JSON模态框 */
         function showPreviewModal() {
-            const data = {
-                name: levelData.name || '新关卡',
-                start: { ...levelData.start },
-                end: { ...levelData.end },
-                path: levelData.path.map(p => ({ ...p })),
-                checkpoints: levelData.checkpoints.map(c => ({ ...c })),
-                enemies: levelData.enemies.map(e => ({ ...e })),
-                boostZones: levelData.boostZones.map(b => ({ ...b })),
-                brakeZones: levelData.brakeZones.map(b => ({ ...b }))
-            };
-            const json = JSON.stringify(data, null, 2);
-            document.getElementById('previewTextArea').value = json;
+            SoundManager.play('click');
+            document.getElementById('previewTextArea').value = JSON.stringify(levelSet, null, 2);
             document.getElementById('previewModal').classList.add('open');
         }
 
-        /** 复制预览文本 */
         function copyPreview() {
             const text = document.getElementById('previewTextArea').value;
             if (!text) return;
             navigator.clipboard.writeText(text).then(() => {
                 showToast('📋 已复制到剪贴板');
             }).catch(() => {
-                // fallback
                 const ta = document.getElementById('previewTextArea');
                 ta.select();
                 document.execCommand('copy');
@@ -1784,88 +2713,150 @@
             });
         }
 
-        /** 关闭模态框 */
         function closeModal(id) {
             document.getElementById(id).classList.remove('open');
         }
 
-        // ---------- 清空 / 重置 ----------
         function clearAll() {
-            if (!confirm('确定要清空所有数据吗？')) return;
-            levelData.path = [
-                { x: 100, y: 310 },
-                { x: 900, y: 310 }
-            ];
-            levelData.checkpoints = [];
-            levelData.enemies = [];
-            levelData.boostZones = [];
-            levelData.brakeZones = [];
-            levelData.start = { x: 100, y: 310 };
-            levelData.end = { x: 900, y: 310 };
-            nextIds = { path: 0, cp: 0, enemy: 0, boost: 0, brake: 0 };
+            if (!confirm('确定要清空所有关卡数据吗？')) return;
+            levelSet.levels = [createDefaultLevel('新关卡')];
+            currentLevelIndex = 0;
+            SoundManager.play('click');
+            renderLevelList();
             clearSelection();
             updateCounters();
             render();
             updateStatus();
-            showToast('🗑️ 已清空所有元素');
+            renderMeta();
+            showToast('🗑️ 已清空，保留一个默认关卡');
         }
 
         function resetToDefault() {
-            levelData = {
-                name: '示例关卡',
-                start: { x: 140, y: 310 },
-                end: { x: 860, y: 310 },
-                path: [
-                    { x: 140, y: 310 }, { x: 280, y: 280 }, { x: 420, y: 240 },
-                    { x: 560, y: 260 }, { x: 700, y: 320 }, { x: 860, y: 310 }
-                ],
-                checkpoints: [
-                    { x: 350, y: 250, radius: 28 },
-                    { x: 530, y: 235, radius: 28 },
-                    { x: 720, y: 285, radius: 28 },
-                ],
-                enemies: [
-                    { x: 280, y: 440, radius: 22, speed: 0.8 },
-                ],
-                boostZones: [
-                    { cx: 350, cy: 270, radius: 35 },
-                    { cx: 720, cy: 305, radius: 35 },
-                ],
-                brakeZones: [
-                    { cx: 530, cy: 255, radius: 35 },
-                ]
+            levelSet = {
+                levelsName: '美好的一天',
+                author: '张三',
+                author_link: 'https://baike.baidu.com/item/%E6%B3%95%E5%A4%96%E7%8B%82%E5%BE%92%E5%BC%A0%E4%B8%89',
+                levelsDescription: '不小心开车撞死撒，完了倒车又撞死两个',
+                levels: [{
+                    name: '初试弯道',
+                    start: { x: 140, y: 310 },
+                    end: { x: 860, y: 310 },
+                    path: [{ x: 140, y: 310 }, { x: 280, y: 280 }, { x: 420, y: 240 }, { x: 560, y: 260 },
+                    { x: 700, y: 320 }, { x: 860, y: 310 }],
+                    checkpoints: [],
+                    enemies: [],
+                    boostZones: [],
+                    brakeZones: []
+                }, {
+                    name: 'S型迂回',
+                    start: { x: 120, y: 400 },
+                    end: { x: 880, y: 200 },
+                    path: [{ x: 120, y: 400 }, { x: 240, y: 350 }, { x: 360, y: 270 }, { x: 480, y: 330 },
+                    { x: 600, y: 240 }, { x: 720, y: 200 }, { x: 880, y: 200 }],
+                    checkpoints: [],
+                    enemies: [],
+                    boostZones: [],
+                    brakeZones: []
+                }, {
+                    name: '陡峭急弯',
+                    start: { x: 100, y: 120 },
+                    end: { x: 900, y: 500 },
+                    path: [{ x: 100, y: 120 }, { x: 200, y: 180 }, { x: 300, y: 280 }, { x: 420, y: 340 },
+                    { x: 550, y: 290 }, { x: 680, y: 380 }, { x: 820, y: 460 }, { x: 900, y: 500 }],
+                    checkpoints: [],
+                    enemies: [],
+                    boostZones: [],
+                    brakeZones: []
+                }, {
+                    name: '检查点挑战',
+                    start: { x: 140, y: 310 },
+                    end: { x: 860, y: 310 },
+                    path: [{ x: 140, y: 310 }, { x: 280, y: 280 }, { x: 420, y: 240 }, { x: 560, y: 260 },
+                    { x: 700, y: 320 }, { x: 860, y: 310 }],
+                    checkpoints: [{ x: 350, y: 250, radius: 28 }, { x: 530, y: 235, radius: 28 },
+                    { x: 720, y: 285, radius: 28 }],
+                    enemies: [],
+                    boostZones: [],
+                    brakeZones: []
+                }, {
+                    name: '追逐敌人',
+                    start: { x: 120, y: 380 },
+                    end: { x: 880, y: 220 },
+                    path: [{ x: 120, y: 380 }, { x: 240, y: 340 }, { x: 360, y: 280 }, { x: 480, y: 320 },
+                    { x: 600, y: 250 }, { x: 720, y: 220 }, { x: 880, y: 220 }],
+                    checkpoints: [],
+                    enemies: [{ x: 280, y: 440, radius: 22, speed: 0.8 }],
+                    boostZones: [],
+                    brakeZones: []
+                }, {
+                    name: '速度与激情',
+                    start: { x: 141.11111111111111, y: 286.66666666666663 },
+                    end: { x: 860, y: 310 },
+                    path: [{ x: 140, y: 286.66666666666663 }, { x: 352.2222222222222, y: 292.22222222222234 },
+                    { x: 491.111111111111, y: 224.44444444444446 }, { x: 621.1111111111115, y: 262.2222222222222 },
+                    { x: 747.7777777777779, y: 296.66666666666663 }, { x: 860, y: 310 }
+                    ],
+                    checkpoints: [],
+                    enemies: [{ x: 44.444444444444436, y: 486.66666666666674, radius: 22, speed: 3 }],
+                    boostZones: [],
+                    brakeZones: []
+                }, {
+                    name: '超级回环',
+                    start: { x: 140, y: 310 },
+                    end: { x: 734.4444444444445, y: 95.55555555555553 },
+                    path: [{ x: 138.88888888888889, y: 310 }, { x: 305.5555555555556, y: 248.88888888888889 },
+                    { x: 517.7777777777777, y: 241.11111111111111 }, { x: 697.7777777777777, y: 397.77777777777777 },
+                    { x: 552.2222222222223, y: 562.2222222222224 }, { x: 374.4444444444444, y: 426.6666666666666 },
+                    { x: 577.7777777777777, y: 142.22222222222223 }, { x: 632.2222222222223, y: 97.77777777777779 },
+                    { x: 734.4444444444445, y: 95.55555555555556 }
+                    ],
+                    checkpoints: [{ x: 553.3333333333333, y: 556.6666666666666, radius: 35 }],
+                    enemies: [],
+                    boostZones: [],
+                    brakeZones: []
+                }, {
+                    name: '微软大战代码！',
+                    start: { x: 202.2222222222222, y: 356.6666666666667 },
+                    end: { x: 204.44444444444437, y: 193.33333333333331 },
+                    path: [{ x: 200, y: 357.7777777777778 }, { x: 740, y: 78.88888888888884 }, {
+                        x: 738.8888888888889,
+                        y: 488.8888888888889
+                    },
+                    { x: 202.22222222222229, y: 192.22222222222223 }
+                    ],
+                    checkpoints: [{ x: 353.33333333333337, y: 275.55555555555554, radius: 35 },
+                    { x: 738.8888888888889, y: 488.8888888888889, radius: 35 },
+                    { x: 738.8888888888889, y: 77.77777777777779, radius: 35 }
+                    ],
+                    enemies: [],
+                    boostZones: [],
+                    brakeZones: []
+                }]
             };
-            nextIds = { path: 0, cp: 0, enemy: 0, boost: 0, brake: 0 };
+            currentLevelIndex = 0;
+            SoundManager.play('click');
+            renderLevelList();
             clearSelection();
             updateCounters();
             render();
             updateStatus();
-            showToast('📋 已加载示例关卡');
+            renderMeta();
+            showToast('📋 已重置完整示例关卡集');
         }
 
-        // ---------- 状态更新 ----------
         function updateStatus() {
-            const total = levelData.path.length + levelData.checkpoints.length +
-                levelData.enemies.length + levelData.boostZones.length + levelData.brakeZones.length;
-            statusText.textContent = `元素: ${total}  |  路径点: ${levelData.path.length}  检查点: ${levelData.checkpoints.length}  敌人: ${levelData.enemies.length}  加速: ${levelData.boostZones.length}  刹车: ${levelData.brakeZones.length}`;
+            const level = getCurrentLevel();
+            const total = level.path.length + level.checkpoints.length +
+                level.enemies.length + level.boostZones.length + level.brakeZones.length;
+            statusText.textContent =
+                `关卡 ${currentLevelIndex + 1}/${levelSet.levels.length}  "${level.name}"  |  元素: ${total}  |  路径: ${level.path.length}  检查点: ${level.checkpoints.length}  敌人: ${level.enemies.length}  加速: ${level.boostZones.length}  刹车: ${level.brakeZones.length}`;
             document.getElementById('statusDot').className = 'dot ready';
         }
 
-        // ---------- Toast ----------
-        let toastTimer = null;
-
-        function showToast(msg, duration = 1000) {
-            toast.textContent = msg;
-            toast.classList.add('show');
-            clearTimeout(toastTimer);
-            toastTimer = setTimeout(() => {
-                toast.classList.remove('show');
-            }, duration);
-        }
-
-        // ---------- 动画循环 (敌人脉冲) ----------
+        // ---------- 动画循环 ----------
         function animate() {
-            if (levelData.enemies.length > 0) {
+            const level = getCurrentLevel();
+            if (level.enemies.length > 0) {
                 render();
             }
             requestAnimationFrame(animate);
@@ -1873,6 +2864,9 @@
 
         // ---------- 初始化 ----------
         function init() {
+            SoundManager.init();
+            resetToDefault();
+
             resizeCanvas();
             window.addEventListener('resize', resizeCanvas);
 
@@ -1883,28 +2877,58 @@
             document.addEventListener('keydown', onKeyDown);
             canvas.addEventListener('contextmenu', (e) => e.preventDefault());
 
-            // 点击模态框外部关闭
             document.querySelectorAll('.modal-overlay').forEach(el => {
                 el.addEventListener('click', (e) => {
                     if (e.target === el) el.classList.remove('open');
                 });
             });
 
+            // ============================================================
+            //  ✨ 新增：标签页滚轮切换（悬浮在标签页头部时生效）
+            // ============================================================
+            const tabHeader = document.getElementById('tabHeader');
+            const tabOrder = ['levels', 'props', 'meta'];
+
+            tabHeader.addEventListener('wheel', function (e) {
+                // 只处理垂直滚动
+                if (e.deltaY === 0) return;
+                e.preventDefault();
+
+                const currentIndex = tabOrder.indexOf(activeTab);
+                if (currentIndex === -1) return;
+
+                let newIndex;
+                if (e.deltaY > 0) {
+                    // 向下滚动 → 下一个标签页
+                    newIndex = (currentIndex + 1) % tabOrder.length;
+                } else {
+                    // 向上滚动 → 上一个标签页
+                    newIndex = (currentIndex - 1 + tabOrder.length) % tabOrder.length;
+                }
+
+                // 如果新旧不同才切换（防止重复触发）
+                if (tabOrder[newIndex] !== activeTab) {
+                    switchTab(tabOrder[newIndex]);
+                }
+            }, { passive: false });
+
             updateCounters();
             render();
             updateStatus();
-            showToast('🎮 编辑器已就绪', 1200);
+            renderMeta();
+            showToast('🎮 三标签页 · 滚轮切换 · 带音效', 1400);
             animate();
         }
 
-        // 暴露到全局
+        // 暴露全局
         window.setTool = setTool;
         window.selectElement = selectElement;
         window.clearSelection = clearSelection;
         window.deleteElement = deleteElement;
         window.updateProp = updateProp;
-        window.exportLevel = exportLevel;
-        window.importLevel = importLevel;
+        window.updateMeta = updateMeta;
+        window.exportSet = exportSet;
+        window.importSet = importSet;
         window.clearAll = clearAll;
         window.resetToDefault = resetToDefault;
         window.showToast = showToast;
@@ -1913,11 +2937,20 @@
         window.showPreviewModal = showPreviewModal;
         window.copyPreview = copyPreview;
         window.closeModal = closeModal;
+        window.switchLevel = switchLevel;
+        window.addLevel = addLevel;
+        window.deleteLevel = deleteLevel;
+        window.renameLevel = renameLevel;
+        window.renderLevelList = renderLevelList;
+        window.switchTab = switchTab;
+        window.closeMenu = closeMenu;
+        window.toggleMenu = toggleMenu;
 
         init();
 
-        console.log('🎮 关卡编辑器已加载 (含文本导入/预览)');
+        console.log('🎮 关卡集编辑器 · 全屏菜单已集成 · 滚轮切换标签页');
         console.log('📖 快捷键: V-选择 P-路径 C-检查点 E-敌人 B-加速 R-刹车 D-删除 S-起点 F-终点');
+        console.log('🖱 鼠标悬浮在标签页头部时，滚动滚轮即可切换标签页');
     </script>
 
 </body>
