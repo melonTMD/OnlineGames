@@ -4,7 +4,7 @@
 <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no" />
-    <title>引力小车 · 主菜单</title>
+    <title>引力小车</title>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css" />
     <style>
         /* ========== 全局重置 ========== */
@@ -147,7 +147,7 @@
 
         .menu-btn.workshop.gotospace {
             height: 30px;
-            width: 400px;
+            width: 35%;
             box-shadow: none !important;
             overflow: visible;
         }
@@ -158,7 +158,7 @@
             transition: all 0.25 ease;
             top: 0;
             left: 0;
-            width: 400px;
+            width: 100%;
             height: 30px;
             background: linear-gradient(to left, #00000000, #1F1F1F);
         }
@@ -201,7 +201,7 @@
 
         .lowerUI-mask.visible {
             background: #232323;
-            height: 130px;
+            height: 140px;
             pointer-events: auto;
         }
 
@@ -644,7 +644,7 @@
             position: absolute;
             bottom: 0;
             right: 0;
-            height: 130px;
+            height: 140px;
             padding: 5px;
             width: 100%;
             z-index: 1000;
@@ -662,7 +662,7 @@
             display: flex;
             align-items: center;
             justify-content: space-between;
-            padding: 4px 0;
+            padding: 2px 0;
         }
 
         .settings-row .label {
@@ -722,9 +722,9 @@
             justify-content: space-between;
             font-size: 12px;
             color: rgba(255, 255, 255, 0.15);
-            padding-top: 12px;
+            padding-top: 8px;
             border-top: 1px solid rgba(255, 255, 255, 0.03);
-            margin-top: 4px;
+            margin-top: 2px;
         }
 
         /* ========== 音量控制专用样式 ========== */
@@ -797,6 +797,57 @@
         .volume-control input[type="number"]::-webkit-inner-spin-button,
         .volume-control input[type="number"]::-webkit-outer-spin-button {
             opacity: 1;
+        }
+
+        /* ========== UI缩放滑动条专用样式 ========== */
+        .ui-scale-control {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .ui-scale-control input[type="range"] {
+            width: 100px;
+            height: 21px;
+            -webkit-appearance: none;
+            background: #232323;
+            border: 1px solid #3C3C3C;
+            outline: none;
+            transition: background 0.2s, border 0.2s;
+        }
+
+        .ui-scale-control input[type="range"]::-webkit-slider-thumb {
+            -webkit-appearance: none;
+            width: 11px;
+            height: 21px;
+            background: #3C3C3C;
+            cursor: pointer;
+            transition: background 0.2s;
+        }
+
+        .ui-scale-control:hover input[type="range"] {
+            border-color: #4a9eff;
+        }
+
+        .ui-scale-control input[type="range"]::-webkit-slider-thumb:hover {
+            background: #6ab8ff;
+        }
+
+        .ui-scale-control input[type="range"]::-moz-range-thumb {
+            width: 14px;
+            height: 14px;
+            border-radius: 50%;
+            background: #4a9eff;
+            cursor: pointer;
+            border: 2px solid #2a2a40;
+        }
+
+        .ui-scale-control .scale-value {
+            min-width: 20px;
+            text-align: center;
+            color: #c0c0d0;
+            font-weight: 600;
+            font-size: 14px;
         }
 
         /* ========== 返回按钮 ========== */
@@ -894,6 +945,8 @@
             flex-shrink: 0;
             z-index: 10;
             overflow: hidden;
+            transform-origin: left top;
+            transition: transform 0.2s ease;
         }
 
         .status-bar {
@@ -1114,7 +1167,7 @@
             color: #ff8888;
         }
 
-        .drag-over::before {
+        .trash-zone::before {
             content: '';
             position: absolute;
             inset: 0;
@@ -1126,16 +1179,15 @@
             background-size: 200% 200%;
             opacity: 0;
             pointer-events: none;
-            z-index: 0;
             animation: slashScroll 2s linear infinite;
             transition: opacity 0.2s ease;
         }
 
-        .drag-over span {
+        .trash-zone.drag-over span {
             z-index: 1;
         }
 
-        .drag-over:hover::before {
+        .trash-zone.drag-over::before {
             opacity: 1;
         }
 
@@ -1390,18 +1442,20 @@
             align-items: center;
             justify-content: center;
             background: #2d5a2d;
-            padding: 8px;
+            padding: 0;
             min-height: 0;
             position: relative;
+            overflow: hidden;
         }
 
         .canvas-wrapper canvas {
+            display: block;
             width: 100%;
             height: 100%;
-            object-fit: contain;
-            border-radius: 0px;
+            object-fit: fill;
             background: #2d5a2d;
             cursor: crosshair;
+            image-rendering: auto;
         }
 
         .info-bar {
@@ -1415,6 +1469,8 @@
             flex-wrap: wrap;
             flex-shrink: 0;
             gap: 19px;
+            font-size: 12px;
+            transition: font-size 0.2s ease;
         }
 
         .info-bar .info-item {
@@ -1422,10 +1478,10 @@
             align-items: center;
             gap: 6px;
             color: #6a6a8a;
-            font-size: 12px;
+            font-size: inherit;
             font-weight: 500;
             letter-spacing: 0.2px;
-            transition: all 0.1s ease;
+            transition: font-size 0.2s ease;
         }
 
         .info-bar .info-item:hover {
@@ -1455,6 +1511,7 @@
             background: #1414255b;
             padding: 2px 10px 2px 8px;
             border: 1px solid #1a1a30;
+            font-size: inherit;
         }
 
         .info-bar .progress-wrap .icon {
@@ -1511,7 +1568,7 @@
             font-family: 'Segoe UI', 'PingFang SC', Arial, sans-serif;
             font-size: 15px;
             font-weight: 600;
-            z-index: 9999;
+            z-index: 999999999;
             pointer-events: none;
             opacity: 1;
             letter-spacing: 0.3px;
@@ -1542,192 +1599,167 @@
             top: 20px;
             left: 20px;
         }
+
+        /* ========== 触摸拖拽预览（通用） ========== */
+        .touch-drag-preview {
+            position: fixed;
+            pointer-events: none;
+            z-index: 999999;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 24px;
+            width: 56px;
+            height: 56px;
+            opacity: 0.92;
+            transform: translate(-50%, -50%) scale(0.85);
+            transition: transform 0.15s ease;
+            touch-action: none;
+            border: 2px solid transparent;
+            background: #1a1a30;
+            /* fallback */
+            color: #fff;
+        }
+
+        /* 激活态（手指移动时） */
+        .touch-drag-preview.active {
+            transform: translate(-50%, -50%) scale(1);
+        }
+
+        /* ---- 按类型定制 ---- */
+        .touch-drag-preview.field {
+            background: #0d1a3a;
+            border-color: #0078d7;
+            color: #88ccff;
+        }
+
+        .touch-drag-preview.boost {
+            background: #0a2a1a;
+            border-color: #22c55e;
+            color: #86efac;
+        }
+
+        .touch-drag-preview.brake {
+            background: #2a0a0a;
+            border-color: #ef4444;
+            color: #fca5a5;
+        }
     </style>
 </head>
 
 <body>
     <div class="game-container" id="gameContainer">
-
-        <!-- ========== 主菜单 ========== -->
+        <!-- 主菜单 -->
         <div class="menu-overlay" id="menuOverlay">
-
             <img class="logo" src="assets/logo.svg">
-
             <div class="menu-buttons">
-                <button class="menu-btn primary" id="btnStartGame">
-                    <span>
-                        开始主要游戏
-                        <span class="icon"><i class="fas fa-play"></i></span>
-                    </span>
-                </button>
-                <button class="menu-btn workshop" id="btnWorkshop">
-                    <span>
-                        🧪 工坊 · 关卡集管理
-                        <span class="icon"><i class="fas fa-cubes"></i></span>
-                    </span>
-                </button>
-
-                <!-- ========== 工坊面板 ========== -->
+                <button class="menu-btn primary" id="btnStartGame"><span>开始主要游戏<span class="icon"><i
+                                class="fas fa-play"></i></span></span></button>
+                <button class="menu-btn workshop" id="btnWorkshop"><span>🧪 工坊 · 关卡集管理<span class="icon"><i
+                                class="fas fa-cubes"></i></span></span></button>
+                <!-- 工坊面板 -->
                 <div class="lowerUI-mask" id="workshopOverlay">
                     <div class="workshop-overlay">
                         <div class="workshop-content" id="workshopContent">
-                            <!-- 由 JavaScript 动态渲染卡片 -->
-                            <div class="card-empty" id="workshopEmpty">
-                                <i class="fas fa-cubes"></i>
-                            </div>
+                            <div class="card-empty" id="workshopEmpty"><i class="fas fa-cubes"></i></div>
                         </div>
                         <div class="workshop-bottom-bar">
-                            <div class="left">
-                                <span class="info-text" id="workshopInfo"><strong id="wsCount">0</strong> 个关卡集已加载</span>
-                            </div>
+                            <div class="left"><span class="info-text" id="workshopInfo"><strong id="wsCount">0</strong>
+                                    个关卡集已加载</span></div>
                             <div class="right">
-                                <button class="ws-btn" id="wsRefreshBtn" title="刷新列表">
-                                    <span class="icon"><i class="fas fa-sync-alt"></i></span> 刷新
-                                </button>
-                                <button class="ws-btn primary" id="wsImportBtn" title="导入 .gcms 关卡集文件">
-                                    <span class="icon"><i class="fas fa-file-import"></i></span> 导入
-                                </button>
-                                <button class="ws-btn danger" id="wsClearAllBtn" title="移除所有关卡集">
-                                    <span class="icon"><i class="fas fa-trash-alt"></i></span> 清空
-                                </button>
+                                <button class="ws-btn" id="wsRefreshBtn"><span class="icon"><i
+                                            class="fas fa-sync-alt"></i></span> 刷新</button>
+                                <button class="ws-btn primary" id="wsImportBtn"><span class="icon"><i
+                                            class="fas fa-file-import"></i></span> 导入</button>
+                                <button class="ws-btn danger" id="wsClearAllBtn"><span class="icon"><i
+                                            class="fas fa-trash-alt"></i></span> 清空</button>
                             </div>
                         </div>
                     </div>
                 </div>
-
-                <button class="menu-btn settings" id="btnSettings">
-                    <span>
-                        设置
-                        <span class="icon"><i class="fas fa-sliders-h"></i></span>
-                    </span>
-                </button>
-
-                <!-- ========== 设置面板 ========== -->
+                <button class="menu-btn settings" id="btnSettings"><span>设置<span class="icon"><i
+                                class="fas fa-sliders-h"></i></span></span></button>
+                <!-- 设置面板 -->
                 <div class="lowerUI-mask" id="settingsOverlay">
                     <div class="settings-overlay">
                         <div class="settings-body">
-                            <div class="settings-row">
-                                <span class="label"><i class="fas fa-gamepad"
-                                        style="margin-right:8px;opacity:0.5;"></i>当前模式</span>
-                                <span class="value" id="settingsMode">主要游戏</span>
+                            <div class="settings-row"><span class="label"><i class="fas fa-gamepad"
+                                        style="margin-right:8px;opacity:0.5;"></i>当前模式</span><span class="value"
+                                    id="settingsMode">主要游戏</span></div>
+                            <div class="settings-row"><span class="label"><i class="fas fa-flag"
+                                        style="margin-right:8px;opacity:0.5;"></i>解锁进度</span><span class="value"
+                                    id="settingsProgress">第 1 关</span></div>
+                            <div class="settings-row"><span class="label"><i class="fas fa-volume-up"></i> 音效音量</span>
+                                <div class="volume-control"><input type="range" id="volumeSlider" min="0" max="100"
+                                        value="100"><input type="number" id="volumeInput" min="0" max="100" value="100"
+                                        step="1"></div>
                             </div>
-                            <div class="settings-row">
-                                <span class="label"><i class="fas fa-flag"
-                                        style="margin-right:8px;opacity:0.5;"></i>解锁进度</span>
-                                <span class="value" id="settingsProgress">第 1 关</span>
+                            <div class="settings-row"><span class="label"><i class="fas fa-expand-alt"></i> UI缩放</span>
+                                <div class="ui-scale-control"><input type="range" id="uiScaleSlider" min="1" max="4"
+                                        value="1" step="0.5"><span class="scale-value" id="uiScaleValue">1</span></div>
                             </div>
-
-                            <!-- ===== 音量控制：滑块 + 输入框 ===== -->
-                            <div class="settings-row">
-                                <span class="label"><i class="fas fa-volume-up"></i> 音效音量</span>
-                                <div class="volume-control">
-                                    <input type="range" id="volumeSlider" min="0" max="100" value="100">
-                                    <input type="number" id="volumeInput" min="0" max="100" value="100" step="1">
-                                </div>
-                            </div>
-
-                            <div class="settings-buttons">
-                                <button class="settings-btn danger" id="btnResetProgress">
-                                    <span class="icon"><i class="fas fa-eraser"></i></span>
-                                    重置通关进度
-                                </button>
-                                <button class="settings-btn" id="neow_neow">
-                                    <span class="icon"><i class="fas fa-paw"></i></span>
-                                    猫说
-                                </button>
-                            </div>
-
-                            <div class="settings-info">
-                                <span>引力小车 v1.0</span>
-                                <span id="settingsLevelCount">关卡: 0</span>
+                            <div class="settings-buttons"><button class="settings-btn danger"
+                                    id="btnResetProgress"><span class="icon"><i
+                                            class="fas fa-eraser"></i></span>重置通关进度</button><button class="settings-btn"
+                                    id="neow_neow"><span class="icon"><i class="fas fa-paw"></i></span>猫说</button></div>
+                            <div class="settings-info"><span>引力小车 v1.0</span><span id="settingsLevelCount">关卡: 0</span>
                             </div>
                         </div>
                     </div>
                 </div>
-
                 <button class="menu-btn workshop gotospace"
-                    onclick="window.location.href = 'https://melontmd.github.io/OnlineGames/GravoCar/Editor.html'">
-                    <span>
-                        前往创意工坊工作区
-                        <span class="icon"><i class="fas fa-external-link-alt"></i></span>
-                    </span>
-                </button>
-
+                    onclick="window.location.href='https://melontmd.github.io/OnlineGames/GravoCar/Editor.html'"><span>前往创意工坊工作区<span
+                            class="icon"><i class="fas fa-external-link-alt"></i></span></span></button>
             </div>
-
         </div>
-
-        <!-- ========== 工坊文件输入（隐藏） ========== -->
+        <!-- 工坊文件输入 -->
         <input type="file" id="workshopFileInput" accept=".gcms,application/json" style="display:none" />
-
-        <!-- ========== 顶部栏 ========== -->
-        <aside class="topbar">
+        <!-- 顶部栏 -->
+        <aside class="topbar" id="topbar">
             <div class="status-bar">
-                <div class="status-section">
-                    <span class="status-dot waiting" id="statusDot"></span>
-                    <span class="status-text" id="statusText">布局中</span>
-
-                    <button class="back-btn" id="backToMenuBtn" title="返回主菜单">
-                        <i class="fas fa-bars"></i> 退出
-                    </button>
-                </div>
-                <button class="main-btn primary" id="mainBtn" title="开始模拟 (Space)"><i class="fas fa-play"></i>
-                    开始</button>
+                <div class="status-section"><span class="status-dot waiting" id="statusDot"></span><span
+                        class="status-text" id="statusText">布局中</span><button class="back-btn" id="backToMenuBtn"><i
+                            class="fas fa-bars"></i> 退出</button></div>
+                <button class="main-btn primary" id="mainBtn"><i class="fas fa-play"></i> 开始</button>
             </div>
-
             <div class="toolbar-outline" id="toolbar">
                 <div class="toolbar-tittle">
                     <div class="tools-label"><i class="fas fa-screwdriver-wrench"></i> 工具</div>
                 </div>
                 <div class="toolbar-contant">
                     <div class="toolbar-tools">
-                        <div class="tool-item drag-source" draggable="true" id="fieldDragSource" title="拖拽到画布创建引力场">
-                            <span class="icon"><i class="fas fa-magnet"></i></span>
+                        <div class="tool-item drag-source" draggable="true" id="fieldDragSource"><span class="icon"><i
+                                    class="fas fa-magnet"></i></span>
                             <div class="tittle">引力场</div>
                         </div>
-                        <div class="tool-item drag-source boost" draggable="true" id="boostDragSource"
-                            title="拖拽到画布创建加速区域">
-                            <span class="icon"><i class="fas fa-bolt"></i></span>
+                        <div class="tool-item drag-source boost" draggable="true" id="boostDragSource"><span
+                                class="icon"><i class="fas fa-bolt"></i></span>
                             <div class="tittle">加速区域</div>
                         </div>
-                        <div class="tool-item drag-source brake" draggable="true" id="brakeDragSource"
-                            title="拖拽到画布创建刹车区域">
-                            <span class="icon"><i class="fas fa-triangle-exclamation"></i></span>
+                        <div class="tool-item drag-source brake" draggable="true" id="brakeDragSource"><span
+                                class="icon"><i class="fas fa-triangle-exclamation"></i></span>
                             <div class="tittle">刹车区域</div>
                         </div>
                     </div>
-                    <div class="trash-zone" id="trashZone" title="将区域拖拽到此删除">
-                        <span class="icon"><i class="fas fa-trash"></i></span>
-                    </div>
+                    <div class="trash-zone" id="trashZone"><span class="icon"><i class="fas fa-trash"></i></span></div>
                 </div>
             </div>
-
             <div class="level-section" id="levelSection">
                 <span class="level-icon" id="level-icon"><i class="fas fa-flag"></i></span>
-                <button id="btnPrevLevel" title="上一关">
-                    <i class="fas fa-chevron-left"></i>
-                    <span class="btn-label">上一关</span>
-                </button>
+                <button id="btnPrevLevel"><i class="fas fa-chevron-left"></i><span class="btn-label">上一关</span></button>
                 <span class="level-name" id="levelLabel">第 1 关</span>
-                <button id="btnNextLevel" title="下一关">
-                    <i class="fas fa-chevron-right"></i>
-                    <span class="btn-label">下一关</span>
-                </button>
+                <button id="btnNextLevel"><i class="fas fa-chevron-right"></i><span
+                        class="btn-label">下一关</span></button>
                 <span class="level-counter" id="levelCounter">1/5</span>
             </div>
         </aside>
-
-        <!-- ========== 主内容 ========== -->
+        <!-- 主内容 -->
         <main class="main-content">
-            <div class="canvas-wrapper" id="canvasWrapper">
-                <canvas id="canvas" width="1000" height="620"></canvas>
-            </div>
-            <div class="info-bar">
-                <!-- ========== 工坊模式标识 ========== -->
-                <div class="workshop-badge" id="workshopBadge">
-                    <i class="fas fa-cubes" style="margin-right:6px;"></i>工坊模式
-                </div>
-
+            <div class="canvas-wrapper" id="canvasWrapper"><canvas id="canvas" width="1000" height="620"></canvas></div>
+            <div class="info-bar" id="infoBar">
+                <div class="workshop-badge" id="workshopBadge"><i class="fas fa-cubes"
+                        style="margin-right:6px;"></i>工坊模式</div>
                 <span class="info-item" id="fieldCount"><span class="icon"><i class="fas fa-magnet"></i></span> 引力场:
                     <span class="value">0</span></span>
                 <span class="info-item" id="boostCount"><span class="icon"><i class="fas fa-bolt"
@@ -1737,24 +1769,21 @@
                 <span class="info-item" id="speedDisplay"><span class="icon"><i class="fas fa-gauge-high"></i></span>
                     速度: <span class="value">0.00</span></span>
                 <div class="space"></div>
-                <span class="progress-wrap">
-                    <span class="icon"><i class="fas fa-chart-simple"></i></span>
-                    <span class="bar-track"><span class="bar-fill" id="progressFill"></span></span>
-                    <span class="bar-label" id="progressText">0%</span>
-                </span>
-                <span class="checkpoint-info" id="checkpointInfo" style="display:none;">
-                    <i class="fas fa-flag-checkered"></i> 检查点: <span class="cp-passed" id="cpPassed">0</span>/<span
-                        class="cp-total" id="cpTotal">0</span>
-                </span>
+                <span class="progress-wrap"><span class="icon"><i class="fas fa-chart-simple"></i></span><span
+                        class="bar-track"><span class="bar-fill" id="progressFill"></span></span><span class="bar-label"
+                        id="progressText">0%</span></span>
+                <span class="checkpoint-info" id="checkpointInfo" style="display:none;"><i
+                        class="fas fa-flag-checkered"></i> 检查点: <span class="cp-passed" id="cpPassed">0</span>/<span
+                        class="cp-total" id="cpTotal">0</span></span>
             </div>
         </main>
     </div>
 
     <script>
         // ============================================================
-        //  引力动力车 · 完整游戏逻辑（支持主菜单 + 工坊模式 + 关卡集管理）
-        //  新增：工坊数据 localStorage 持久化存储
-        //  新增：音量保存 + 精确输入框 (0~100)
+        //  完整游戏逻辑（原始代码 + 触摸支持）
+        //  唯一新增：触摸事件处理（画布拖拽、工具长按拖拽）
+        //  其余功能（关卡、工坊、设置、物理、绘制）完全保持不变
         // ============================================================
 
         // ---------- DOM ----------
@@ -1782,11 +1811,11 @@
         const cpPassed = document.getElementById('cpPassed');
         const cpTotal = document.getElementById('cpTotal');
 
-        // ---------- 音量控件 ----------
         const volumeSlider = document.getElementById('volumeSlider');
         const volumeInput = document.getElementById('volumeInput');
+        const uiScaleSlider = document.getElementById('uiScaleSlider');
+        const uiScaleValue = document.getElementById('uiScaleValue');
 
-        // ---------- 主菜单 DOM ----------
         const menuOverlay = document.getElementById('menuOverlay');
         const settingsOverlay = document.getElementById('settingsOverlay');
         const workshopOverlay = document.getElementById('workshopOverlay');
@@ -1804,8 +1833,6 @@
         const settingsMode = document.getElementById('settingsMode');
         const settingsProgress = document.getElementById('settingsProgress');
         const settingsLevelCount = document.getElementById('settingsLevelCount');
-
-        // ---------- 工坊按钮 ----------
         const coreFunction = document.getElementById('neow_neow')
         const wsImportBtn = document.getElementById('wsImportBtn');
         const wsRefreshBtn = document.getElementById('wsRefreshBtn');
@@ -1832,9 +1859,9 @@
         const BRAKE_COEFF = 0.06;
         const MOVE_THRESHOLD = 0.35;
 
-        // ===== 新增：工坊存储键名 =====
         const WORKSHOP_STORAGE_KEY = 'gravoCarWorkshopData';
         const VOLUME_STORAGE_KEY = 'gravoCarVolume';
+        const UI_SCALE_STORAGE_KEY = 'gravoCarUIScale';
 
         // ---------- 游戏状态 ----------
         const STATE = { LAYOUT: 'layout', RUNNING: 'running', SUCCESS: 'success', FAIL: 'fail' };
@@ -1843,17 +1870,12 @@
         let animTime = 0;
         let isWorkshopMode = false;
         let mainLevelsBackup = null;
-
-        // ---------- 计时与统计 ----------
         let startTime = 0;
         let elapsedTime = 0;
-
-        // ---------- 起点脉冲 ----------
         let startPulseActive = false;
         let startPulseProgress = 0;
         const START_PULSE_DURATION = 0.8;
 
-        // ---------- 小车 ----------
         const car = {
             x: 120,
             y: 310,
@@ -1873,30 +1895,20 @@
         };
         let previousTrail = [];
 
-        // ---------- 引力场 ----------
         let fields = [];
         let fieldIdCounter = 0;
-
-        // ---------- 加速区域 ----------
         let boostZones = [];
         let boostIdCounter = 0;
-
-        // ---------- 刹车区域 ----------
         let brakeZones = [];
         let brakeIdCounter = 0;
-
-        // ---------- 选中状态 ----------
         let selectedField = null;
         let selectedBoost = null;
         let selectedBrake = null;
-
         function clearSelection() {
             selectedField = null;
             selectedBoost = null;
             selectedBrake = null;
         }
-
-        // ---------- 拖拽状态 ----------
         let dragMode = null;
         let dragTarget = null;
         let dragOffsetX = 0,
@@ -1907,29 +1919,20 @@
         let mouseDownTarget = null;
         let isOverTrash = false;
 
-        // ---------- 火花粒子系统 ----------
         let sparkParticles = [];
-
         function spawnSparks(x, y, count) {
             const actualCount = Math.min(count, 1);
             for (let i = 0; i < actualCount; i++) {
                 const angle = Math.random() * Math.PI * 2;
                 const speed = 0.6 + Math.random() * 2.0;
                 sparkParticles.push({
-                    x: x + (Math.random() - 0.5) * 3,
-                    y: y + (Math.random() - 0.5) * 3,
-                    vx: Math.cos(angle) * speed,
-                    vy: Math.sin(angle) * speed,
-                    life: 0.2 + Math.random() * 0.4,
-                    maxLife: 0.2 + Math.random() * 0.4,
-                    size: 0.8 + Math.random() * 1.6,
+                    x: x + (Math.random() - 0.5) * 3, y: y + (Math.random() - 0.5) * 3, vx: Math.cos(angle) *
+                        speed, vy: Math.sin(angle) * speed, life: 0.2 + Math.random() * 0.4, maxLife: 0.2 + Math.random() *
+                            0.4, size: 0.8 + Math.random() * 1.6
                 });
             }
-            if (sparkParticles.length > 80) {
-                sparkParticles.splice(0, sparkParticles.length - 80);
-            }
+            if (sparkParticles.length > 80) sparkParticles.splice(0, sparkParticles.length - 80);
         }
-
         function updateParticles(dt) {
             for (let i = sparkParticles.length - 1; i >= 0; i--) {
                 const p = sparkParticles[i];
@@ -1938,20 +1941,17 @@
                 p.vx *= 0.96;
                 p.vy *= 0.96;
                 p.life -= dt;
-                if (p.life <= 0) {
-                    sparkParticles.splice(i, 1);
-                }
+                if (p.life <= 0) sparkParticles.splice(i, 1);
             }
         }
-
         function drawParticles() {
             if (sparkParticles.length === 0) return;
             for (const p of sparkParticles) {
                 const alpha = p.life / p.maxLife;
                 const size = p.size * (0.3 + 0.7 * alpha);
-                const r = 255;
-                const g = Math.floor(200 * alpha + 60);
-                const b = Math.floor(40 * alpha);
+                const r = 255,
+                    g = Math.floor(200 * alpha + 60),
+                    b = Math.floor(40 * alpha);
                 ctx.globalAlpha = alpha * 0.8;
                 ctx.fillStyle = `rgb(${r}, ${g}, ${b})`;
                 ctx.shadowColor = `rgba(255, 200, 80, ${alpha * 0.25})`;
@@ -1964,7 +1964,6 @@
             ctx.shadowBlur = 0;
         }
 
-        // ---------- 拖拽创建 ----------
         let isDragging = false;
         let dragStartX = 0,
             dragStartY = 0;
@@ -1976,49 +1975,13 @@
 
         function createDragImage(type) {
             const el = document.createElement('div');
-            const size = 56;
-            el.style.width = size + 'px';
-            el.style.height = size + 'px';
-            el.style.display = 'flex';
-            el.style.alignItems = 'center';
-            el.style.justifyContent = 'center';
-            el.style.fontSize = '24px';
-            el.style.color = '#fff';
-            el.style.boxShadow = 'none';
-            el.style.border = '2px solid transparent';
-            el.style.borderRadius = '4px';
-            el.style.transform = 'scale(0.6)';
-            el.style.transition = 'all 0.25s cubic-bezier(0.34, 1.56, 0.64, 1)';
-            el.style.position = 'fixed';
-            el.style.top = '-9999px';
-            el.style.left = '-9999px';
-            el.style.pointerEvents = 'none';
-
+            el.className = 'touch-drag-preview ' + type;
             let iconHtml = '';
-            if (type === 'field') {
-                el.style.background = '#0d1a3a';
-                el.style.borderColor = '#0078d7';
-                iconHtml = '<i class="fas fa-magnet"></i>';
-            } else if (type === 'boost') {
-                el.style.background = '#0a2a1a';
-                el.style.borderColor = '#22c55e';
-                iconHtml = '<i class="fas fa-bolt"></i>';
-            } else if (type === 'brake') {
-                el.style.background = '#2a0a0a';
-                el.style.borderColor = '#ef4444';
-                iconHtml = '<i class="fas fa-triangle-exclamation"></i>';
-            } else {
-                el.style.background = '#1a1a30';
-                el.style.borderColor = '#3a3a5a';
-                iconHtml = '<i class="fas fa-circle"></i>';
-            }
+            if (type === 'field') iconHtml = '<i class="fas fa-magnet"></i>';
+            else if (type === 'boost') iconHtml = '<i class="fas fa-bolt"></i>';
+            else if (type === 'brake') iconHtml = '<i class="fas fa-triangle-exclamation"></i>';
+            else iconHtml = '<i class="fas fa-circle"></i>';
             el.innerHTML = iconHtml;
-
-            requestAnimationFrame(() => {
-                el.style.borderRadius = '50%';
-                el.style.transform = 'scale(1)';
-            });
-
             return el;
         }
 
@@ -2037,10 +2000,7 @@
         }
 
         function updateCursorStyle(mx, my) {
-            if (gameState !== STATE.LAYOUT) {
-                canvas.style.cursor = 'crosshair';
-                return;
-            }
+            if (gameState !== STATE.LAYOUT) { canvas.style.cursor = 'crosshair'; return; }
             if (isMouseDownOnTarget) {
                 if (dragMode === 'move') canvas.style.cursor = 'move';
                 else if (dragMode === 'resize' && dragTarget) {
@@ -2049,11 +2009,7 @@
                 }
                 return;
             }
-            if (isDragging) {
-                canvas.style.cursor = 'crosshair';
-                return;
-            }
-
+            if (isDragging) { canvas.style.cursor = 'crosshair'; return; }
             for (let i = brakeZones.length - 1; i >= 0; i--) {
                 const z = brakeZones[i];
                 if (z.builtIn) continue;
@@ -2096,24 +2052,19 @@
             canvas.style.cursor = 'crosshair';
         }
 
-        // ============================================================
-        //  关卡数据
-        // ============================================================
+        // ---------- 关卡数据 ----------
         const DEFAULT_LEVELS = [{
             name: '主游戏加载失败',
             start: { x: 140, y: 310 },
             end: { x: 860, y: 310 },
-            path: [
-                { x: 140, y: 310 }, { x: 280, y: 280 }, { x: 420, y: 240 },
-                { x: 560, y: 260 }, { x: 700, y: 320 }, { x: 860, y: 310 }
+            path: [{ x: 140, y: 310 }, { x: 280, y: 280 }, { x: 420, y: 240 }, { x: 560, y: 260 }, { x: 700, y: 320 },
+            { x: 860, y: 310 }
             ],
             checkpoints: [],
             enemies: [],
             boostZones: [],
             brakeZones: []
         }];
-
-        // ---------- 全局变量 ----------
         let LEVELS = [];
         let currentLevelIndex = 0,
             currentLevel = null;
@@ -2124,52 +2075,37 @@
         let checkpoints = [];
         let enemies = [];
 
-        // ============================================================
-        //  localStorage 存档管理
-        // ============================================================
+        // ---------- localStorage ----------
         const STORAGE_KEY = 'gravoCarUnlockedLevel';
-
         function loadUnlockedFromStorage() {
             try {
                 const saved = localStorage.getItem(STORAGE_KEY);
                 if (saved !== null) {
                     const parsed = parseInt(saved, 10);
-                    if (!isNaN(parsed) && parsed >= 0 && parsed < LEVELS.length) {
-                        unlockedLevelIndex = parsed;
-                        return;
-                    }
+                    if (!isNaN(parsed) && parsed >= 0 && parsed < LEVELS.length) { unlockedLevelIndex = parsed; return; }
                 }
             } catch (_) { /* ignore */ }
             unlockedLevelIndex = 0;
         }
-
         function saveUnlockedToStorage() {
-            if (isWorkshopMode) return;
-            try {
-                localStorage.setItem(STORAGE_KEY, String(unlockedLevelIndex));
+            if (isWorkshopMode) return; try {
+                localStorage.setItem(STORAGE_KEY, String(
+                    unlockedLevelIndex));
             } catch (_) { /* ignore */ }
         }
 
-        // ===== 新增：工坊数据存储函数 =====
         function saveWorkshopData() {
             try {
-                const data = {
-                    collections: workshopCollections,
-                    nextId: collectionIdCounter
-                };
+                const data = { collections: workshopCollections, nextId: collectionIdCounter };
                 localStorage.setItem(WORKSHOP_STORAGE_KEY, JSON.stringify(data));
-            } catch (e) {
-                console.warn('保存工坊数据失败:', e);
-            }
+            } catch (e) { console.warn('保存工坊数据失败:', e); }
         }
-
         function loadWorkshopData() {
             try {
                 const raw = localStorage.getItem(WORKSHOP_STORAGE_KEY);
                 if (!raw) return false;
                 const data = JSON.parse(raw);
                 if (!data.collections || !Array.isArray(data.collections)) return false;
-                // 基本验证：确保每个集合有必要的字段
                 for (const col of data.collections) {
                     if (!col.id || !col.meta || !col.meta.levelsName || !col.levels || !Array.isArray(col.levels)) {
                         console.warn('工坊数据损坏，跳过无效集合:', col);
@@ -2178,18 +2114,12 @@
                 }
                 workshopCollections = data.collections;
                 collectionIdCounter = typeof data.nextId === 'number' ? data.nextId : 0;
-                // 确保 collectionIdCounter 大于所有已存在 ID
                 for (const col of workshopCollections) {
                     const num = parseInt(col.id.replace('col_', ''), 10);
-                    if (!isNaN(num) && num >= collectionIdCounter) {
-                        collectionIdCounter = num + 1;
-                    }
+                    if (!isNaN(num) && num >= collectionIdCounter) collectionIdCounter = num + 1;
                 }
                 return true;
-            } catch (e) {
-                console.warn('加载工坊数据失败:', e);
-                return false;
-            }
+            } catch (e) { console.warn('加载工坊数据失败:', e); return false; }
         }
 
         window.clearPass = function () {
@@ -2207,12 +2137,8 @@
             showToast(`<i class="fas fa-eraser"></i> 已清除所有通关记录`, 1500);
             console.log('🗑️ clearPass() 已执行');
         };
-
         window.debug = function () {
-            if (isWorkshopMode) {
-                showToast(`<i class="fas fa-info-circle"></i> 工坊模式已全解锁`, 1200);
-                return;
-            }
+            if (isWorkshopMode) { showToast(`<i class="fas fa-info-circle"></i> 工坊模式已全解锁`, 1200); return; }
             unlockedLevelIndex = LEVELS.length - 1;
             saveUnlockedToStorage();
             updateLevelButtons();
@@ -2220,10 +2146,8 @@
             console.log('🔓 调试模式已开启');
             if (currentLevelIndex > unlockedLevelIndex) loadLevel(currentLevelIndex);
         };
-
         console.log('💡 可用命令: clearPass() 清除通关记录 | debug() 解锁所有关卡');
 
-        // ---------- 辅助函数 ----------
         function distance(x1, y1, x2, y2) { return Math.sqrt((x1 - x2) ** 2 + (y1 - y2) ** 2); }
 
         function clamp(v, min, max) { return Math.max(min, Math.min(max, v)); }
@@ -2240,7 +2164,6 @@
             }
             return segs;
         }
-
         function rebuildPath() {
             pathPoints = currentLevel.path;
             startPos = currentLevel.start;
@@ -2259,7 +2182,6 @@
                 projy = p1.y + t * dy;
             return distance(px, py, projx, projy);
         }
-
         function isOnRoad(px, py) {
             if (pathSegments.length === 0) return true;
             let minDist = Infinity;
@@ -2269,7 +2191,6 @@
             }
             return minDist <= PATH_WIDTH;
         }
-
         function getProgress() {
             if (pathSegments.length === 0) return 0;
             let minDist = Infinity,
@@ -2299,16 +2220,9 @@
             return total > 0 ? accumulated / total : 0;
         }
 
-        // ---------- 区域动画系统 ----------
         function initAnim(obj, type) {
-            obj._anim = {
-                type: type,
-                progress: 0,
-                duration: type === 'appear' ? 0.35 : 0.3,
-                active: true
-            };
+            obj._anim = { type: type, progress: 0, duration: type === 'appear' ? 0.35 : 0.3, active: true };
         }
-
         function updateAnimations(dt) {
             const arrays = [fields, boostZones, brakeZones];
             for (const arr of arrays) {
@@ -2324,14 +2238,11 @@
                             if (selectedBoost === obj) selectedBoost = null;
                             if (selectedBrake === obj) selectedBrake = null;
                             continue;
-                        } else {
-                            delete obj._anim;
-                        }
+                        } else delete obj._anim;
                     }
                 }
             }
         }
-
         function getAnimTransform(obj) {
             if (!obj._anim) return { scale: 1, alpha: 1 };
             const p = obj._anim.progress;
@@ -2365,33 +2276,28 @@
             initAnim(obj, 'appear');
             return obj;
         }
-
         function createBoostZone(cx, cy, radius) {
             const obj = { id: boostIdCounter++, cx, cy, radius, strength: radius * BOOST_COEFF };
             initAnim(obj, 'appear');
             return obj;
         }
-
         function createBrakeZone(cx, cy, radius) {
             const obj = { id: brakeIdCounter++, cx, cy, radius, strength: radius * BRAKE_COEFF };
             initAnim(obj, 'appear');
             return obj;
         }
-
         function removeField(field) {
             if (field._anim && field._anim.type === 'disappear') return false;
             field._anim = { type: 'disappear', progress: 0, duration: 0.3, active: true };
             spawnSparks(field.cx, field.cy, 8);
             return true;
         }
-
         function removeBoostZone(zone) {
             if (zone._anim && zone._anim.type === 'disappear') return false;
             zone._anim = { type: 'disappear', progress: 0, duration: 0.3, active: true };
             spawnSparks(zone.cx, zone.cy, 8);
             return true;
         }
-
         function removeBrakeZone(zone) {
             if (zone._anim && zone._anim.type === 'disappear') return false;
             zone._anim = { type: 'disappear', progress: 0, duration: 0.3, active: true };
@@ -2408,7 +2314,6 @@
             }
             return null;
         }
-
         function getBoostAt(x, y) {
             for (let i = boostZones.length - 1; i >= 0; i--) {
                 const z = boostZones[i];
@@ -2418,7 +2323,6 @@
             }
             return null;
         }
-
         function getBrakeAt(x, y) {
             for (let i = brakeZones.length - 1; i >= 0; i--) {
                 const z = brakeZones[i];
@@ -2429,37 +2333,24 @@
             return null;
         }
 
-        // ---------- 内置区域初始化 ----------
         function initBoostZones(level) {
-            const zones = (level.boostZones || []).map(z => ({
-                id: boostIdCounter++,
-                cx: z.cx,
-                cy: z.cy,
-                radius: z.radius || DEFAULT_RADIUS,
-                strength: (z.radius || DEFAULT_RADIUS) * BOOST_COEFF,
-                builtIn: true
+            return (level.boostZones || []).map(z => ({
+                id: boostIdCounter++, cx: z.cx, cy: z.cy, radius: z.radius ||
+                    DEFAULT_RADIUS, strength: (z.radius || DEFAULT_RADIUS) * BOOST_COEFF, builtIn: true
             }));
-            return zones;
         }
-
         function initBrakeZones(level) {
-            const zones = (level.brakeZones || []).map(z => ({
-                id: brakeIdCounter++,
-                cx: z.cx,
-                cy: z.cy,
-                radius: z.radius || DEFAULT_RADIUS,
-                strength: (z.radius || DEFAULT_RADIUS) * BRAKE_COEFF,
-                builtIn: true
+            return (level.brakeZones || []).map(z => ({
+                id: brakeIdCounter++, cx: z.cx, cy: z.cy, radius: z.radius ||
+                    DEFAULT_RADIUS, strength: (z.radius || DEFAULT_RADIUS) * BRAKE_COEFF, builtIn: true
             }));
-            return zones;
         }
-
-        function initCheckpoints(level) {
-            return (level.checkpoints || []).map(cp => ({ ...cp, passed: false }));
-        }
-
+        function initCheckpoints(level) { return (level.checkpoints || []).map(cp => ({ ...cp, passed: false })); }
         function initEnemies(level) {
-            return (level.enemies || []).map(en => ({ ...en, currentX: en.x, currentY: en.y, trail: [] }));
+            return (level.enemies || []).map(en => ({
+                ...en, currentX: en.x, currentY: en.y,
+                trail: []
+            }));
         }
 
         function resetLevelState() {
@@ -2468,7 +2359,6 @@
             updateCheckpointUI();
             updateCountUI();
         }
-
         function updateCheckpointUI() {
             const total = checkpoints.length;
             if (total > 0) {
@@ -2476,11 +2366,8 @@
                 const passed = checkpoints.filter(c => c.passed).length;
                 cpPassed.textContent = passed;
                 cpTotal.textContent = total;
-            } else {
-                checkpointInfo.style.display = 'none';
-            }
+            } else checkpointInfo.style.display = 'none';
         }
-
         function updateCountUI() {
             const fieldCount = fields.filter(f => !f.builtIn).length;
             const boostCount = boostZones.filter(z => !z.builtIn).length;
@@ -2510,14 +2397,12 @@
                 }, 300);
             }
         }
-
         function updateLevelIcon() {
             let icon = document.getElementById('level-icon');
             if (currentLevelIndex < unlockedLevelIndex || isWorkshopMode) icon.classList.add('PASS');
             else icon.classList.remove('PASS');
         }
 
-        // ---------- 关卡加载与重置 ----------
         function updateLevelCounter() {
             const total = LEVELS.length;
             levelCounter.textContent = `${currentLevelIndex + 1}/${total}`;
@@ -2527,8 +2412,8 @@
             if (gameState === STATE.RUNNING) return;
             const target = clamp(index, 0, LEVELS.length - 1);
             if (!isWorkshopMode && target > unlockedLevelIndex) {
-                showToast(`<i class="fas fa-lock"></i> 请先通关前一关！`, 1500);
-                return;
+                showToast(`<i class="fas fa-lock"></i> 请先通关前一关！`,
+                    1500); return;
             }
             currentLevelIndex = target;
             currentLevel = LEVELS[currentLevelIndex];
@@ -2583,7 +2468,6 @@
             draw();
         }
 
-        // ---------- 状态管理 ----------
         function setState(newState) {
             if (gameState === newState) return;
             gameState = newState;
@@ -2679,9 +2563,8 @@
                 if (!isWorkshopMode) saveUnlockedToStorage();
                 showToast(`<i class="fas fa-unlock"></i> 解锁第 ${next + 1} 关！`, 2000);
                 updateLevelButtons();
-            } else if (currentLevelIndex === LEVELS.length - 1) {
-                showToast(`<i class="fas fa-trophy"></i> 恭喜通关所有关卡！`, 2000);
-            }
+            } else if (currentLevelIndex === LEVELS.length - 1) showToast(`<i class="fas fa-trophy"></i> 恭喜通关所有关卡！`,
+                2000);
         }
 
         function updateLevelButtons() {
@@ -2689,11 +2572,9 @@
             const isLocked = !isWorkshopMode && currentLevelIndex > unlockedLevelIndex;
             btnNextLevel.disabled = (nextIdx >= LEVELS.length || (isLocked && nextIdx > unlockedLevelIndex));
             btnPrevLevel.disabled = currentLevelIndex === 0;
-            if (isLocked) {
-                levelLabel.innerHTML = `第 ${currentLevelIndex + 1} 关 · <span class="lock"><i class="fas fa-lock"></i></span>`;
-            } else {
-                levelLabel.textContent = `第 ${currentLevelIndex + 1} 关 · ${currentLevel.name}`;
-            }
+            if (isLocked) levelLabel.innerHTML =
+                `第 ${currentLevelIndex + 1} 关 · <span class="lock"><i class="fas fa-lock"></i></span>`;
+            else levelLabel.textContent = `第 ${currentLevelIndex + 1} 关 · ${currentLevel.name}`;
             btnNextLevel.title = nextIdx < LEVELS.length ? (nextIdx <= unlockedLevelIndex || isWorkshopMode ? '下一关 (→)' :
                 '🔒 未解锁') : '已是最后一关';
             updateLevelCounter();
@@ -2722,7 +2603,8 @@
 
         function updateFieldStrength(field) {
             field.strength = field.radius * GRAVITY_COEFF;
-            field.color = `hsl(${220 - clamp(field.strength * 8, 0, 180)}, 80%, ${55 + clamp(field.strength * 2, 0, 30)}%)`;
+            field.color =
+                `hsl(${220 - clamp(field.strength * 8, 0, 180)}, 80%, ${55 + clamp(field.strength * 2, 0, 30)}%)`;
         }
 
         function updateBoostStrength(zone) { zone.strength = zone.radius * BOOST_COEFF; }
@@ -2730,14 +2612,15 @@
         function updateBrakeStrength(zone) { zone.strength = zone.radius * BRAKE_COEFF; }
 
         // ---------- Toast ----------
-        const BASE_BOTTOM = 30;
-        const GAP = 2;
-        const TOAST_HEIGHT = 40;
+        const BASE_BOTTOM = 30,
+            GAP = 2,
+            TOAST_HEIGHT = 40;
         let activeToasts = [];
 
         function updatePositions() {
             activeToasts.forEach((el, index) => {
-                const bottom = BASE_BOTTOM + index * (TOAST_HEIGHT + GAP);
+                const bottom = BASE_BOTTOM + index * (TOAST_HEIGHT +
+                    GAP);
                 el.style.bottom = bottom + 'px';
             });
         }
@@ -2750,9 +2633,7 @@
             document.body.appendChild(div);
             activeToasts.unshift(div);
             updatePositions();
-            const timer = setTimeout(() => {
-                hideToast(div);
-            }, duration);
+            const timer = setTimeout(() => { hideToast(div); }, duration);
             div._timer = timer;
         }
 
@@ -2763,9 +2644,7 @@
             const onTransitionEnd = () => {
                 el.removeEventListener('transitionend', onTransitionEnd);
                 const index = activeToasts.indexOf(el);
-                if (index !== -1) {
-                    activeToasts.splice(index, 1);
-                }
+                if (index !== -1) { activeToasts.splice(index, 1); }
                 updatePositions();
                 el.remove();
             };
@@ -2848,26 +2727,222 @@
             }
         }
 
-        // ===================== draw 函数 =====================
+        // ============================================================
+        //  Canvas 自适应
+        // ============================================================
+        let transform = { scale: 1, offsetX: 0, offsetY: 0 };
+
+        function updateTransform() {
+            const cw = canvas.width,
+                ch = canvas.height;
+            if (cw === 0 || ch === 0) {
+                transform.scale = 1;
+                transform.offsetX = 0;
+                transform.offsetY = 0; return;
+            }
+            const scaleX = cw / W,
+                scaleY = ch / H;
+            const s = Math.min(scaleX, scaleY);
+            transform.scale = s;
+            transform.offsetX = (cw - W * s) / 2;
+            transform.offsetY = (ch - H * s) / 2;
+        }
+
+        function screenToGame(sx, sy) {
+            const s = transform.scale,
+                ox = transform.offsetX,
+                oy = transform.offsetY;
+            if (s === 0) return { x: 0, y: 0 };
+            return { x: (sx - ox) / s, y: (sy - oy) / s };
+        }
+
+        function gameToScreen(gx, gy) {
+            const s = transform.scale,
+                ox = transform.offsetX,
+                oy = transform.offsetY;
+            return { x: gx * s + ox, y: gy * s + oy };
+        }
+
+        function resizeCanvas() {
+            const rect = wrapper.getBoundingClientRect();
+            const dpr = window.devicePixelRatio || 1;
+            const w = Math.floor(rect.width * dpr),
+                h = Math.floor(rect.height * dpr);
+            if (w === 0 || h === 0) return;
+            if (canvas.width !== w || canvas.height !== h) {
+                canvas.width = w;
+                canvas.height = h;
+            }
+            canvas.style.width = '100%';
+            canvas.style.height = '100%';
+            updateTransform();
+            draw();
+        }
+        if (window.ResizeObserver) {
+            const ro = new ResizeObserver(() => { resizeCanvas(); });
+            ro.observe(wrapper);
+        }
+        window.addEventListener('resize', resizeCanvas);
+
+        function getMousePos(e) {
+            const rect = canvas.getBoundingClientRect();
+            let clientX, clientY;
+            if (e.touches && e.touches.length > 0) {
+                clientX = e.touches[0].clientX;
+                clientY = e.touches[0].clientY;
+            } else if (e.changedTouches && e.changedTouches.length > 0) {
+                clientX = e
+                    .changedTouches[0].clientX;
+                clientY = e.changedTouches[0].clientY;
+            } else {
+                clientX = e.clientX;
+                clientY = e.clientY;
+            }
+            const sx = (clientX - rect.left) * (canvas.width / rect.width);
+            const sy = (clientY - rect.top) * (canvas.height / rect.height);
+            const g = screenToGame(sx, sy);
+            return { x: g.x, y: g.y, screenX: sx, screenY: sy };
+        }
+
+        // ============================================================
+        //  UI 缩放
+        // ============================================================
+        let uiScaleFactor = 1;
+        const originalFontSizes = new Map();
+
+        function applyUIScale() {
+            const scale = uiScaleFactor;
+            const topbar = document.getElementById('topbar');
+            if (topbar) {
+                topbar.style.transform = `scale(${scale})`;
+                topbar.style.transformOrigin = 'left top';
+            }
+            const menuOverlay = document.getElementById('menuOverlay');
+            if (menuOverlay) menuOverlay.style.zoom = scale;
+            const infoBar = document.getElementById('infoBar');
+            if (infoBar) {
+                let base = originalFontSizes.get(infoBar);
+                if (!base) {
+                    const computed = window.getComputedStyle(infoBar).fontSize;
+                    const px = parseFloat(computed);
+                    if (!isNaN(px) && px > 0) {
+                        base = px;
+                        originalFontSizes.set(infoBar, base);
+                    } else base = 12;
+                }
+                infoBar.style.fontSize = (base * scale) + 'px';
+                const targets = infoBar.querySelectorAll('.info-item, .progress-wrap, .checkpoint-info, .workshop-badge');
+                targets.forEach(el => {
+                    let orig = originalFontSizes.get(el);
+                    if (!orig) {
+                        const computed = window.getComputedStyle(el).fontSize;
+                        const px = parseFloat(computed);
+                        if (!isNaN(px) && px > 0) {
+                            orig = px;
+                            originalFontSizes.set(el, orig);
+                        } else return;
+                    }
+                    el.style.fontSize = (orig * scale) + 'px';
+                });
+                const barLabel = infoBar.querySelector('.bar-label');
+                if (barLabel) {
+                    let orig = originalFontSizes.get(barLabel);
+                    if (!orig) {
+                        const computed = window.getComputedStyle(barLabel).fontSize;
+                        const px = parseFloat(computed);
+                        if (!isNaN(px) && px > 0) {
+                            orig = px;
+                            originalFontSizes.set(barLabel, orig);
+                        }
+                    }
+                    if (orig) barLabel.style.fontSize = (orig * scale) + 'px';
+                }
+                const cpSpans = infoBar.querySelectorAll('.cp-passed, .cp-total');
+                cpSpans.forEach(el => {
+                    let orig = originalFontSizes.get(el);
+                    if (!orig) {
+                        const computed = window.getComputedStyle(el).fontSize;
+                        const px = parseFloat(computed);
+                        if (!isNaN(px) && px > 0) {
+                            orig = px;
+                            originalFontSizes.set(el, orig);
+                        } else return;
+                    }
+                    el.style.fontSize = (orig * scale) + 'px';
+                });
+            }
+        }
+
+        function saveUIScale() { try { localStorage.setItem(UI_SCALE_STORAGE_KEY, String(uiScaleFactor)); } catch (_) { } }
+
+        function restoreUIScale() {
+            try {
+                const saved = localStorage.getItem(UI_SCALE_STORAGE_KEY);
+                if (saved !== null) {
+                    const val = parseFloat(saved);
+                    if (!isNaN(val) && val >= 1 && val <= 4) {
+                        uiScaleFactor = val; if (uiScaleSlider) uiScaleSlider.value =
+                            val; if (uiScaleValue) uiScaleValue.textContent = val;
+                        applyUIScale(); return;
+                    }
+                }
+            } catch (_) { }
+            uiScaleFactor = 1;
+            if (uiScaleSlider) uiScaleSlider.value = 1;
+            if (uiScaleValue) uiScaleValue.textContent = 1;
+            applyUIScale();
+        }
+
+        if (uiScaleSlider && uiScaleValue) {
+            uiScaleSlider.addEventListener('input', function () {
+                let val = parseFloat(this.value);
+                if (isNaN(val) || val < 1) val = 1;
+                if (val > 4) val = 4;
+                this.value = val;
+                uiScaleValue.textContent = val;
+            });
+            uiScaleSlider.addEventListener('change', function () {
+                let val = parseFloat(this.value);
+                if (isNaN(val) || val < 1) {
+                    this.value = 1;
+                    val = 1;
+                }
+                if (val > 4) {
+                    this.value = 4;
+                    val = 4;
+                }
+                uiScaleValue.textContent = val;
+                uiScaleFactor = val;
+                applyUIScale();
+                saveUIScale();
+            });
+        }
+
+        // ============================================================
+        //  绘制函数
+        // ============================================================
         function draw() {
             updateParticles(0.02);
             animTime += 0.02;
-
             if (gameState === STATE.RUNNING) {
                 for (const z of brakeZones) {
                     const dist = distance(car.x, car.y, z.cx, z.cy);
-                    if (dist < z.radius && car.speed > 0.3) {
-                        spawnSparks(car.x, car.y, 1);
-                        break;
-                    }
+                    if (dist < z.radius && car.speed > 0.3) { spawnSparks(car.x, car.y, 1); break; }
                 }
             }
             updateAnimations(0.02);
 
+            ctx.clearRect(0, 0, canvas.width, canvas.height);
             ctx.fillStyle = '#2d5a2d';
-            ctx.fillRect(0, 0, W, H);
+            ctx.fillRect(0, 0, canvas.width, canvas.height);
 
-            // ---- 道路 ----
+            ctx.save();
+            const s = transform.scale,
+                ox = transform.offsetX,
+                oy = transform.offsetY;
+            ctx.translate(ox, oy);
+            ctx.scale(s, s);
+
             if (pathPoints.length > 1) {
                 ctx.beginPath();
                 ctx.moveTo(pathPoints[0].x, pathPoints[0].y);
@@ -2953,7 +3028,8 @@
                         gradCp.addColorStop(0, 'rgba(52, 211, 153, 0.25)');
                         gradCp.addColorStop(1, 'rgba(52, 211, 153, 0)');
                     } else {
-                        gradCp.addColorStop(0, 'rgba(96, 165, 250, 0.2)');
+                        gradCp.addColorStop(0,
+                            'rgba(96, 165, 250, 0.2)');
                         gradCp.addColorStop(1, 'rgba(96, 165, 250, 0)');
                     }
                     ctx.fillStyle = gradCp;
@@ -3076,7 +3152,6 @@
                 }
             }
 
-            // ---- 加速区域 ----
             const isRunning = (gameState === STATE.RUNNING);
             const isFinished = (gameState === STATE.SUCCESS || gameState === STATE.FAIL);
 
@@ -3087,10 +3162,8 @@
                 const distToCar = distance(car.x, car.y, z.cx, z.cy);
                 const isAffecting = (distToCar < z.radius);
                 const radius = z.radius;
-
                 let isLit = false;
                 if (isRunning && isAffecting) isLit = true;
-
                 let fillAlpha = isSelected ? 0.35 : 0.2;
                 let borderAlpha = isSelected ? 0.9 : 0.5;
                 if (isRunning) {
@@ -3102,13 +3175,11 @@
                         borderAlpha = 0.15;
                     }
                 }
-
                 ctx.save();
                 ctx.globalAlpha = anim.alpha;
                 ctx.translate(z.cx, z.cy);
                 ctx.scale(anim.scale, anim.scale);
                 ctx.translate(-z.cx, -z.cy);
-
                 const gradBoost = ctx.createRadialGradient(z.cx, z.cy, 0, z.cx, z.cy, radius);
                 gradBoost.addColorStop(0, `rgba(74, 222, 128, ${fillAlpha})`);
                 gradBoost.addColorStop(0.7, `rgba(74, 222, 128, ${fillAlpha * 0.6})`);
@@ -3117,7 +3188,6 @@
                 ctx.beginPath();
                 ctx.arc(z.cx, z.cy, radius, 0, Math.PI * 2);
                 ctx.fill();
-
                 ctx.strokeStyle = isSelected ? `rgba(74, 222, 128, ${borderAlpha})` :
                     `rgba(74, 222, 128, ${borderAlpha})`;
                 ctx.lineWidth = isSelected ? 3 : 2;
@@ -3126,23 +3196,20 @@
                 ctx.arc(z.cx, z.cy, radius, 0, Math.PI * 2);
                 ctx.stroke();
                 ctx.setLineDash([]);
-
                 ctx.font = '900 18px "Font Awesome 6 Free"';
                 ctx.fillStyle = isLit ? `rgba(74, 222, 128, 0.95)` : `rgba(74, 222, 128, ${isRunning ? 0.2 : 0.7})`;
                 ctx.textAlign = 'center';
                 ctx.textBaseline = 'middle';
                 ctx.fillText('\uf0e7', z.cx, z.cy + 1);
-
                 if (z.builtIn) {
                     ctx.font = '900 14px "Font Awesome 6 Free"';
                     ctx.fillStyle = 'rgba(255, 215, 0, 0.85)';
                     ctx.textAlign = 'center';
                     ctx.textBaseline = 'middle';
-                    const lockX = z.cx + z.radius * 0.55;
-                    const lockY = z.cy - z.radius * 0.55;
+                    const lockX = z.cx + z.radius * 0.55,
+                        lockY = z.cy - z.radius * 0.55;
                     ctx.fillText('\uf023', lockX, lockY);
                 }
-
                 ctx.font = '9px "Segoe UI", monospace';
                 ctx.fillStyle = isLit ? `rgba(74, 222, 128, 0.7)` :
                     `rgba(74, 222, 128, ${isRunning ? 0.15 : 0.4})`;
@@ -3159,8 +3226,7 @@
                     } else {
                         const a = car.angle;
                         dirX = Math.cos(a);
-                        dirY = Math.sin(a);
-                        if (Math.abs(dirX) < 0.01 && Math.abs(dirY) < 0.01) dirX = 1;
+                        dirY = Math.sin(a); if (Math.abs(dirX) < 0.01 && Math.abs(dirY) < 0.01) dirX = 1;
                     }
                     const perpX = -dirY,
                         perpY = dirX;
@@ -3168,7 +3234,6 @@
                     const spacing = radius * 2 / (numLines + 1);
                     const moveSpeed = Math.max(0.3, speed * 0.15);
                     const offset = (animTime * moveSpeed) % spacing;
-
                     ctx.save();
                     ctx.beginPath();
                     ctx.arc(z.cx, z.cy, radius, 0, Math.PI * 2);
@@ -3179,8 +3244,8 @@
                     const halfLen = radius * 1.3;
                     for (let i = 0; i < numLines + 2; i++) {
                         const t = (i - 1) * spacing + offset - radius;
-                        const px = z.cx + t * dirX;
-                        const py = z.cy + t * dirY;
+                        const px = z.cx + t * dirX,
+                            py = z.cy + t * dirY;
                         ctx.beginPath();
                         ctx.moveTo(px + perpX * halfLen, py + perpY * halfLen);
                         ctx.lineTo(px - perpX * halfLen, py - perpY * halfLen);
@@ -3190,15 +3255,14 @@
                     ctx.lineWidth = 0.8;
                     for (let i = 0; i < numLines + 2; i++) {
                         const t = (i - 1) * spacing + offset - radius + spacing * 0.5;
-                        const px = z.cx + t * dirX;
-                        const py = z.cy + t * dirY;
+                        const px = z.cx + t * dirX,
+                            py = z.cy + t * dirY;
                         ctx.beginPath();
                         ctx.moveTo(px + perpX * halfLen * 0.9, py + perpY * halfLen * 0.9);
                         ctx.lineTo(px - perpX * halfLen * 0.9, py - perpY * halfLen * 0.9);
                         ctx.stroke();
                     }
                     ctx.restore();
-
                     ctx.strokeStyle = `rgba(74, 222, 128, 0.15)`;
                     ctx.lineWidth = 2;
                     ctx.shadowColor = 'rgba(74, 222, 128, 0.2)';
@@ -3244,7 +3308,6 @@
                 ctx.restore();
             }
 
-            // ---- 刹车区域 ----
             for (const z of brakeZones) {
                 const anim = getAnimTransform(z);
                 if (anim.alpha < 0.01) continue;
@@ -3252,10 +3315,8 @@
                 const distToCar = distance(car.x, car.y, z.cx, z.cy);
                 const isAffecting = (distToCar < z.radius);
                 const radius = z.radius;
-
                 let isLit = false;
                 if (isRunning && isAffecting) isLit = true;
-
                 let fillAlpha = isSelected ? 0.35 : 0.2;
                 let borderAlpha = isSelected ? 0.9 : 0.5;
                 if (isRunning) {
@@ -3267,13 +3328,11 @@
                         borderAlpha = 0.15;
                     }
                 }
-
                 ctx.save();
                 ctx.globalAlpha = anim.alpha;
                 ctx.translate(z.cx, z.cy);
                 ctx.scale(anim.scale, anim.scale);
                 ctx.translate(-z.cx, -z.cy);
-
                 const gradBrake = ctx.createRadialGradient(z.cx, z.cy, 0, z.cx, z.cy, radius);
                 gradBrake.addColorStop(0, `rgba(248, 113, 113, ${fillAlpha})`);
                 gradBrake.addColorStop(0.7, `rgba(248, 113, 113, ${fillAlpha * 0.6})`);
@@ -3282,7 +3341,6 @@
                 ctx.beginPath();
                 ctx.arc(z.cx, z.cy, radius, 0, Math.PI * 2);
                 ctx.fill();
-
                 ctx.strokeStyle = isSelected ? `rgba(248, 113, 113, ${borderAlpha})` :
                     `rgba(248, 113, 113, ${borderAlpha})`;
                 ctx.lineWidth = isSelected ? 3 : 2;
@@ -3291,29 +3349,25 @@
                 ctx.arc(z.cx, z.cy, radius, 0, Math.PI * 2);
                 ctx.stroke();
                 ctx.setLineDash([]);
-
                 ctx.font = '900 18px "Font Awesome 6 Free"';
                 ctx.fillStyle = isLit ? `rgba(248, 113, 113, 0.95)` : `rgba(248, 113, 113, ${isRunning ? 0.2 : 0.7})`;
                 ctx.textAlign = 'center';
                 ctx.textBaseline = 'middle';
                 ctx.fillText('\uf071', z.cx, z.cy + 1);
-
                 if (z.builtIn) {
                     ctx.font = '900 14px "Font Awesome 6 Free"';
                     ctx.fillStyle = 'rgba(255, 215, 0, 0.85)';
                     ctx.textAlign = 'center';
                     ctx.textBaseline = 'middle';
-                    const lockX = z.cx + z.radius * 0.55;
-                    const lockY = z.cy - z.radius * 0.55;
+                    const lockX = z.cx + z.radius * 0.55,
+                        lockY = z.cy - z.radius * 0.55;
                     ctx.fillText('\uf023', lockX, lockY);
                 }
-
                 ctx.font = '9px "Segoe UI", monospace';
                 ctx.fillStyle = isLit ? `rgba(248, 113, 113, 0.7)` :
                     `rgba(248, 113, 113, ${isRunning ? 0.15 : 0.4})`;
                 ctx.textBaseline = 'top';
                 ctx.fillText(`刹车 r=${Math.round(radius)}`, z.cx, z.cy + radius + 8);
-
                 if (isLit) {
                     ctx.strokeStyle = 'rgba(248, 113, 113, 0.15)';
                     ctx.lineWidth = 2;
@@ -3324,7 +3378,6 @@
                     ctx.stroke();
                     ctx.shadowBlur = 0;
                 }
-
                 if (isSelected) {
                     ctx.strokeStyle = 'rgba(248, 113, 113, 0.4)';
                     ctx.lineWidth = 1;
@@ -3362,7 +3415,6 @@
 
             drawParticles();
 
-            // ---- 引力场 ----
             for (const f of fields) {
                 const anim = getAnimTransform(f);
                 if (anim.alpha < 0.01) continue;
@@ -3454,8 +3506,8 @@
                     ctx.fillStyle = 'rgba(255, 215, 0, 0.85)';
                     ctx.textAlign = 'center';
                     ctx.textBaseline = 'middle';
-                    const lockX = f.cx + f.radius * 0.55;
-                    const lockY = f.cy - f.radius * 0.55;
+                    const lockX = f.cx + f.radius * 0.55,
+                        lockY = f.cy - f.radius * 0.55;
                     ctx.fillText('\uf023', lockX, lockY);
                 }
 
@@ -3515,7 +3567,6 @@
                 ctx.restore();
             }
 
-            // ---- 轨迹 ----
             if (previousTrail.length > 1) {
                 ctx.setLineDash([6, 8]);
                 ctx.strokeStyle = 'rgba(200, 200, 255, 0.3)';
@@ -3548,7 +3599,6 @@
                 }
             }
 
-            // ---- 小车 ----
             const angle = car.angle,
                 cx = car.x,
                 cy = car.y;
@@ -3691,6 +3741,8 @@
                 ctx.textBaseline = 'top';
                 ctx.fillText('点击 "重置" 改进布局', W / 2, H / 2 + 52);
             }
+
+            ctx.restore();
             updateUI();
         }
 
@@ -3791,10 +3843,9 @@
             const allCheckpointsPassed = checkpoints.every(cp => cp.passed);
             if (distance(car.x, car.y, endPos.x, endPos.y) < TARGET_RADIUS + CAR_RADIUS * 0.6) {
                 if (checkpoints.length > 0 && !allCheckpointsPassed) {
-                    showToast(`<i class="fas fa-exclamation-triangle"></i> 请通过所有检查点！`, 2000);
-                } else {
-                    setState(STATE.SUCCESS);
-                }
+                    showToast(
+                        `<i class="fas fa-exclamation-triangle"></i> 请通过所有检查点！`, 2000);
+                } else { setState(STATE.SUCCESS); }
                 return;
             }
             updateUI();
@@ -3819,8 +3870,7 @@
                 if (en.trail.length > 12) en.trail.shift();
                 if (distance(car.x, car.y, en.currentX, en.currentY) < en.radius + CAR_RADIUS) {
                     setState(STATE.FAIL);
-                    showToast(`<i class="fas fa-skull"></i> 被敌人追上！`, 1500);
-                    return;
+                    showToast(`<i class="fas fa-skull"></i> 被敌人追上！`, 1500); return;
                 }
             }
         }
@@ -3828,9 +3878,7 @@
         function updateCheckpoints() {
             if (gameState !== STATE.RUNNING || checkpoints.length === 0) return;
             let nextIdx = -1;
-            for (let i = 0; i < checkpoints.length; i++) {
-                if (!checkpoints[i].passed) { nextIdx = i; break; }
-            }
+            for (let i = 0; i < checkpoints.length; i++) { if (!checkpoints[i].passed) { nextIdx = i; break; } }
             if (nextIdx === -1) return;
             const cp = checkpoints[nextIdx];
             if (distance(car.x, car.y, cp.x, cp.y) < cp.radius + CAR_RADIUS * 0.5) {
@@ -3840,7 +3888,9 @@
             }
         }
 
-        // ---------- 事件绑定 ----------
+        // ============================================================
+        //  鼠标事件 (保留)
+        // ============================================================
         function onCanvasMouseMove(e) {
             const pos = getMousePos(e);
             const mx = pos.x,
@@ -3860,7 +3910,6 @@
             const pos = getMousePos(e);
             const mx = pos.x,
                 my = pos.y;
-
             const field = getFieldAt(mx, my);
             if (field) {
                 selectedField = field;
@@ -3888,7 +3937,6 @@
                 document.addEventListener('mouseup', onDocumentMouseUp);
                 return;
             }
-
             const boost = getBoostAt(mx, my);
             if (boost) {
                 selectedBoost = boost;
@@ -3916,7 +3964,6 @@
                 document.addEventListener('mouseup', onDocumentMouseUp);
                 return;
             }
-
             const brake = getBrakeAt(mx, my);
             if (brake) {
                 selectedBrake = brake;
@@ -3955,7 +4002,6 @@
             const inTrash = isPointInTrash(e.clientX, e.clientY);
             isOverTrash = inTrash;
             trashZone.classList.toggle('drag-over', inTrash);
-
             if (dragMode === 'move' && dragTarget && !inTrash) {
                 const target = dragTarget;
                 const newX = clamp(mx - dragOffsetX, 0, W);
@@ -3995,10 +4041,12 @@
                     removeField(target.ref);
                     showToast(`<i class="fas fa-trash"></i> 已删除引力场`, 1000);
                 } else if (target.type === 'boost') {
-                    removeBoostZone(target.ref);
+                    removeBoostZone(
+                        target.ref);
                     showToast(`<i class="fas fa-trash"></i> 已删除加速区域`, 1000);
                 } else if (target.type === 'brake') {
-                    removeBrakeZone(target.ref);
+                    removeBrakeZone(
+                        target.ref);
                     showToast(`<i class="fas fa-trash"></i> 已删除刹车区域`, 1000);
                 }
                 updateUI();
@@ -4029,26 +4077,22 @@
             if (field) {
                 removeField(field);
                 updateUI();
-                showToast(`<i class="fas fa-trash"></i> 已移除引力场`, 1000);
-                return;
+                showToast(`<i class="fas fa-trash"></i> 已移除引力场`, 1000); return;
             }
             const boost = getBoostAt(mx, my);
             if (boost) {
                 removeBoostZone(boost);
                 updateUI();
-                showToast(`<i class="fas fa-trash"></i> 已移除加速区域`, 1000);
-                return;
+                showToast(`<i class="fas fa-trash"></i> 已移除加速区域`, 1000); return;
             }
             const brake = getBrakeAt(mx, my);
             if (brake) {
                 removeBrakeZone(brake);
                 updateUI();
-                showToast(`<i class="fas fa-trash"></i> 已移除刹车区域`, 1000);
-                return;
+                showToast(`<i class="fas fa-trash"></i> 已移除刹车区域`, 1000); return;
             }
         }
 
-        // ---------- HTML5 拖拽创建 ----------
         function handleDragOver(e) {
             e.preventDefault();
             e.dataTransfer.dropEffect = 'copy';
@@ -4057,14 +4101,12 @@
         function handleDrop(e) {
             e.preventDefault();
             if (gameState !== STATE.LAYOUT) { showToast(`<i class="fas fa-ban"></i> 只能在布局阶段创建`, 1200); return; }
-            const rect = canvas.getBoundingClientRect();
-            const scaleX = canvas.width / rect.width;
-            const scaleY = canvas.height / rect.height;
-            const mx = (e.clientX - rect.left) * scaleX;
-            const my = (e.clientY - rect.top) * scaleY;
+            const pos = getMousePos(e);
+            const mx = pos.x,
+                my = pos.y;
             if (mx < 0 || mx > W || my < 0 || my > H) {
-                showToast(`<i class="fas fa-exclamation-triangle"></i> 请拖拽到画布内部`, 1000);
-                return;
+                showToast(`<i class="fas fa-exclamation-triangle"></i> 请拖拽到画布内部`,
+                    1000); return;
             }
             const type = e.dataTransfer.getData('text/plain') || 'field';
             const radius = Math.min(DEFAULT_RADIUS, MAX_RADIUS);
@@ -4073,11 +4115,13 @@
                 obj = createField(mx, my, radius);
                 fields.push(obj);
                 showToast(`<i class="fas fa-check-circle"></i> 创建引力场 (r=${Math.round(radius)})`, 800);
-            } else if (type === 'boost') {
+            } else if (type ===
+                'boost') {
                 obj = createBoostZone(mx, my, radius);
                 boostZones.push(obj);
                 showToast(`<i class="fas fa-check-circle"></i> 创建加速区域 (r=${Math.round(radius)})`, 800);
-            } else if (type === 'brake') {
+            } else if (type ===
+                'brake') {
                 obj = createBrakeZone(mx, my, radius);
                 brakeZones.push(obj);
                 showToast(`<i class="fas fa-check-circle"></i> 创建刹车区域 (r=${Math.round(radius)})`, 800);
@@ -4132,28 +4176,6 @@
             }
         }
 
-        // ---------- Canvas 自适应 ----------
-        function resizeCanvas() {
-            const rect = wrapper.getBoundingClientRect();
-            const ratio = W / H;
-            let w = rect.width - 16;
-            let h = rect.height - 16;
-            if (w / h > ratio) w = h * ratio;
-            else h = w / ratio;
-            canvas.style.width = Math.floor(w) + 'px';
-            canvas.style.height = Math.floor(h) + 'px';
-        }
-
-        // ---------- 工具函数 ----------
-        function getMousePos(e) {
-            const rect = canvas.getBoundingClientRect();
-            const scaleX = canvas.width / rect.width;
-            const scaleY = canvas.height / rect.height;
-            const clientX = e.clientX || (e.touches && e.touches[0].clientX);
-            const clientY = e.clientY || (e.touches && e.touches[0].clientY);
-            return { x: (clientX - rect.left) * scaleX, y: (clientY - rect.top) * scaleY };
-        }
-
         function isPointInTrash(clientX, clientY) {
             const rect = trashZone.getBoundingClientRect();
             return clientX >= rect.left && clientX <= rect.right &&
@@ -4163,8 +4185,7 @@
         function handleDragStart(e, type) {
             if (gameState !== STATE.LAYOUT) {
                 e.preventDefault();
-                showToast(`<i class="fas fa-ban"></i> 只能在布局阶段创建`, 1200);
-                return;
+                showToast(`<i class="fas fa-ban"></i> 只能在布局阶段创建`, 1200); return;
             }
             e.dataTransfer.setData('text/plain', type);
             e.dataTransfer.effectAllowed = 'copy';
@@ -4175,8 +4196,8 @@
             dragImageElement = el;
             e.dataTransfer.setDragImage(el, 28, 28);
             const cleanup = () => {
-                if (dragImageElement && dragImageElement.parentNode) dragImageElement.parentNode.removeChild(
-                    dragImageElement);
+                if (dragImageElement && dragImageElement.parentNode) dragImageElement.parentNode
+                    .removeChild(dragImageElement);
                 dragImageElement = null;
                 document.removeEventListener('dragend', cleanup);
             };
@@ -4199,21 +4220,15 @@
             workshopBadge.classList.remove('visible');
             menuOverlay.classList.remove('backdrop');
             updateSettingsInfo();
-            // 刷新工坊列表
             renderWorkshopCards();
-            if (gameState !== STATE.LAYOUT) {
-                resetFullLevel();
-            }
+            if (gameState !== STATE.LAYOUT) resetFullLevel();
         }
 
         function hideMenu() {
             menuOverlay.classList.add('hidden');
             backToMenuBtn.classList.add('visible');
-            if (isWorkshopMode) {
-                workshopBadge.classList.add('visible');
-            } else {
-                workshopBadge.classList.remove('visible');
-            }
+            if (isWorkshopMode) workshopBadge.classList.add('visible');
+            else workshopBadge.classList.remove('visible');
         }
 
         function toggleSettings() {
@@ -4223,9 +4238,7 @@
             updateSettingsInfo();
         }
 
-        function closeSettings() {
-            settingsOverlay.classList.remove('visible');
-        }
+        function closeSettings() { settingsOverlay.classList.remove('visible'); }
 
         function updateSettingsInfo() {
             const mode = isWorkshopMode ? '工坊模式 🧪' : '主要游戏 🎯';
@@ -4238,88 +4251,58 @@
         // ============================================================
         //  工坊 · 关卡集管理
         // ============================================================
-
-        // ---------- 数据 ----------
-        let workshopCollections = []; // { id, meta: { levelsName, levelsDescription, author, author_link }, levels, isActive }
+        let workshopCollections = [];
         let collectionIdCounter = 0;
 
-        // ---------- 解析关卡集文件 ----------
         function parseCollectionFile(data) {
-            if (!Array.isArray(data) || data.length === 0) {
-                throw new Error('无效的关卡集文件：数据为空');
-            }
-            // 第一个元素是元数据
+            if (!Array.isArray(data) || data.length === 0) throw new Error('无效的关卡集文件：数据为空');
             const meta = data[0];
-            if (!meta.levelsName || !meta.levelsDescription) {
-                throw new Error('关卡集元数据不完整：缺少 levelsName 或 levelsDescription');
-            }
-            // 后续元素是关卡
+            if (!meta.levelsName || !meta.levelsDescription) throw new Error(
+                '关卡集元数据不完整：缺少 levelsName 或 levelsDescription');
             const levels = data.slice(1);
-            if (levels.length === 0) {
-                throw new Error('关卡集没有包含任何关卡');
-            }
-            // 验证每个关卡
+            if (levels.length === 0) throw new Error('关卡集没有包含任何关卡');
             for (const lv of levels) {
-                if (!lv.name || !lv.start || !lv.end || !lv.path || !Array.isArray(lv.path)) {
-                    throw new Error(`关卡 "${lv.name || '未命名'}" 数据不完整`);
-                }
+                if (!lv.name || !lv.start || !lv.end || !lv.path || !Array.isArray(lv.path)) throw new Error(
+                    `关卡 "${lv.name || '未命名'}" 数据不完整`);
             }
             return { meta, levels };
         }
 
-        // ---------- 导入关卡集 ----------
         function importCollection(file) {
             const reader = new FileReader();
             reader.onload = function (e) {
                 try {
                     const data = JSON.parse(e.target.result);
                     const { meta, levels } = parseCollectionFile(data);
-
-                    // 检查是否已存在同名关卡集
                     const existing = workshopCollections.find(c => c.meta.levelsName === meta.levelsName);
                     if (existing) {
-                        showToast(`<i class="fas fa-exclamation-triangle"></i> 已存在同名关卡集 "${meta.levelsName}"`, 2000);
-                        return;
+                        showToast(`<i class="fas fa-exclamation-triangle"></i> 已存在同名关卡集 "${meta.levelsName}"`,
+                            2000); return;
                     }
-
                     const id = 'col_' + (++collectionIdCounter);
-                    const collection = {
-                        id,
-                        meta: { ...meta },
-                        levels: levels,
-                        isActive: false // 导入时不激活
-                    };
+                    const collection = { id, meta: { ...meta }, levels: levels, isActive: false };
                     workshopCollections.push(collection);
-                    // ===== 新增：保存到 localStorage =====
                     saveWorkshopData();
                     renderWorkshopCards();
-                    showToast(`<i class="fas fa-check-circle"></i> 已导入 "${meta.levelsName}" (${levels.length} 关)`, 1800);
+                    showToast(`<i class="fas fa-check-circle"></i> 已导入 "${meta.levelsName}" (${levels.length} 关)`,
+                        1800);
                     updateWorkshopInfo();
-                } catch (err) {
-                    showToast(`<i class="fas fa-exclamation-triangle"></i> 导入失败: ${err.message}`, 2500);
-                }
+                } catch (err) { showToast(`<i class="fas fa-exclamation-triangle"></i> 导入失败: ${err.message}`, 2500); }
             };
-            reader.onerror = function () {
-                showToast(`<i class="fas fa-exclamation-triangle"></i> 文件读取失败`, 2000);
-            };
+            reader.onerror = function () { showToast(`<i class="fas fa-exclamation-triangle"></i> 文件读取失败`, 2000); };
             reader.readAsText(file);
         }
 
-        // ---------- 加载关卡集（游玩） ----------
         function loadCollection(collection) {
             settingsOverlay.classList.remove('visible');
             workshopOverlay.classList.remove('visible');
-            // 取消所有激活状态
             for (const c of workshopCollections) c.isActive = false;
             collection.isActive = true;
-            // ===== 新增：保存激活状态 =====
             saveWorkshopData();
-
-            // 进入工坊模式
             isWorkshopMode = true;
             mainLevelsBackup = LEVELS;
             LEVELS = collection.levels;
-            unlockedLevelIndex = LEVELS.length - 1; // 全解锁
+            unlockedLevelIndex = LEVELS.length - 1;
             currentLevelIndex = 0;
             hideMenu();
             loadLevel(0);
@@ -4331,40 +4314,30 @@
                 1500);
         }
 
-        // ---------- 删除关卡集 ----------
         function deleteCollection(id) {
             const idx = workshopCollections.findIndex(c => c.id === id);
             if (idx === -1) return;
             const col = workshopCollections[idx];
             if (col.isActive) {
-                // 如果删除的是当前激活的，切换到另一个或退出工坊模式
                 const remaining = workshopCollections.filter((_, i) => i !== idx);
-                if (remaining.length > 0) {
-                    loadCollection(remaining[0]);
-                } else {
-                    // 没有其他关卡集，退出工坊模式
+                if (remaining.length > 0) loadCollection(remaining[0]);
+                else {
                     isWorkshopMode = false;
                     if (mainLevelsBackup) {
                         LEVELS = mainLevelsBackup;
                         mainLevelsBackup = null;
-                    } else {
-                        // 如果主游戏备份丢失，使用默认
-                        LEVELS = DEFAULT_LEVELS;
-                    }
+                    } else LEVELS = DEFAULT_LEVELS;
                     unlockedLevelIndex = 0;
                     loadUnlockedFromStorage();
                     currentLevelIndex = 0;
                     loadLevel(0);
                     workshopBadge.classList.remove('visible');
-                    // ===== 新增：清除激活状态并保存 =====
                     col.isActive = false;
                     saveWorkshopData();
                     showToast(`<i class="fas fa-info-circle"></i> 已退出工坊模式`, 1200);
                 }
             } else {
-                // 删除非激活的关卡集
                 workshopCollections.splice(idx, 1);
-                // ===== 新增：保存 =====
                 saveWorkshopData();
                 renderWorkshopCards();
                 updateWorkshopInfo();
@@ -4372,28 +4345,23 @@
                 showToast(`<i class="fas fa-trash"></i> 已删除 "${col.meta.levelsName}"`, 1200);
                 return;
             }
-            // 如果上面没有返回，说明已经处理了激活状态切换或退出，但需要确保保存和渲染
             renderWorkshopCards();
             updateWorkshopInfo();
             updateSettingsInfo();
         }
 
-        // ---------- 清空所有关卡集 ----------
         function clearAllCollections() {
             if (workshopCollections.length === 0) {
-                showToast(`<i class="fas fa-info-circle"></i> 没有关卡集可清空`, 1200);
-                return;
+                showToast(`<i class="fas fa-info-circle"></i> 没有关卡集可清空`,
+                    1200); return;
             }
             if (!confirm('确定要移除所有关卡集吗？此操作不可撤销。')) return;
-            // 退出工坊模式
             if (isWorkshopMode) {
                 isWorkshopMode = false;
                 if (mainLevelsBackup) {
                     LEVELS = mainLevelsBackup;
                     mainLevelsBackup = null;
-                } else {
-                    LEVELS = DEFAULT_LEVELS;
-                }
+                } else LEVELS = DEFAULT_LEVELS;
                 unlockedLevelIndex = 0;
                 loadUnlockedFromStorage();
                 currentLevelIndex = 0;
@@ -4401,177 +4369,108 @@
                 workshopBadge.classList.remove('visible');
             }
             workshopCollections = [];
-            // ===== 新增：清空存储 =====
-            try {
-                localStorage.removeItem(WORKSHOP_STORAGE_KEY);
-            } catch (_) { /* ignore */ }
+            try { localStorage.removeItem(WORKSHOP_STORAGE_KEY); } catch (_) { }
             renderWorkshopCards();
             updateWorkshopInfo();
             updateSettingsInfo();
             showToast(`<i class="fas fa-eraser"></i> 已清空所有关卡集`, 1500);
         }
 
-        // ---------- 渲染工坊卡片 ----------
         function renderWorkshopCards() {
-            // 清空 content，保留 empty
-            while (workshopContent.firstChild) {
-                workshopContent.removeChild(workshopContent.firstChild);
-            }
-
+            while (workshopContent.firstChild) workshopContent.removeChild(workshopContent.firstChild);
             if (workshopCollections.length === 0) {
-                // 显示空状态
                 const empty = document.createElement('div');
                 empty.className = 'card-empty';
                 empty.id = 'workshopEmpty';
-                empty.innerHTML = `
-                            <i class="fas fa-cubes"></i>
-                        `;
+                empty.innerHTML = `<i class="fas fa-cubes"></i>`;
                 workshopContent.appendChild(empty);
                 updateWorkshopInfo();
                 return;
             }
-
-            // 渲染每个卡片
             for (const col of workshopCollections) {
                 const card = document.createElement('div');
                 card.className = 'workshop-levelsCard';
                 if (col.isActive) card.classList.add('active');
-
                 const levelCount = col.levels.length;
-
-                // --- 处理作者信息 ---
                 const author = col.meta.author || '';
                 const authorLink = col.meta.author_link || '';
                 let authorHtml = '';
                 if (author) {
-                    if (authorLink) {
-                        // 有链接：蓝色可点击，带外部链接图标
-                        authorHtml = `
-                                    <a href="${authorLink}" target="_blank" class="author-link" title="访问作者主页">
-                                        ${author}
-                                        <i class="fas fa-external-link-alt external-icon"></i>
-                                    </a>
-                                `;
-                    } else {
-                        // 无链接：白色普通文本
-                        authorHtml = `<span class="author-name">${author}</span>`;
-                    }
+                    if (authorLink) authorHtml =
+                        `<a href="${authorLink}" target="_blank" class="author-link" title="访问作者主页">${author}<i class="fas fa-external-link-alt external-icon"></i></a>`;
+                    else authorHtml = `<span class="author-name">${author}</span>`;
                 }
-
                 card.innerHTML = `
-                            <div class="card-header">
-                                <span class="card-icon"><i class="fas fa-cube"></i></span>
-                                <span class="card-title" title="${col.meta.levelsName}">${col.meta.levelsName}</span>
-                            </div>
-                            <div class="card-description">${col.meta.levelsDescription}</div>
-                            ${author ? `
-                            <div class="card-author">
-                                <span class="author-label"><i class="fas fa-user" style="font-size:9px;"></i></span>
-                                ${authorHtml}
-                            </div>
-                            ` : ''}
-                            <div class="card-meta">
-                                <span class="card-level-count"><i class="fas fa-layer-group"></i> ${levelCount} 关</span>
-                                <div class="card-actions">
-                                    <button class="card-btn play" data-id="${col.id}"><span class="icon"><i class="fas fa-play"></i></span></button>
-                                    <button class="card-btn delete" data-id="${col.id}">
-                                        <i class="fas fa-trash-alt"></i>
-                                    </button>
-                                </div>
-                            </div>
-                        `;
+                    <div class="card-header"><span class="card-icon"><i class="fas fa-cube"></i></span><span class="card-title" title="${col.meta.levelsName}">${col.meta.levelsName}</span></div>
+                    <div class="card-description">${col.meta.levelsDescription}</div>
+                    ${author ? `<div class="card-author"><span class="author-label"><i class="fas fa-user" style="font-size:9px;"></i></span>${authorHtml}</div>` : ''}
+                    <div class="card-meta"><span class="card-level-count"><i class="fas fa-layer-group"></i> ${levelCount} 关</span>
+                    <div class="card-actions"><button class="card-btn play" data-id="${col.id}"><span class="icon"><i class="fas fa-play"></i></span></button><button class="card-btn delete" data-id="${col.id}"><i class="fas fa-trash-alt"></i></button></div></div>
+                `;
                 workshopContent.appendChild(card);
             }
-
-            // 绑定事件 - 不再检查 isActive，直接加载
             workshopContent.querySelectorAll('.card-btn.play').forEach(btn => {
                 btn.addEventListener('click', (e) => {
-                    e.stopPropagation();
-                    const id = btn.dataset.id;
-                    const col = workshopCollections.find(c => c.id === id);
-                    if (col) {
-                        loadCollection(col);
-                    }
+                    e.stopPropagation(); const id = btn.dataset.id; const col =
+                        workshopCollections.find(c => c.id === id); if (col) loadCollection(col);
+                });
+                btn.addEventListener('touchstart', (e) => { if (e.touches.length === 1) { /* let click handle */ } }, {
+                    passive: true
                 });
             });
-
             workshopContent.querySelectorAll('.card-btn.delete').forEach(btn => {
                 btn.addEventListener('click', (e) => {
-                    e.stopPropagation();
-                    const id = btn.dataset.id;
+                    e.stopPropagation(); const id = btn.dataset.id;
                     deleteCollection(id);
                 });
+                btn.addEventListener('touchstart', (e) => { if (e.touches.length === 1) { /* let click handle */ } }, {
+                    passive: true
+                });
             });
-
             updateWorkshopInfo();
         }
 
-        // ---------- 更新工坊信息 ----------
         function updateWorkshopInfo() {
             const count = workshopCollections.length;
             wsCount.textContent = count;
-            const active = workshopCollections.find(c => c.isActive);
-            let infoText = `${count} 个关卡集已加载`;
-            workshopInfo.innerHTML = infoText;
+            workshopInfo.innerHTML = `${count} 个关卡集已加载`;
         }
 
         // ---------- 工坊按钮事件 ----------
-        wsImportBtn.addEventListener('click', () => {
-            workshopFileInput.click();
-        });
-
-        coreFunction.addEventListener('click', () => {
-            neow();
-        });
-
+        wsImportBtn.addEventListener('click', () => { workshopFileInput.click(); });
+        wsImportBtn.addEventListener('touchstart', (e) => { if (e.touches.length === 1) { /* let click handle */ } }, { passive: true });
+        coreFunction.addEventListener('click', () => { neow(); });
         wsRefreshBtn.addEventListener('click', () => {
             renderWorkshopCards();
             showToast(`<i class="fas fa-sync-alt"></i> 已刷新`, 600);
         });
-
         wsClearAllBtn.addEventListener('click', clearAllCollections);
-
         workshopFileInput.addEventListener('change', (e) => {
-            const file = e.target.files[0];
-            if (file) {
-                importCollection(file);
-            }
+            const file = e.target.files[0]; if (file) importCollection(file);
             workshopFileInput.value = '';
         });
-
-        // 点击工坊按钮时打开工坊面板
         btnWorkshop.addEventListener('click', () => {
             SoundManager.play('click');
             workshopOverlay.classList.toggle('visible');
-            settingsOverlay.classList.remove('visible');
-            if (workshopOverlay.classList.contains('visible')) {
+            settingsOverlay.classList.remove('visible'); if (workshopOverlay.classList.contains('visible'))
                 renderWorkshopCards();
-            }
         });
+        btnWorkshop.addEventListener('touchstart', (e) => { if (e.touches.length === 1) { /* let click handle */ } }, { passive: true });
 
-        // ---------- 主菜单按钮 ----------
         btnStartGame.addEventListener('click', () => {
-
             SoundManager.play('click');
-
             settingsOverlay.classList.remove('visible');
             workshopOverlay.classList.remove('visible');
-            // 退出工坊模式，回到主要游戏
             if (isWorkshopMode) {
-                // ===== 新增：清除激活状态并保存 =====
                 const active = workshopCollections.find(c => c.isActive);
                 if (active) {
                     active.isActive = false;
                     saveWorkshopData();
                 }
-                // 如果有备份，恢复
                 if (mainLevelsBackup) {
                     LEVELS = mainLevelsBackup;
                     mainLevelsBackup = null;
-                } else {
-                    // 否则使用默认
-                    LEVELS = DEFAULT_LEVELS;
-                }
+                } else LEVELS = DEFAULT_LEVELS;
                 isWorkshopMode = false;
                 unlockedLevelIndex = 0;
                 loadUnlockedFromStorage();
@@ -4580,33 +4479,26 @@
                 workshopBadge.classList.remove('visible');
                 showToast(`<i class="fas fa-arrow-left"></i> 已退出工坊模式，回到主要游戏`, 1500);
             }
-            // 如果当前已经在主要游戏模式，直接开始
             hideMenu();
-            // 如果当前关卡被锁定，跳转到可玩的
-            if (!isWorkshopMode && currentLevelIndex > unlockedLevelIndex) {
-                loadLevel(unlockedLevelIndex);
-            }
+            if (!isWorkshopMode && currentLevelIndex > unlockedLevelIndex) loadLevel(unlockedLevelIndex);
             resetFullLevel();
             const levelName = currentLevel ? currentLevel.name : '未知关卡';
             showToast(`<i class="fas fa-play"></i> 开始主要游戏 · ${levelName}`, 1200);
             updateSettingsInfo();
         });
+        btnStartGame.addEventListener('touchstart', (e) => { if (e.touches.length === 1) { /* let click handle */ } }, { passive: true });
 
         btnSettings.addEventListener('click', toggleSettings);
-        settingsOverlay.addEventListener('click', (e) => {
-            if (e.target === settingsOverlay) closeSettings();
-        });
-
+        btnSettings.addEventListener('touchstart', (e) => { if (e.touches.length === 1) { /* let click handle */ } }, { passive: true });
+        settingsOverlay.addEventListener('click', (e) => { if (e.target === settingsOverlay) closeSettings(); });
         btnResetProgress.addEventListener('click', () => {
-            if (isWorkshopMode) {
-                showToast(`<i class="fas fa-info-circle"></i> 工坊模式无进度记录`, 1200);
-                return;
-            }
+            if (isWorkshopMode) { showToast(`<i class="fas fa-info-circle"></i> 工坊模式无进度记录`, 1200); return; }
             if (confirm('确定要清除所有通关进度吗？')) {
                 clearPass();
                 closeSettings();
             }
         });
+        btnResetProgress.addEventListener('touchstart', (e) => { if (e.touches.length === 1) { /* let click handle */ } }, { passive: true });
 
         backToMenuBtn.addEventListener('click', () => {
             if (gameState === STATE.RUNNING) {
@@ -4615,6 +4507,7 @@
             }
             showMenu();
         });
+        backToMenuBtn.addEventListener('touchstart', (e) => { if (e.touches.length === 1) { /* let click handle */ } }, { passive: true });
 
         // ---------- 原有事件绑定 ----------
         canvas.addEventListener('mousemove', onCanvasMouseMove);
@@ -4635,10 +4528,12 @@
             if (gameState === STATE.RUNNING) return;
             loadLevel(currentLevelIndex - 1);
         });
+        btnPrevLevel.addEventListener('touchstart', (e) => { if (e.touches.length === 1) { /* let click handle */ } }, { passive: true });
         btnNextLevel.addEventListener('click', () => {
             if (gameState === STATE.RUNNING) return;
             loadLevel(currentLevelIndex + 1);
         });
+        btnNextLevel.addEventListener('touchstart', (e) => { if (e.touches.length === 1) { /* let click handle */ } }, { passive: true });
 
         window.addEventListener('resize', resizeCanvas);
 
@@ -4649,8 +4544,7 @@
             if (gameState === STATE.RUNNING) {
                 for (let i = 0; i < 2; i++) {
                     updatePhysics();
-                    updateLevelIcon();
-                    if (gameState !== STATE.RUNNING) break;
+                    updateLevelIcon(); if (gameState !== STATE.RUNNING) break;
                 }
             }
             draw();
@@ -4658,14 +4552,13 @@
         }
 
         // ============================================================
-        //  音效管理器 (SoundManager)
+        //  音效管理器
         // ============================================================
         const SoundManager = {
             sounds: {},
             ctx: null,
             initialized: false,
-            globalVolume: 1.0, // 默认 100%
-
+            globalVolume: 1.0,
             init() {
                 try {
                     this.ctx = new (window.AudioContext || window.webkitAudioContext)();
@@ -4678,32 +4571,22 @@
                     showToast('err on load sounds: ' + e)
                 }
             },
-
             loadSound(name, url) {
                 if (!this.ctx) return;
-                fetch(url)
-                    .then(res => res.arrayBuffer())
-                    .then(buffer => this.ctx.decodeAudioData(buffer))
-                    .then(decoded => {
-                        this.sounds[name] = decoded;
-                    })
-                    .catch(err => console.warn(`加载音效 ${name} 失败:`, err));
+                fetch(url).then(res => res.arrayBuffer()).then(buffer => this.ctx.decodeAudioData(buffer)).then(decoded => {
+                    this.sounds[name] = decoded;
+                }).catch(err => console.warn(`加载音效 ${name} 失败:`, err));
             },
-
             setGlobalVolume(vol) {
                 this.globalVolume = Math.max(0, Math.min(1, vol));
-                // 保存到 localStorage
                 try {
                     const val = Math.round(vol * 100);
                     localStorage.setItem(VOLUME_STORAGE_KEY, String(val));
-                } catch (_) { /* ignore */ }
+                } catch (_) { }
             },
-
             play(name, volume = 0.6) {
                 if (!this.initialized || !this.ctx || this.ctx.state === 'suspended') {
-                    if (this.ctx && this.ctx.state === 'suspended') {
-                        this.ctx.resume().catch(() => { });
-                    }
+                    if (this.ctx && this.ctx.state === 'suspended') this.ctx.resume().catch(() => { });
                     return;
                 }
                 const buffer = this.sounds[name];
@@ -4717,14 +4600,12 @@
                     source.connect(gain);
                     gain.connect(this.ctx.destination);
                     source.start(0);
-                } catch (e) {
-                    // 静默忽略
-                }
+                } catch (e) { }
             }
         };
 
         // ============================================================
-        //  音量恢复与绑定（新增）
+        //  音量恢复与绑定
         // ============================================================
         function restoreVolume() {
             try {
@@ -4732,86 +4613,332 @@
                 if (saved !== null) {
                     const val = parseInt(saved, 10);
                     if (!isNaN(val) && val >= 0 && val <= 100) {
-                        // 设置 UI
-                        if (volumeSlider) volumeSlider.value = val;
-                        if (volumeInput) volumeInput.value = val;
-                        // 设置 SoundManager
-                        SoundManager.setGlobalVolume(val / 100);
-                        return;
+                        if (volumeSlider) volumeSlider.value = val; if (volumeInput)
+                            volumeInput.value = val;
+                        SoundManager.setGlobalVolume(val / 100); return;
                     }
                 }
-            } catch (_) { /* ignore */ }
-            // 默认 60%
+            } catch (_) { }
             if (volumeSlider) volumeSlider.value = 60;
             if (volumeInput) volumeInput.value = 60;
             SoundManager.setGlobalVolume(0.6);
         }
 
         function bindVolumeControls() {
-            // 滑块 → 输入框 + SoundManager + 存储
-            if (volumeSlider) {
-                volumeSlider.addEventListener('input', function () {
-                    const val = parseInt(this.value, 10);
-                    if (volumeInput) volumeInput.value = val;
-                    SoundManager.setGlobalVolume(val / 100);
-                    // setGlobalVolume 已负责存储
-                });
-            }
-
-            // 输入框 → 滑块 + SoundManager + 存储
+            if (volumeSlider) volumeSlider.addEventListener('input', function () {
+                const val = parseInt(this.value, 10); if (
+                    volumeInput) volumeInput.value = val;
+                SoundManager.setGlobalVolume(val / 100);
+            });
             if (volumeInput) {
                 volumeInput.addEventListener('input', function () {
-                    let val = parseInt(this.value, 10);
-                    if (isNaN(val)) val = 0;
+                    let val = parseInt(this.value, 10); if (isNaN(val)) val =
+                        0;
                     val = Math.max(0, Math.min(100, val));
-                    // 修正显示
-                    this.value = val;
-                    if (volumeSlider) volumeSlider.value = val;
+                    this.value = val; if (volumeSlider) volumeSlider.value = val;
                     SoundManager.setGlobalVolume(val / 100);
                 });
-
-                // 失焦时再次修正（防止用户输入了非法值）
                 volumeInput.addEventListener('blur', function () {
-                    let val = parseInt(this.value, 10);
-                    if (isNaN(val)) val = 0;
+                    let val = parseInt(this.value, 10); if (isNaN(val)) val =
+                        0;
                     val = Math.max(0, Math.min(100, val));
-                    this.value = val;
-                    if (volumeSlider) volumeSlider.value = val;
+                    this.value = val; if (volumeSlider) volumeSlider.value = val;
                     SoundManager.setGlobalVolume(val / 100);
                 });
             }
         }
 
         // ============================================================
-        //  启动：加载外部关卡或使用默认
+        //  🖐️ 触摸屏支持 (核心新增)
+        // ============================================================
+        let touchDragState = { active: false, type: null, preview: null, startX: 0, startY: 0, currentX: 0, currentY: 0 };
+
+        function startToolTouchDrag(e, type) {
+            e.preventDefault();
+            if (gameState !== STATE.LAYOUT) {
+                showToast(`<i class="fas fa-ban"></i> 只能在布局阶段创建`, 1200);
+                return;
+            }
+            if (touchDragState.active) return;
+
+            const touch = e.touches[0];
+            if (!touch) return;
+
+            touchDragState.active = true;
+            touchDragState.type = type;
+            touchDragState.startX = touch.clientX;
+            touchDragState.startY = touch.clientY;
+            touchDragState.currentX = touch.clientX;
+            touchDragState.currentY = touch.clientY;
+
+            // ===== 创建预览元素（样式完全由 CSS 控制） =====
+            const el = createDragImage(type);   // 现在只返回带有类名的元素
+            el.classList.add('active');         // 触发缩放动画
+            el.style.left = touch.clientX + 'px';
+            el.style.top = touch.clientY + 'px';
+            document.body.appendChild(el);
+            touchDragState.preview = el;
+
+            document.addEventListener('touchmove', onToolTouchMove, { passive: false });
+            document.addEventListener('touchend', onToolTouchEnd, { passive: false });
+            document.addEventListener('touchcancel', onToolTouchEnd, { passive: false });
+        }
+
+        function onToolTouchMove(e) {
+            e.preventDefault();
+            if (!touchDragState.active || !touchDragState.preview) return;
+            const touch = e.touches[0];
+            if (!touch) return;
+            touchDragState.currentX = touch.clientX;
+            touchDragState.currentY = touch.clientY;
+            touchDragState.preview.style.left = touch.clientX + 'px';
+            touchDragState.preview.style.top = touch.clientY + 'px';
+        }
+
+        function onToolTouchEnd(e) {
+            document.removeEventListener('touchmove', onToolTouchMove);
+            document.removeEventListener('touchend', onToolTouchEnd);
+            document.removeEventListener('touchcancel', onToolTouchEnd);
+            if (!touchDragState.active) { cleanupTouchDrag(); return; }
+            const touch = e.changedTouches ? e.changedTouches[0] : null;
+            if (!touch) { cleanupTouchDrag(); return; }
+            const rect = canvas.getBoundingClientRect();
+            const inCanvas = touch.clientX >= rect.left && touch.clientX <= rect.right &&
+                touch.clientY >= rect.top && touch.clientY <= rect.bottom;
+            if (inCanvas && gameState === STATE.LAYOUT) {
+                const pos = getMousePos({ clientX: touch.clientX, clientY: touch.clientY });
+                const mx = pos.x,
+                    my = pos.y;
+                if (mx >= 0 && mx <= W && my >= 0 && my <= H) {
+                    const radius = Math.min(DEFAULT_RADIUS, MAX_RADIUS);
+                    let obj;
+                    if (touchDragState.type === 'field') {
+                        obj = createField(mx, my, radius);
+                        fields.push(obj);
+                        showToast(`<i class="fas fa-check-circle"></i> 创建引力场 (r=${Math.round(radius)})`, 800);
+                    } else if (
+                        touchDragState.type === 'boost') {
+                        obj = createBoostZone(mx, my, radius);
+                        boostZones.push(obj);
+                        showToast(`<i class="fas fa-check-circle"></i> 创建加速区域 (r=${Math.round(radius)})`, 800);
+                    } else if (
+                        touchDragState.type === 'brake') {
+                        obj = createBrakeZone(mx, my, radius);
+                        brakeZones.push(obj);
+                        showToast(`<i class="fas fa-check-circle"></i> 创建刹车区域 (r=${Math.round(radius)})`, 800);
+                    }
+                    updateUI();
+                } else showToast(`<i class="fas fa-exclamation-triangle"></i> 请拖拽到画布内部`, 1000);
+            } else showToast(`<i class="fas fa-exclamation-triangle"></i> 请拖拽到画布内部`, 1000);
+            cleanupTouchDrag();
+        }
+
+        function cleanupTouchDrag() {
+            if (touchDragState.preview && touchDragState.preview.parentNode) touchDragState.preview.parentNode.removeChild(
+                touchDragState.preview);
+            touchDragState.active = false;
+            touchDragState.type = null;
+            touchDragState.preview = null;
+        }
+
+        let touchCanvasState = {
+            active: false, touchId: null, target: null, mode: null, offsetX: 0, offsetY: 0,
+            startRadius: 0, startDist: 0
+        };
+
+        function onCanvasTouchStart(e) {
+            if (touchDragState.active) return;
+            if (gameState !== STATE.LAYOUT) return;
+            e.preventDefault();
+            const touch = e.touches[0];
+            if (!touch) return;
+            const pos = getMousePos({ clientX: touch.clientX, clientY: touch.clientY });
+            const mx = pos.x,
+                my = pos.y;
+            const field = getFieldAt(mx, my);
+            if (field) {
+                selectedField = field;
+                selectedBoost = null;
+                selectedBrake = null;
+                const dist = distance(mx, my, field.cx, field.cy);
+                const ratio = field.radius > 0 ? dist / field.radius : 0;
+                if (ratio < MOVE_THRESHOLD) {
+                    touchCanvasState.mode = 'move';
+                    touchCanvasState.offsetX = mx - field.cx;
+                    touchCanvasState.offsetY = my - field.cy;
+                } else {
+                    touchCanvasState.mode = 'resize';
+                    touchCanvasState.startRadius = field.radius;
+                    touchCanvasState.startDist = dist;
+                }
+                touchCanvasState.active = true;
+                touchCanvasState.target = { type: 'field', ref: field };
+                document.addEventListener('touchmove', onCanvasTouchMove, { passive: false });
+                document.addEventListener('touchend', onCanvasTouchEnd, { passive: false });
+                document.addEventListener('touchcancel', onCanvasTouchEnd, { passive: false });
+                return;
+            }
+            const boost = getBoostAt(mx, my);
+            if (boost) {
+                selectedBoost = boost;
+                selectedField = null;
+                selectedBrake = null;
+                const dist = distance(mx, my, boost.cx, boost.cy);
+                const ratio = boost.radius > 0 ? dist / boost.radius : 0;
+                if (ratio < MOVE_THRESHOLD) {
+                    touchCanvasState.mode = 'move';
+                    touchCanvasState.offsetX = mx - boost.cx;
+                    touchCanvasState.offsetY = my - boost.cy;
+                } else {
+                    touchCanvasState.mode = 'resize';
+                    touchCanvasState.startRadius = boost.radius;
+                    touchCanvasState.startDist = dist;
+                }
+                touchCanvasState.active = true;
+                touchCanvasState.target = { type: 'boost', ref: boost };
+                document.addEventListener('touchmove', onCanvasTouchMove, { passive: false });
+                document.addEventListener('touchend', onCanvasTouchEnd, { passive: false });
+                document.addEventListener('touchcancel', onCanvasTouchEnd, { passive: false });
+                return;
+            }
+            const brake = getBrakeAt(mx, my);
+            if (brake) {
+                selectedBrake = brake;
+                selectedField = null;
+                selectedBoost = null;
+                const dist = distance(mx, my, brake.cx, brake.cy);
+                const ratio = brake.radius > 0 ? dist / brake.radius : 0;
+                if (ratio < MOVE_THRESHOLD) {
+                    touchCanvasState.mode = 'move';
+                    touchCanvasState.offsetX = mx - brake.cx;
+                    touchCanvasState.offsetY = my - brake.cy;
+                } else {
+                    touchCanvasState.mode = 'resize';
+                    touchCanvasState.startRadius = brake.radius;
+                    touchCanvasState.startDist = dist;
+                }
+                touchCanvasState.active = true;
+                touchCanvasState.target = { type: 'brake', ref: brake };
+                document.addEventListener('touchmove', onCanvasTouchMove, { passive: false });
+                document.addEventListener('touchend', onCanvasTouchEnd, { passive: false });
+                document.addEventListener('touchcancel', onCanvasTouchEnd, { passive: false });
+                return;
+            }
+            clearSelection();
+        }
+
+        function onCanvasTouchMove(e) {
+            if (!touchCanvasState.active) return;
+            e.preventDefault();
+            const touch = e.touches[0];
+            if (!touch) return;
+            const pos = getMousePos({ clientX: touch.clientX, clientY: touch.clientY });
+            const mx = pos.x,
+                my = pos.y;
+            const rect = trashZone.getBoundingClientRect();
+            const inTrash = touch.clientX >= rect.left && touch.clientX <= rect.right &&
+                touch.clientY >= rect.top && touch.clientY <= rect.bottom;
+            trashZone.classList.toggle('drag-over', inTrash);
+            if (!touchCanvasState.target) return;
+            if (touchCanvasState.mode === 'move' && !inTrash) {
+                const target = touchCanvasState.target;
+                const newX = clamp(mx - touchCanvasState.offsetX, 0, W);
+                const newY = clamp(my - touchCanvasState.offsetY, 0, H);
+                if (target.type === 'field') {
+                    target.ref.cx = newX;
+                    target.ref.cy = newY;
+                } else if (target.type === 'boost') {
+                    target.ref.cx = newX;
+                    target.ref.cy = newY;
+                } else if (target.type === 'brake') {
+                    target.ref.cx = newX;
+                    target.ref.cy = newY;
+                }
+            } else if (touchCanvasState.mode === 'resize' && !inTrash) {
+                const target = touchCanvasState.target;
+                const dist = distance(mx, my, target.ref.cx, target.ref.cy);
+                let newRadius = Math.max(dist, MIN_RADIUS);
+                newRadius = Math.min(newRadius, MAX_RADIUS);
+                target.ref.radius = newRadius;
+                if (target.type === 'field') updateFieldStrength(target.ref);
+                else if (target.type === 'boost') updateBoostStrength(target.ref);
+                else if (target.type === 'brake') updateBrakeStrength(target.ref);
+            }
+        }
+
+        function onCanvasTouchEnd(e) {
+            document.removeEventListener('touchmove', onCanvasTouchMove);
+            document.removeEventListener('touchend', onCanvasTouchEnd);
+            document.removeEventListener('touchcancel', onCanvasTouchEnd);
+            if (!touchCanvasState.active) { trashZone.classList.remove('drag-over'); return; }
+            const touch = e.changedTouches ? e.changedTouches[0] : null;
+            if (touch && touchCanvasState.target) {
+                const rect = trashZone.getBoundingClientRect();
+                const inTrash = touch.clientX >= rect.left && touch.clientX <= rect.right &&
+                    touch.clientY >= rect.top && touch.clientY <= rect.bottom;
+                if (inTrash) {
+                    const target = touchCanvasState.target;
+                    if (target.type === 'field') {
+                        removeField(target.ref);
+                        showToast(`<i class="fas fa-trash"></i> 已删除引力场`, 1000);
+                    } else if (target.type === 'boost') {
+                        removeBoostZone(target.ref);
+                        showToast(`<i class="fas fa-trash"></i> 已删除加速区域`, 1000);
+                    } else if (target.type === 'brake') {
+                        removeBrakeZone(target.ref);
+                        showToast(`<i class="fas fa-trash"></i> 已删除刹车区域`, 1000);
+                    }
+                    updateUI();
+                }
+            }
+            touchCanvasState.active = false;
+            touchCanvasState.target = null;
+            touchCanvasState.mode = null;
+            trashZone.classList.remove('drag-over');
+        }
+
+        function bindTouchEvents() {
+            if (dragSource) dragSource.addEventListener('touchstart', (e) => startToolTouchDrag(e, 'field'), { passive: false });
+            if (boostDragSource) boostDragSource.addEventListener('touchstart', (e) => startToolTouchDrag(e, 'boost'), {
+                passive: false
+            });
+            if (brakeDragSource) brakeDragSource.addEventListener('touchstart', (e) => startToolTouchDrag(e, 'brake'), {
+                passive: false
+            });
+            if (canvas) {
+                canvas.addEventListener('touchstart', onCanvasTouchStart, { passive: false });
+                canvas.addEventListener('touchmove', (e) => {
+                    if (gameState === STATE.LAYOUT || gameState === STATE
+                        .RUNNING) e.preventDefault();
+                }, { passive: false });
+            }
+            document.addEventListener('touchmove', (e) => {
+                const target = e.target;
+                if (target && (target.closest('.canvas-wrapper') || target.closest('.toolbar-tools') ||
+                    target.closest('.status-bar') || target.closest('.level-section'))) e.preventDefault();
+            }, { passive: false });
+            console.log('🖐️ 触摸支持已绑定');
+        }
+
+        // ============================================================
+        //  启动
         // ============================================================
         function extractLevels(data) {
             if (!Array.isArray(data)) return [];
-            return data.filter(item => {
-                return item.name && item.start && item.end && item.path && Array.isArray(item.path);
-            });
+            return data.filter(item => item.name && item.start && item.end && item.path && Array.isArray(item.path));
         }
 
-        // ===== 修改：initGame 中加载工坊数据 =====
         function initGame(levels) {
             SoundManager.init();
-
-            // 恢复音量（必须在 SoundManager.init() 之后）
             restoreVolume();
             bindVolumeControls();
-
-            // 1. 从 localStorage 加载工坊数据
+            restoreUIScale();
             loadWorkshopData();
-
-            // 2. 设置 LEVELS
             LEVELS = levels;
             isWorkshopMode = false;
             mainLevelsBackup = null;
-
-            // 3. 检查是否有激活的工坊关卡集
             const activeCollection = workshopCollections.find(c => c.isActive);
             if (activeCollection && activeCollection.levels && activeCollection.levels.length > 0) {
-                // 验证激活的关卡集是否有效
                 isWorkshopMode = true;
                 mainLevelsBackup = LEVELS;
                 LEVELS = activeCollection.levels;
@@ -4820,78 +4947,60 @@
                 workshopBadge.classList.add('visible');
                 console.log('🧪 恢复工坊模式，激活关卡集:', activeCollection.meta.levelsName);
             } else {
-                // 清除无效的激活状态
                 if (activeCollection) {
                     activeCollection.isActive = false;
                     saveWorkshopData();
                 }
-                // 主要游戏模式
                 loadUnlockedFromStorage();
                 currentLevelIndex = 0;
                 workshopBadge.classList.remove('visible');
             }
-
-            // 4. 加载关卡
             loadLevel(currentLevelIndex);
-            resizeCanvas();
+            requestAnimationFrame(() => { resizeCanvas(); });
             if (animId) cancelAnimationFrame(animId);
             gameLoop();
             showMenu();
             updateSettingsInfo();
             renderWorkshopCards();
             updateWorkshopInfo();
+            bindTouchEvents();
             setTimeout(() => {
-                const toolbar = document.getElementById('toolbar');
-                if (toolbar) toolbar.style.width = toolbar.offsetWidth + 'px';
+                const toolbar = document.getElementById('toolbar'); if (toolbar) toolbar.style.width = toolbar
+                    .offsetWidth + 'px';
             }, 100);
             console.log('🎮 游戏已启动，关卡数:', LEVELS.length);
             console.log('💡 可用命令: clearPass() 清除记录 | debug() 解锁所有关卡');
             console.log('💡 工坊数据已持久化存储，共', workshopCollections.length, '个关卡集');
+            console.log('📐 Canvas 自适应已启用，像素匹配 wrapper 尺寸');
+            console.log('🖐️ 触摸支持已启用 (长按工具拖拽，单指移动/缩放区域)');
         }
 
         fetch('level.gcms')
-            .then(response => {
-                if (!response.ok) throw new Error(`HTTP ${response.status}`);
-                return response.json();
-            })
+            .then(response => { if (!response.ok) throw new Error(`HTTP ${response.status}`); return response.json(); })
             .then(data => {
                 if (Array.isArray(data) && data.length > 0) {
                     const levels = extractLevels(data);
                     if (levels.length > 0) {
                         console.log('✅ 成功加载外部关卡数据，共', levels.length, '关');
                         initGame(levels);
-                    } else {
-                        throw new Error('未找到有效关卡数据');
-                    }
-                } else {
-                    throw new Error('数据格式错误');
-                }
+                    } else throw new Error('未找到有效关卡数据');
+                } else throw new Error('数据格式错误');
             })
             .catch(err => {
                 console.warn('⚠️ 关卡集加载失败:', err.message);
-                // 使用默认关卡
                 initGame(DEFAULT_LEVELS);
                 showToast('err on load levels: ' + err.message, 1200);
             });
 
-        // ========== 暴露调试工具 ==========
         window.workshop = {
-            collections: workshopCollections,
-            import: importCollection,
-            render: renderWorkshopCards,
-            clear: clearAllCollections,
-            save: saveWorkshopData,
-            load: loadWorkshopData
+            collections: workshopCollections, import: importCollection, render: renderWorkshopCards,
+            clear: clearAllCollections, save: saveWorkshopData, load: loadWorkshopData
         };
         console.log('🔧 工坊调试: window.workshop 可用');
 
-        // ========== 猫叫 ==========
-        const catSounds = [
-            "喵", "咪", "咪呜", "喵呜", "喵呀", "喵~", "喵呜~", "呜~~~喵",
-            "呜喵", "咪呜咪呜", "咪呀！", "喵咦？", "咪咪咪", "喵喵喵喵喵",
-            "喵嗷！", "嘶哈！", "呵——！", "嗷嗷嗷", "哇嗷——", "嗷呜嗷呜",
-            "呜哇嗷！", "喵呜咦？", "喵嗷呜呜", "呃嗷...", "Meow", "Mew",
-            "Mrrow", "Mreeeow", "Brrr", "咕噜噜", "咕噜咕噜"
+        const catSounds = ["喵", "咪", "咪呜", "喵呜", "喵呀", "喵~", "喵呜~", "呜~~~喵", "呜喵", "咪呜咪呜", "咪呀！", "喵咦？", "咪咪咪",
+            "喵喵喵喵喵", "喵嗷！", "嘶哈！", "呵——！", "嗷嗷嗷", "哇嗷——", "嗷呜嗷呜", "呜哇嗷！", "喵呜咦？", "喵嗷呜呜", "呃嗷...", "Meow",
+            "Mew", "Mrrow", "Mreeeow", "Brrr", "咕噜噜", "咕噜咕噜"
         ];
 
         function neow() {
@@ -4900,12 +5009,245 @@
             showToast(`<i class="fas fa-paw"></i>猫说：${catSounds[randomIndex]}`);
         }
 
-        // 页面加载后初始化 SoundManager，点击页面恢复 AudioContext
         document.addEventListener('click', () => {
-            if (SoundManager.ctx && SoundManager.ctx.state === 'suspended') {
-                SoundManager.ctx.resume().catch(() => { });
-            }
+            if (SoundManager.ctx && SoundManager.ctx.state === 'suspended') SoundManager
+                .ctx.resume().catch(() => { });
         }, { once: false });
+
+        // ================================================================
+        //  新手教程 (触摸适配)
+        // ================================================================
+        (function () {
+            'use strict';
+            const CONFIG = {
+                boxColor: '#4a9eff', boxBorderWidth: '2px', shadowColor: 'rgba(0, 0, 0, 0.82)',
+                toastDuration: 5000, transitionDuration: 400, regionShowDuration: 4000, autoCloseDelay: 500
+            };
+            let isRunning = false,
+                aborted = false,
+                focusBox = null;
+            const $ = (s) => document.querySelector(s);
+            const sleep = (ms) => new Promise(r => setTimeout(r, ms));
+
+            function getShadowSize() {
+                const maxDim = Math.max(window.innerWidth, window.innerHeight); return Math.ceil(
+                    maxDim * 1.8) + 'px';
+            }
+
+            function createFocusUI() {
+                const container = document.createElement('div');
+                container.id = 'tutorial-container';
+                container.style.cssText =
+                    `position: fixed; top:0; left:0; width:100%; height:100%; pointer-events: none; z-index: 10000; display: none;`;
+                const box = document.createElement('div');
+                box.id = 'tutorial-focus-box';
+                box.style.cssText =
+                    `position: absolute; border: ${CONFIG.boxBorderWidth} solid ${CONFIG.boxColor}; transition: all ${CONFIG.transitionDuration}ms ease; pointer-events: none; border-radius: 0 !important; background: transparent; z-index: 10001; box-sizing: border-box;`;
+                container.appendChild(box);
+                document.body.appendChild(container);
+                return {
+                    container,
+                    box,
+                    show() { container.style.display = 'block'; },
+                    hide() { container.style.display = 'none'; },
+                    updateShadow() {
+                        const size = getShadowSize(); this.box.style.boxShadow =
+                            `0 0 0 ${size} ${CONFIG.shadowColor}`;
+                    },
+                    focus(el, padding = 4) {
+                        if (!el) { this.hide(); return; } this.updateShadow(); const rect = el
+                            .getBoundingClientRect(); const p = padding; this.box.style.left = (rect.left + window
+                                .scrollX - p) + 'px'; this.box.style.top = (rect.top + window.scrollY - p) +
+                                    'px'; this.box.style.width = (rect.width + p * 2) + 'px'; this.box.style.height = (
+                                        rect.height + p * 2) + 'px'; this.show();
+                    },
+                    focusScreen() {
+                        this.updateShadow(); const w = window.innerWidth,
+                            h = window.innerHeight,
+                            p = 20; this.box.style.left = p + 'px'; this.box.style.top = p + 'px'; this.box.style
+                                .width = (w - p * 2) + 'px'; this.box.style.height = (h - p * 2) + 'px'; this.show();
+                    },
+                    clear() {
+                        this.hide(); this.box.style.left = '-9999px'; this.box.style.top = '-9999px'; this.box
+                            .style.width = '0px'; this.box.style.height = '0px';
+                    }
+                };
+            }
+
+            function toast(msg, duration) {
+                if (typeof window.showToast === 'function') window.showToast(msg, duration || CONFIG.toastDuration);
+                else {
+                    const div = document.createElement('div');
+                    div.innerHTML = msg;
+                    div.style.cssText =
+                        `position: fixed; bottom: 30px; right: 10px; color: #e0e0f0; background: #00000060; padding: 8px 14px; font-size: 15px; font-weight: 600; z-index: 99999; border-radius: 3px; pointer-events: none; transition: opacity 0.3s ease; backdrop-filter: blur(2px);`;
+                    document.body.appendChild(div);
+                    setTimeout(() => {
+                        div.style.opacity = '0';
+                        setTimeout(() => div.remove(), 400);
+                    }, duration || CONFIG.toastDuration);
+                }
+            }
+
+            function setWorkshopVisible(visible) {
+                const el = $('#workshopOverlay'); if (el) el.classList.toggle('visible',
+                    visible);
+            }
+
+            function setSettingsVisible(visible) {
+                const el = $('#settingsOverlay'); if (el) el.classList.toggle('visible',
+                    visible);
+            }
+
+            function waitForTap(selector, timeout = 30000) {
+                return new Promise((resolve, reject) => {
+                    const el = $(selector);
+                    if (!el) return reject(new Error(`元素未找到: ${selector}`));
+                    let timer = setTimeout(() => {
+                        el.removeEventListener('click', handler);
+                        el.removeEventListener('touchstart', handler);
+                        reject(new Error(`点击超时: ${selector}`));
+                    }, timeout);
+
+                    function handler(e) {
+                        el.removeEventListener('click', handler);
+                        el.removeEventListener('touchstart', handler);
+                        clearTimeout(timer);
+                        resolve(e);
+                    }
+                    el.addEventListener('click', handler);
+                    el.addEventListener('touchstart', handler, { passive: true });
+                });
+            }
+
+            async function focusAndWait(selector, message, padding = 4) {
+                if (aborted) return; const el = $(selector); if (!el) {
+                    console.warn(`[教程] 元素不存在: ${selector}`); return;
+                } focusBox.focus(el, padding);
+                toast(message, CONFIG.toastDuration);
+                await waitForTap(selector);
+            }
+
+            async function focusAndShow(selector, message, padding = 4, duration = CONFIG.regionShowDuration) {
+                if (aborted)
+                    return; const el = $(selector); if (!el) { console.warn(`[教程] 元素不存在: ${selector}`); return; } focusBox
+                        .focus(el, padding);
+                toast(message, CONFIG.toastDuration);
+                await sleep(duration);
+            }
+
+            async function focusScreen(message, duration = CONFIG.regionShowDuration) {
+                if (aborted) return; focusBox
+                    .focusScreen();
+                toast(message, CONFIG.toastDuration);
+                await sleep(duration);
+            }
+
+            function waitForGameEnd() {
+                return new Promise((resolve) => {
+                    if (typeof gameState === 'undefined') {
+                        resolve(
+                            'fail'); return;
+                    } const checkState = () => {
+                        const s = gameState; if (s === 'success' || s ===
+                            'fail') { resolve(s); return; } setTimeout(checkState, 50);
+                    }; checkState();
+                });
+            }
+
+            async function startTutorial() {
+                if (isRunning) return;
+                if (localStorage.getItem('tutorialCompleted') === 'true') { console.log('欢迎回来，长官！'); return; }
+                isRunning = true;
+                aborted = false;
+                const menu = $('#menuOverlay');
+                if (menu) menu.classList.remove('hidden');
+                setWorkshopVisible(false);
+                setSettingsVisible(false);
+                focusBox = createFocusUI();
+                focusBox.clear();
+                try {
+                    await focusAndShow('#btnStartGame', '这里开启游戏，我们稍后进入', 6);
+                    focusBox.clear();
+                    await focusAndShow('#btnWorkshop', '这里打开工坊', 6);
+                    btnWorkshop.click();
+                    setWorkshopVisible(true);
+                    await sleep(500);
+                    await focusAndShow('#wsImportBtn', '点这里可以导入关卡集', 6);
+                    btnWorkshop.click();
+                    setWorkshopVisible(false);
+                    focusBox.clear();
+                    await sleep(500);
+                    await focusAndShow('#btnSettings', '这里打开设置', 6);
+                    btnSettings.click();
+                    setSettingsVisible(true);
+                    await sleep(300);
+                    await focusAndShow('#uiScaleSlider', '你可以根据屏幕大小调整UI缩放，稍后你可以来这里调整', 6);
+                    btnSettings.click();
+                    setSettingsVisible(false);
+                    focusBox.clear();
+                    await sleep(300);
+                    await focusAndWait('#btnStartGame', '现在请打开游戏', 6);
+                    await sleep(800);
+                    focusBox.clear();
+                    await focusScreen('游戏界面分为 4 个主要区域', 3000);
+                    await focusAndShow('.status-bar', '运行状态栏', 6);
+                    await focusAndShow('#toolbar', '工具区', 6);
+                    await focusAndShow('#levelSection', '关卡选择器', 6);
+                    await focusAndShow('#infoBar', '信息栏', 6);
+                    focusBox.clear();
+                    await focusAndWait('#mainBtn', '▶ 点击「开始」模拟，观察小车运动', 6);
+                    let endState;
+                    endState = await waitForGameEnd();
+                    if (window.gameState === 'running' && typeof window.stopSimulation === 'function') {
+                        window
+                            .stopSimulation();
+                        await sleep(300);
+                    }
+                    focusBox.clear();
+                    await focusScreen('没有工具的帮助，小车很快偏离道路，现在需要重置', 3000);
+                    focusBox.clear();
+                    await focusAndWait('#mainBtn', '点击「重置」按钮，回到布局状态', 6);
+                    await sleep(500);
+                    focusBox.clear();
+                    await sleep(500);
+                    await focusAndShow('#toolbar', '从左侧拖拽「引力场」到画布上，帮助小车通过', 3);
+                    await sleep(500);
+                    await focusAndShow('#mainBtn', '▶ 布置好工具后，再次点击「开始」模拟', 6);
+                    focusBox.clear();
+                    await waitForTap('#mainBtn');
+                    await sleep(500);
+                    await waitForGameEnd();
+                    const isSuccess = (window.gameState === 'success');
+                    const msg = isSuccess ?
+                        '恭喜你，我觉得你已经知道这个游戏的基本操作了，教程已结束[泪目散花]' :
+                        '恭喜你，我觉得你已经知道这个游戏的基本操作了，尽管你仍然失败了，不过我的任务已经完成，所以教程已结束[泪目散花]';
+                    await focusScreen(msg, 5000);
+                    await sleep(3000);
+                    focusBox.clear();
+                } catch (err) {
+                    console.warn('[教程] 出错:', err);
+                    toast('教程中断: ' + err.message, 3000);
+                } finally {
+                    if (focusBox) {
+                        focusBox.clear();
+                        focusBox.hide(); const container = document.getElementById('tutorial-container'); if (container)
+                            container.remove();
+                    }
+                    isRunning = false;
+                    aborted = false;
+                    setWorkshopVisible(false);
+                    setSettingsVisible(false);
+                    const menu = $('#menuOverlay');
+                    if (menu) menu.classList.remove('hidden');
+                    toast('教程已结束，祝你玩得开心！', 2000);
+                    localStorage.setItem('tutorialCompleted', 'true');
+                }
+            }
+            window.Tutorial = { start: startTutorial, isRunning: () => isRunning, abort: () => { aborted = true; } };
+            console.log('🧭 新手教程已加载 (触摸适配)，输入 Tutorial.start() 启动');
+        })();
+        setTimeout(() => { window.Tutorial.start(); }, 900);
     </script>
 </body>
 
