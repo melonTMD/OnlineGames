@@ -3,12 +3,40 @@
 
 <head>
     <meta charset="UTF-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>🧪 引力小车 · 关卡集编辑器 (.gcms)</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no" />
+    <title>引力小车 · 关卡集编辑器</title>
     <link rel="icon" href="assets/workspace_icon.svg" type="image/x-icon">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css" />
     <style>
-        /* ===== 全屏菜单（从主游戏扣） ===== */
+        html,
+        body {
+            overflow: hidden;
+            width: 100%;
+            height: 100%;
+            margin: 0;
+            padding: 0;
+            touch-action: none;
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            user-select: none;
+        }
+
+        body {
+            background: #0d0d0d;
+            font-family: 'Segoe UI', 'PingFang SC', Roboto, Arial, sans-serif;
+            color: #d0d8e0;
+            height: 100vh;
+            width: 100vw;
+            overflow: hidden;
+            display: flex;
+            flex-direction: column;
+            touch-action: none;
+        }
+
         .menu-overlay {
             position: absolute;
             inset: 0;
@@ -103,11 +131,7 @@
             content: '';
             position: absolute;
             inset: 0;
-            background: repeating-linear-gradient(-45deg,
-                    transparent,
-                    transparent 8px,
-                    #4ade8049 8px,
-                    #4ade8049 16px);
+            background: repeating-linear-gradient(-45deg, transparent, transparent 8px, #4ade8049 8px, #4ade8049 16px);
             background-size: 200% 200%;
             pointer-events: none;
         }
@@ -177,8 +201,6 @@
             pointer-events: auto;
         }
 
-        /* ========== 文件操作面板 ========== */
-
         .submenu-mask:has(.filework-overlay) {
             background: #208244;
         }
@@ -187,7 +209,6 @@
             background: #1E2F25;
         }
 
-        /* 子菜单容器 */
         .filework-overlay {
             position: absolute;
             bottom: 0;
@@ -214,7 +235,6 @@
             justify-content: flex-end;
         }
 
-        /* 子菜单按钮 */
         .submenu-btn {
             width: 120px;
             height: 120px;
@@ -281,25 +301,6 @@
             border-color: rgba(34, 197, 94, 0.15);
         }
 
-        /* ===== 气凝胶 · 硬脆 · 低饱和 · 三标签页 · 带音效 ===== */
-        * {
-            margin: 0;
-            padding: 0;
-            box-sizing: border-box;
-            user-select: none;
-        }
-
-        body {
-            background: #0d0d0d;
-            font-family: 'Segoe UI', 'PingFang SC', Roboto, Arial, sans-serif;
-            color: #d0d8e0;
-            height: 100vh;
-            overflow: hidden;
-            display: flex;
-            flex-direction: column;
-        }
-
-        /* ===== 顶部栏 ===== */
         .header {
             display: flex;
             align-items: center;
@@ -319,11 +320,7 @@
             content: '';
             position: absolute;
             inset: 0;
-            background: repeating-linear-gradient(-45deg,
-                    transparent,
-                    transparent 8px,
-                    #4ade8049 8px,
-                    #4ade8049 16px);
+            background: repeating-linear-gradient(-45deg, transparent, transparent 8px, #4ade8049 8px, #4ade8049 16px);
             background-size: 200% 200%;
             pointer-events: none;
         }
@@ -338,6 +335,10 @@
             white-space: nowrap;
             color: #d0d8e0;
             z-index: 1;
+        }
+
+        .header .title i {
+            color: #4ade80;
         }
 
         .workspace-logo {
@@ -371,6 +372,7 @@
             align-items: center;
             gap: 4px;
             font-family: inherit;
+            touch-action: manipulation;
         }
 
         .menu-toggle:hover {
@@ -383,14 +385,13 @@
             transform: scale(0.97);
         }
 
-        /* ===== 主体 ===== */
         .main-body {
             display: flex;
             flex: 1;
             min-height: 0;
+            overflow: hidden;
         }
 
-        /* ===== 左侧工具栏 ===== */
         .toolbar {
             width: 54px;
             background: #141414;
@@ -403,17 +404,14 @@
             flex-shrink: 0;
             overflow-y: auto;
             position: relative;
+            -webkit-overflow-scrolling: touch;
         }
 
         .toolbar::after {
             content: '';
             position: absolute;
             inset: 0;
-            background: repeating-linear-gradient(45deg,
-                    transparent,
-                    transparent 4px,
-                    rgba(255, 255, 255, 0.01) 4px,
-                    rgba(255, 255, 255, 0.01) 8px);
+            background: repeating-linear-gradient(45deg, transparent, transparent 4px, rgba(255, 255, 255, 0.01) 4px, rgba(255, 255, 255, 0.01) 8px);
             pointer-events: none;
             opacity: 0.3;
         }
@@ -432,6 +430,7 @@
             align-items: center;
             justify-content: center;
             position: relative;
+            touch-action: manipulation;
         }
 
         .toolbar .tool-btn:hover {
@@ -469,7 +468,6 @@
             margin: 3px 0;
         }
 
-        /* ===== 画布 ===== */
         .canvas-wrap {
             flex: 1;
             display: flex;
@@ -479,6 +477,7 @@
             padding: 10px;
             min-height: 0;
             position: relative;
+            touch-action: none;
         }
 
         .canvas-wrap canvas {
@@ -487,11 +486,9 @@
             border-radius: 2px;
             box-shadow: 0 0 30px rgba(0, 0, 0, 0.6);
             image-rendering: pixelated;
+            touch-action: none;
         }
 
-        /* ==============================================================
-           右侧面板 · 三标签页
-           ============================================================== */
         .panel {
             width: 270px;
             background: #141414;
@@ -507,17 +504,12 @@
             content: '';
             position: absolute;
             inset: 0;
-            background: repeating-linear-gradient(-45deg,
-                    transparent,
-                    transparent 6px,
-                    rgba(255, 255, 255, 0.01) 6px,
-                    rgba(255, 255, 255, 0.01) 12px);
+            background: repeating-linear-gradient(-45deg, transparent, transparent 6px, rgba(255, 255, 255, 0.01) 6px, rgba(255, 255, 255, 0.01) 12px);
             pointer-events: none;
             opacity: 0.2;
             z-index: 0;
         }
 
-        /* ---- 标签页头 ---- */
         .tab-header {
             display: flex;
             flex-shrink: 0;
@@ -543,6 +535,7 @@
             font-family: inherit;
             text-align: center;
             position: relative;
+            touch-action: manipulation;
         }
 
         .tab-header .tab-btn:hover {
@@ -565,7 +558,6 @@
             font-weight: 600;
         }
 
-        /* ---- 标签页内容容器 ---- */
         .tab-content {
             flex: 1;
             overflow-y: auto;
@@ -575,13 +567,13 @@
             display: flex;
             flex-direction: column;
             gap: 6px;
+            -webkit-overflow-scrolling: touch;
         }
 
         .tab-content.hidden {
             display: none;
         }
 
-        /* ---- 关卡列表（标签页1） ---- */
         .level-list-area {
             display: flex;
             flex-direction: column;
@@ -592,6 +584,7 @@
             border-radius: 2px;
             padding: 3px 2px;
             border: 1px solid rgba(255, 255, 255, 0.03);
+            -webkit-overflow-scrolling: touch;
         }
 
         .level-list-area .list-item {
@@ -607,6 +600,7 @@
             font-weight: 600;
             transition: 0.1s;
             border-left: 2px solid transparent;
+            touch-action: manipulation;
         }
 
         .level-list-area .list-item:hover {
@@ -638,6 +632,7 @@
             border-radius: 2px;
             line-height: 1;
             transition: 0.1s;
+            touch-action: manipulation;
         }
 
         .level-list-area .list-item .item-close:hover {
@@ -671,6 +666,7 @@
             font-family: inherit;
             margin-top: 2px;
             flex-shrink: 0;
+            touch-action: manipulation;
         }
 
         .level-list-area .add-level-btn:hover {
@@ -679,7 +675,6 @@
             color: #8a9aaa;
         }
 
-        /* ---- 元素属性（标签页2） ---- */
         .prop-content {
             display: flex;
             flex-direction: column;
@@ -735,6 +730,7 @@
             background: rgba(255, 255, 255, 0.06);
             border-radius: 1px;
             outline: none;
+            touch-action: none;
         }
 
         .prop-content .prop-group .prop-row input[type="range"]::-webkit-slider-thumb {
@@ -828,6 +824,7 @@
             font-family: inherit;
             margin-top: 3px;
             width: 100%;
+            touch-action: manipulation;
         }
 
         .prop-content .btn-delete:hover {
@@ -835,7 +832,6 @@
             border-color: rgba(200, 70, 70, 0.30);
         }
 
-        /* ---- 通用按钮：重命名（属性面板 + 元数据标签页） ---- */
         .btn-rename {
             padding: 4px 10px;
             border: 1px solid rgba(58, 90, 138, 0.15);
@@ -849,6 +845,7 @@
             font-family: inherit;
             margin-top: 3px;
             width: 100%;
+            touch-action: manipulation;
         }
 
         .btn-rename:hover {
@@ -860,7 +857,6 @@
             transform: scale(0.97);
         }
 
-        /* ---- 元数据（标签页3） ---- */
         .meta-content {
             display: flex;
             flex-direction: column;
@@ -913,7 +909,6 @@
             margin: 4px 0;
         }
 
-        /* ===== 状态栏 ===== */
         .status-bar {
             display: flex;
             align-items: center;
@@ -949,7 +944,6 @@
             color: #3a4a5a;
         }
 
-        /* ===== 模态框 ===== */
         .modal-overlay {
             position: fixed;
             inset: 0;
@@ -983,11 +977,7 @@
             content: '';
             position: absolute;
             inset: 0;
-            background: repeating-linear-gradient(-45deg,
-                    transparent,
-                    transparent 6px,
-                    rgba(255, 255, 255, 0.01) 6px,
-                    rgba(255, 255, 255, 0.01) 12px);
+            background: repeating-linear-gradient(-45deg, transparent, transparent 6px, rgba(255, 255, 255, 0.01) 6px, rgba(255, 255, 255, 0.01) 12px);
             pointer-events: none;
             opacity: 0.2;
         }
@@ -1015,6 +1005,7 @@
             font-size: 22px;
             cursor: pointer;
             transition: 0.1s;
+            touch-action: manipulation;
         }
 
         .modal-box .modal-header .close-btn:hover {
@@ -1029,6 +1020,7 @@
             gap: 8px;
             position: relative;
             z-index: 1;
+            -webkit-overflow-scrolling: touch;
         }
 
         .modal-box .modal-body textarea {
@@ -1044,6 +1036,7 @@
             resize: vertical;
             outline: none;
             line-height: 1.5;
+            -webkit-overflow-scrolling: touch;
         }
 
         .modal-box .modal-body textarea:focus {
@@ -1069,6 +1062,7 @@
             cursor: pointer;
             transition: 0.15s;
             font-family: inherit;
+            touch-action: manipulation;
         }
 
         .modal-box .modal-body .btn-row button:hover {
@@ -1096,7 +1090,6 @@
             background: rgba(34, 197, 94, 0.16);
         }
 
-        /* ===== Toast（完全照搬主游戏） ===== */
         .toast-msg {
             position: fixed;
             right: 5px;
@@ -1115,6 +1108,10 @@
             animation: jumpOut 0.3s cubic-bezier(0.26, 1.5, 0.71, 1.06);
             white-space: nowrap;
             border: 1px solid rgba(255, 255, 255, 0.06);
+        }
+
+        .toast-msg i {
+            margin-right: 4px;
         }
 
         .toast-msg.hide {
@@ -1137,12 +1134,45 @@
             top: 20px;
             left: 20px;
         }
+
+        @media (orientation: landscape) and (max-height: 400px) {
+            .logo {
+                transform: scale(0.7);
+                top: -30px;
+                left: -70px;
+            }
+        }
+
+        @media (hover: none) {
+            .toolbar .tool-btn {
+                min-width: 36px;
+                min-height: 36px;
+            }
+
+            .level-list-area .list-item {
+                padding: 4px 6px;
+                min-height: 28px;
+            }
+
+            .level-list-area .add-level-btn {
+                padding: 4px 6px;
+                min-height: 28px;
+            }
+
+            .prop-content .btn-delete,
+            .btn-rename {
+                padding: 6px 10px;
+            }
+
+            .tab-header .tab-btn {
+                padding: 8px 4px;
+            }
+        }
     </style>
 </head>
 
 <body>
 
-    <!-- ===== HEADER ===== -->
     <header class="header">
         <div class="title">
             <img src="assets/workspace_logo.svg" alt="Workspace" class="workspace-logo" />
@@ -1152,18 +1182,12 @@
         </div>
     </header>
 
-    <!-- ===== 全屏主菜单 ===== -->
     <div class="menu-overlay" id="menuOverlay">
-
         <img class="logo" src="assets/workspace_logo.svg">
-
         <div class="menu-buttons">
-            <!-- 继续编辑 -->
             <button class="menu-btn primary" id="btnContinueEdit">
                 <span>继续编辑 <span class="icon"><i class="fas fa-arrow-left"></i></span></span>
             </button>
-
-            <!-- 文件操作 -->
             <button class="menu-btn workshop" id="btnFileOps">
                 <span>文件操作 <span class="icon"><i class="fas fa-folder"></i></span></span>
             </button>
@@ -1179,37 +1203,26 @@
                             class="fas fa-file-import"></i> 文本导入</button>
                 </div>
             </div>
-
-            <!-- 编辑器操作 -->
             <button class="menu-btn settings" id="btnEditorOps">
                 <span>编辑器操作 <span class="icon"><i class="fas fa-cubes"></i></span></span>
             </button>
             <div class="submenu-mask" id="editorSubmenu">
                 <div class="workspaceaction-overlay">
                     <button class="submenu-btn" onclick="showPreviewModal(); closeMenu();"><i class="fas fa-code"></i>
-                        预览
-                        JSON</button>
-                    <button class="submenu-btn danger"
-                        onclick="if(confirm('确定要清空所有关卡数据吗？')){clearAll();closeMenu();}"><i class="fas fa-trash"></i>
-                        清空全集</button>
+                        预览 JSON</button>
+                    <button class="submenu-btn danger" onclick="clearAll();"><i class="fas fa-trash"></i> 清空全集</button>
                     <button class="submenu-btn success" onclick="resetToDefault(); closeMenu();"><i
-                            class="fas fa-undo"></i>
-                        重置示例</button>
+                            class="fas fa-undo"></i> 重置示例</button>
                 </div>
             </div>
             <button class="menu-btn workshop gotospace"
                 onclick="window.location.href = 'https://melontmd.github.io/OnlineGames/GravoCar/'">
-                <span>
-                    返回游戏
-                    <span class="icon"><i class="fas fa-external-link-alt"></i></span>
-                </span>
+                <span>返回游戏 <span class="icon"><i class="fas fa-external-link-alt"></i></span></span>
             </button>
         </div>
     </div>
 
-    <!-- ===== 原有的编辑器内容（画布、工具栏、面板等） ===== -->
     <div class="main-body">
-        <!-- 左侧工具栏 -->
         <div class="toolbar" id="toolbar">
             <button class="tool-btn active" data-tool="select" title="选择/移动 (V)" onclick="setTool('select')">
                 <i class="fas fa-arrow-pointer"></i>
@@ -1246,12 +1259,10 @@
             </button>
         </div>
 
-        <!-- 画布 -->
         <div class="canvas-wrap" id="canvasWrap">
             <canvas id="editorCanvas" width="1000" height="620"></canvas>
         </div>
 
-        <!-- 右侧面板 -->
         <div class="panel" id="panel">
             <div class="tab-header" id="tabHeader">
                 <button class="tab-btn active" data-tab="levels" onclick="switchTab('levels')">
@@ -1314,7 +1325,6 @@
         </div>
     </div>
 
-    <!-- ===== 状态栏 ===== -->
     <div class="status-bar">
         <div class="status-left">
             <span class="dot ready" id="statusDot"></span>
@@ -1324,7 +1334,6 @@
         <div class="status-right" id="coordStatus">x: 0, y: 0</div>
     </div>
 
-    <!-- ===== 模态框：文本导入 ===== -->
     <div class="modal-overlay" id="importTextModal">
         <div class="modal-box">
             <div class="modal-header">
@@ -1332,8 +1341,8 @@
                 <button class="close-btn" onclick="closeModal('importTextModal')">&times;</button>
             </div>
             <div class="modal-body">
-                <p style="color:#6a7a8a;font-size:12px;">粘贴完整的关卡集 JSON 数据（包含 levels 数组）：</p>
-                <textarea id="importTextArea" placeholder='{"levelsName":"ExampleLevelset","levels":[...]}'></textarea>
+                <p style="color:#6a7a8a;font-size:12px;">粘贴完整的关卡集 JSON 数据（数组格式）：</p>
+                <textarea id="importTextArea" placeholder='[{"levelsName":"Example","levels":[...]}]'></textarea>
                 <div class="btn-row">
                     <button onclick="closeModal('importTextModal')">取消</button>
                     <button class="primary" onclick="importFromText()"><i class="fas fa-check"></i> 应用</button>
@@ -1342,7 +1351,6 @@
         </div>
     </div>
 
-    <!-- ===== 模态框：预览JSON ===== -->
     <div class="modal-overlay" id="previewModal">
         <div class="modal-box">
             <div class="modal-header">
@@ -1361,15 +1369,11 @@
     </div>
 
     <script>
-        // ================================================================
-        //  SoundManager · 与主游戏完全一致
-        // ================================================================
         const SoundManager = {
             sounds: {},
             ctx: null,
             initialized: false,
             globalVolume: 1.0,
-
             init() {
                 try {
                     this.ctx = new (window.AudioContext || window.webkitAudioContext)();
@@ -1377,29 +1381,18 @@
                     this.loadSound('clickAlt', 'assets/sounds/click-alt.wav');
                     this.loadSound('showToast', 'assets/sounds/message.wav');
                     this.initialized = true;
-                } catch (e) {
-                    console.warn('⚠️ 音效初始化失败:', e);
-                }
+                } catch (e) { console.warn('音效初始化失败:', e); }
             },
-
             loadSound(name, url) {
                 if (!this.ctx) return;
-                fetch(url)
-                    .then(res => res.arrayBuffer())
-                    .then(buffer => this.ctx.decodeAudioData(buffer))
+                fetch(url).then(res => res.arrayBuffer()).then(buffer => this.ctx.decodeAudioData(buffer))
                     .then(decoded => { this.sounds[name] = decoded; })
-                    .catch(err => console.warn(`加载音效 ${name} 失败:`, err));
+                    .catch(err => console.warn('加载音效失败:', err));
             },
-
-            setGlobalVolume(vol) {
-                this.globalVolume = Math.max(0, Math.min(1, vol));
-            },
-
+            setGlobalVolume(vol) { this.globalVolume = Math.max(0, Math.min(1, vol)); },
             play(name, volume = 0.6) {
                 if (!this.initialized || !this.ctx || this.ctx.state === 'suspended') {
-                    if (this.ctx && this.ctx.state === 'suspended') {
-                        this.ctx.resume().catch(() => { });
-                    }
+                    if (this.ctx && this.ctx.state === 'suspended') this.ctx.resume().catch(() => { });
                     return;
                 }
                 const buffer = this.sounds[name];
@@ -1408,26 +1401,17 @@
                     const source = this.ctx.createBufferSource();
                     const gain = this.ctx.createGain();
                     source.buffer = buffer;
-                    const finalVol = volume * this.globalVolume;
-                    gain.gain.value = finalVol;
+                    gain.gain.value = volume * this.globalVolume;
                     source.connect(gain);
                     gain.connect(this.ctx.destination);
                     source.start(0);
                 } catch (e) { }
             }
         };
-
         document.addEventListener('click', () => {
-            if (SoundManager.ctx && SoundManager.ctx.state === 'suspended') {
-                SoundManager.ctx.resume().catch(() => { });
-            }
+            if (SoundManager.ctx && SoundManager.ctx.state === 'suspended') SoundManager.ctx.resume().catch(() => { });
         }, { once: false });
 
-        // ================================================================
-        //  关卡集编辑器核心逻辑
-        // ================================================================
-
-        // ---------- DOM ----------
         const canvas = document.getElementById('editorCanvas');
         const ctx = canvas.getContext('2d');
         const wrap = document.getElementById('canvasWrap');
@@ -1436,7 +1420,6 @@
         const coordStatus = document.getElementById('coordStatus');
         const levelListContainer = document.getElementById('levelListContainer');
         const propContent = document.getElementById('propContent');
-
         const metaLevelsName = document.getElementById('metaLevelsName');
         const metaAuthor = document.getElementById('metaAuthor');
         const metaAuthorLink = document.getElementById('metaAuthorLink');
@@ -1444,7 +1427,6 @@
         const currentLevelNameInput = document.getElementById('currentLevelNameInput');
         const levelCountBadge = document.getElementById('levelCountBadge');
 
-        // ---------- 全屏菜单控制 ----------
         const menuOverlay = document.getElementById('menuOverlay');
         const btnContinueEdit = document.getElementById('btnContinueEdit');
         const btnFileOps = document.getElementById('btnFileOps');
@@ -1466,32 +1448,25 @@
             fileSubmenu.classList.remove('open');
             editorSubmenu.classList.remove('open');
         }
-
         btnContinueEdit.addEventListener('click', closeMenu);
-
         btnFileOps.addEventListener('click', function (e) {
             e.stopPropagation();
             SoundManager.play('click');
             editorSubmenu.classList.remove('open');
             fileSubmenu.classList.toggle('open');
         });
-
         btnEditorOps.addEventListener('click', function (e) {
             e.stopPropagation();
             SoundManager.play('click');
             fileSubmenu.classList.remove('open');
             editorSubmenu.classList.toggle('open');
         });
-
-        menuOverlay.addEventListener('click', function (e) {
-            if (e.target === menuOverlay) closeMenu();
-        });
-
+        menuOverlay.addEventListener('click', function (e) { if (e.target === menuOverlay) closeMenu(); });
         document.addEventListener('keydown', function (e) {
-            if (e.key === 'Escape' && menuOverlay.classList.contains('open')) closeMenu();
+            if (e.key === 'Escape' && menuOverlay.classList.contains('open'))
+                closeMenu();
         });
 
-        // ---------- 常量 ----------
         const W = 1000,
             H = 620;
         const PATH_WIDTH = 28;
@@ -1499,17 +1474,13 @@
         const MIN_RADIUS = 8;
         const MAX_RADIUS = 120;
 
-        // ---------- Toast ----------
         const BASE_BOTTOM = 30;
         const GAP = 2;
         const TOAST_HEIGHT = 40;
         let activeToasts = [];
 
         function updatePositions() {
-            activeToasts.forEach((el, index) => {
-                const bottom = BASE_BOTTOM + index * (TOAST_HEIGHT + GAP);
-                el.style.bottom = bottom + 'px';
-            });
+            activeToasts.forEach((el, index) => { el.style.bottom = BASE_BOTTOM + index * (TOAST_HEIGHT + GAP) + 'px'; });
         }
 
         function showToast(msg, duration = 2000) {
@@ -1520,43 +1491,34 @@
             document.body.appendChild(div);
             activeToasts.unshift(div);
             updatePositions();
-            const timer = setTimeout(() => { hideToast(div); }, duration);
-            div._timer = timer;
+            setTimeout(() => { hideToast(div); }, duration);
         }
 
         function hideToast(el) {
             if (!el || el._hidden) return;
             el._hidden = true;
             el.classList.add('hide');
-            const onTransitionEnd = () => {
-                el.removeEventListener('transitionend', onTransitionEnd);
-                const index = activeToasts.indexOf(el);
-                if (index !== -1) activeToasts.splice(index, 1);
+            el.addEventListener('transitionend', () => {
+                const idx = activeToasts.indexOf(el);
+                if (idx !== -1) activeToasts.splice(idx, 1);
                 updatePositions();
                 el.remove();
-            };
-            el.addEventListener('transitionend', onTransitionEnd);
+            });
             setTimeout(() => {
                 if (el.parentNode) {
-                    const idx = activeToasts.indexOf(el);
-                    if (idx !== -1) activeToasts.splice(idx, 1);
+                    const idx = activeToasts.indexOf(el); if (idx !== -1) activeToasts
+                        .splice(idx, 1);
                     updatePositions();
                     el.remove();
                 }
             }, 500);
         }
 
-        // ---------- 数据 ----------
         let levelSet = {
-            levelsName: '美好的一天',
-            author: '张三',
-            author_link: 'https://baike.baidu.com/item/%E5%BC%A0%E4%B8%89',
-            levelsDescription: '不小心开车撞死撒，完了倒车又撞死两个',
-            levels: []
+            levelsName: '美好的一天', author: '张三', author_link: 'https://baike.baidu.com/item/%E5%BC%A0%E4%B8%89',
+            levelsDescription: '不小心开车撞死撒，完了倒车又撞死两个', levels: []
         };
         let currentLevelIndex = 0;
-
-        // ---------- 状态 ----------
         let currentTool = 'select';
         let selectedId = null;
         let isDragging = false;
@@ -1567,52 +1529,35 @@
         let hoveredId = null;
         let activeTab = 'levels';
 
-        // ---------- 辅助 ----------
-        function distance(x1, y1, x2, y2) {
-            return Math.sqrt((x1 - x2) ** 2 + (y1 - y2) ** 2);
-        }
+        function distance(x1, y1, x2, y2) { return Math.sqrt((x1 - x2) ** 2 + (y1 - y2) ** 2); }
 
-        function clamp(v, min, max) {
-            return Math.max(min, Math.min(max, v));
-        }
+        function clamp(v, min, max) { return Math.max(min, Math.min(max, v)); }
 
-        function pointToKey(type, index) {
-            return `${type}-${index}`;
-        }
+        function pointToKey(type, index) { return type + '-' + index; }
 
-        function parseKey(key) {
-            const parts = key.split('-');
-            return { type: parts[0], index: parseInt(parts[1], 10) };
-        }
+        function parseKey(key) { const parts = key.split('-'); return { type: parts[0], index: parseInt(parts[1], 10) }; }
 
         function getCurrentLevel() {
             if (!levelSet.levels || levelSet.levels.length === 0) {
                 levelSet.levels = [createDefaultLevel()];
                 currentLevelIndex = 0;
             }
-            if (currentLevelIndex >= levelSet.levels.length) {
-                currentLevelIndex = levelSet.levels.length - 1;
-            }
+            if (currentLevelIndex >= levelSet.levels.length) currentLevelIndex = levelSet.levels.length - 1;
             return levelSet.levels[currentLevelIndex];
         }
 
-        function createDefaultLevel(name = '新关卡') {
+        function createDefaultLevel(name) {
+            name = name || '新关卡';
             return {
-                name: name,
-                start: { x: 140, y: 310 },
-                end: { x: 860, y: 310 },
-                path: [
-                    { x: 140, y: 310 }, { x: 280, y: 280 }, { x: 420, y: 240 },
-                    { x: 560, y: 260 }, { x: 700, y: 320 }, { x: 860, y: 310 }
-                ],
-                checkpoints: [],
-                enemies: [],
-                boostZones: [],
-                brakeZones: []
+                name: name, start: { x: 140, y: 310 }, end: { x: 860, y: 310 },
+                path: [{ x: 140, y: 310 }, { x: 280, y: 280 }, { x: 420, y: 240 }, { x: 560, y: 260 }, {
+                    x: 700,
+                    y: 320
+                }, { x: 860, y: 310 }],
+                checkpoints: [], enemies: [], boostZones: [], brakeZones: []
             };
         }
 
-        // ---------- 查找元素 ----------
         function findElement(key) {
             const level = getCurrentLevel();
             if (key === 'start') return { type: 'start', ref: level.start };
@@ -1633,20 +1578,20 @@
                     break;
                 case 'enemy':
                     if (parsed.index < level.enemies.length) return {
-                        type: 'enemy', ref: level.enemies[parsed
-                            .index], index: parsed.index
+                        type: 'enemy', ref: level.enemies[parsed.index],
+                        index: parsed.index
                     };
                     break;
                 case 'boost':
                     if (parsed.index < level.boostZones.length) return {
-                        type: 'boost', ref: level.boostZones[
-                            parsed.index], index: parsed.index
+                        type: 'boost', ref: level.boostZones[parsed
+                            .index], index: parsed.index
                     };
                     break;
                 case 'brake':
                     if (parsed.index < level.brakeZones.length) return {
-                        type: 'brake', ref: level.brakeZones[
-                            parsed.index], index: parsed.index
+                        type: 'brake', ref: level.brakeZones[parsed
+                            .index], index: parsed.index
                     };
                     break;
             }
@@ -1657,44 +1602,47 @@
             const level = getCurrentLevel();
             for (let i = level.path.length - 1; i >= 0; i--) {
                 const p = level.path[i];
-                if (distance(mx, my, p.x, p.y) < 14) {
-                    return { key: pointToKey('path', i), type: 'path', ref: p, index: i };
-                }
+                if (distance(mx, my, p.x, p.y) < 14) return {
+                    key: pointToKey('path', i), type: 'path', ref: p,
+                    index: i
+                };
             }
             for (let i = level.checkpoints.length - 1; i >= 0; i--) {
                 const cp = level.checkpoints[i];
-                if (distance(mx, my, cp.x, cp.y) < cp.radius + 6) {
-                    return { key: pointToKey('cp', i), type: 'cp', ref: cp, index: i };
-                }
+                if (distance(mx, my, cp.x, cp.y) < cp.radius + 6) return {
+                    key: pointToKey('cp', i), type: 'cp',
+                    ref: cp, index: i
+                };
             }
             for (let i = level.enemies.length - 1; i >= 0; i--) {
                 const en = level.enemies[i];
-                if (distance(mx, my, en.x, en.y) < en.radius + 6) {
-                    return { key: pointToKey('enemy', i), type: 'enemy', ref: en, index: i };
-                }
+                if (distance(mx, my, en.x, en.y) < en.radius + 6) return {
+                    key: pointToKey('enemy', i), type: 'enemy',
+                    ref: en, index: i
+                };
             }
             for (let i = level.boostZones.length - 1; i >= 0; i--) {
                 const b = level.boostZones[i];
-                if (distance(mx, my, b.cx, b.cy) < b.radius + 6) {
-                    return { key: pointToKey('boost', i), type: 'boost', ref: b, index: i };
-                }
+                if (distance(mx, my, b.cx, b.cy) < b.radius + 6) return {
+                    key: pointToKey('boost', i), type: 'boost',
+                    ref: b, index: i
+                };
             }
             for (let i = level.brakeZones.length - 1; i >= 0; i--) {
                 const b = level.brakeZones[i];
-                if (distance(mx, my, b.cx, b.cy) < b.radius + 6) {
-                    return { key: pointToKey('brake', i), type: 'brake', ref: b, index: i };
-                }
+                if (distance(mx, my, b.cx, b.cy) < b.radius + 6) return {
+                    key: pointToKey('brake', i), type: 'brake',
+                    ref: b, index: i
+                };
             }
-            if (distance(mx, my, level.start.x, level.start.y) < 20) {
-                return { key: 'start', type: 'start', ref: level.start };
-            }
-            if (distance(mx, my, level.end.x, level.end.y) < 20) {
-                return { key: 'end', type: 'end', ref: level.end };
-            }
+            if (distance(mx, my, level.start.x, level.start.y) < 20) return {
+                key: 'start', type: 'start',
+                ref: level.start
+            };
+            if (distance(mx, my, level.end.x, level.end.y) < 20) return { key: 'end', type: 'end', ref: level.end };
             return null;
         }
 
-        // ---------- 选中 ----------
         function selectElement(key) {
             SoundManager.play('click');
             selectedId = key;
@@ -1711,7 +1659,6 @@
             updateStatus();
         }
 
-        // ---------- 添加/删除 ----------
         function addPathPoint(x, y) {
             const level = getCurrentLevel();
             level.path.push({ x: clamp(x, 0, W), y: clamp(y, 0, H) });
@@ -1720,67 +1667,66 @@
             render();
             updateStatus();
             SoundManager.play('click');
-            showToast(`➕ 路径点 #${level.path.length}`);
+            showToast('<i class="fas fa-plus"></i> 路径点 #' + level.path.length);
         }
 
         function addCheckpoint(x, y) {
             const level = getCurrentLevel();
-            const cp = { x: clamp(x, 0, W), y: clamp(y, 0, H), radius: DEFAULT_RADIUS };
-            level.checkpoints.push(cp);
+            level.checkpoints.push({ x: clamp(x, 0, W), y: clamp(y, 0, H), radius: DEFAULT_RADIUS });
             nextIds.cp++;
             updateCounters();
             render();
             updateStatus();
             SoundManager.play('click');
-            showToast(`🚩 检查点 #${level.checkpoints.length}`);
+            showToast('<i class="fas fa-flag"></i> 检查点 #' + level.checkpoints.length);
         }
 
         function addEnemy(x, y) {
             const level = getCurrentLevel();
-            const en = { x: clamp(x, 0, W), y: clamp(y, 0, H), radius: 22, speed: 0.8 };
-            level.enemies.push(en);
+            level.enemies.push({ x: clamp(x, 0, W), y: clamp(y, 0, H), radius: 22, speed: 0.8 });
             nextIds.enemy++;
             updateCounters();
             render();
             updateStatus();
             SoundManager.play('click');
-            showToast(`💀 敌人 #${level.enemies.length}`);
+            showToast('<i class="fas fa-skull"></i> 敌人 #' + level.enemies.length);
         }
 
         function addBoostZone(x, y) {
             const level = getCurrentLevel();
-            const b = { cx: clamp(x, 0, W), cy: clamp(y, 0, H), radius: DEFAULT_RADIUS };
-            level.boostZones.push(b);
+            level.boostZones.push({ cx: clamp(x, 0, W), cy: clamp(y, 0, H), radius: DEFAULT_RADIUS });
             nextIds.boost++;
             updateCounters();
             render();
             updateStatus();
             SoundManager.play('click');
-            showToast(`⚡ 加速区 #${level.boostZones.length}`);
+            showToast('<i class="fas fa-bolt"></i> 加速区 #' + level.boostZones.length);
         }
 
         function addBrakeZone(x, y) {
             const level = getCurrentLevel();
-            const b = { cx: clamp(x, 0, W), cy: clamp(y, 0, H), radius: DEFAULT_RADIUS };
-            level.brakeZones.push(b);
+            level.brakeZones.push({ cx: clamp(x, 0, W), cy: clamp(y, 0, H), radius: DEFAULT_RADIUS });
             nextIds.brake++;
             updateCounters();
             render();
             updateStatus();
             SoundManager.play('click');
-            showToast(`🛑 刹车区 #${level.brakeZones.length}`);
+            showToast('<i class="fas fa-stop"></i> 刹车区 #' + level.brakeZones.length);
         }
 
         function deleteElement(key) {
             const level = getCurrentLevel();
             if (key === 'start' || key === 'end') {
-                showToast('⚠️ 不能删除起点/终点', 1200);
-                return;
+                showToast('<i class="fas fa-triangle-exclamation"></i> 不能删除起点/终点',
+                    1200); return;
             }
             const parsed = parseKey(key);
             switch (parsed.type) {
                 case 'path':
-                    if (level.path.length <= 2) { showToast('⚠️ 至少保留2个路径点', 1200); return; }
+                    if (level.path.length <= 2) {
+                        showToast(
+                            '<i class="fas fa-triangle-exclamation"></i> 至少保留2个路径点', 1200); return;
+                    }
                     level.path.splice(parsed.index, 1);
                     break;
                 case 'cp':
@@ -1803,7 +1749,7 @@
             updateCounters();
             render();
             updateStatus();
-            showToast(`🗑️ 已删除 ${typeLabel(parsed.type)} #${parsed.index + 1}`);
+            showToast('<i class="fas fa-trash"></i> 已删除 ' + typeLabel(parsed.type) + ' #' + (parsed.index + 1));
         }
 
         function typeLabel(type) {
@@ -1811,7 +1757,6 @@
             return map[type] || type;
         }
 
-        // ---------- 更新计数 ----------
         function updateCounters() {
             const level = getCurrentLevel();
             document.getElementById('pathCount').textContent = level.path.length;
@@ -1822,37 +1767,30 @@
             levelCountBadge.textContent = levelSet.levels.length;
         }
 
-        // ---------- 工具切换 ----------
         function setTool(tool) {
             SoundManager.play('click');
             currentTool = tool;
             document.querySelectorAll('.toolbar .tool-btn').forEach(btn => {
-                btn.classList.toggle('active', btn.dataset.tool === tool);
+                btn.classList.toggle('active', btn.dataset
+                    .tool === tool);
             });
             const names = {
-                select: '选择/移动',
-                path: '添加路径点',
-                checkpoint: '添加检查点',
-                enemy: '添加敌人',
-                boost: '添加加速区',
-                brake: '添加刹车区',
-                delete: '删除模式',
-                start: '设置起点',
-                end: '设置终点'
+                select: '选择/移动', path: '添加路径点', checkpoint: '添加检查点', enemy: '添加敌人', boost: '添加加速区',
+                brake: '添加刹车区', delete: '删除模式', start: '设置起点', end: '设置终点'
             };
-            toolStatus.textContent = `工具: ${names[tool] || tool}`;
+            toolStatus.textContent = '工具: ' + (names[tool] || tool);
             canvas.style.cursor = (tool === 'delete') ? 'not-allowed' : 'crosshair';
             if (tool === 'select') canvas.style.cursor = 'default';
             clearSelection();
             render();
         }
 
-        // ---------- 标签页切换 ----------
         function switchTab(tab) {
             SoundManager.play('click');
             activeTab = tab;
             document.querySelectorAll('.tab-header .tab-btn').forEach(btn => {
-                btn.classList.toggle('active', btn.dataset.tab === tab);
+                btn.classList.toggle('active', btn.dataset
+                    .tab === tab);
             });
             document.getElementById('tabLevels').classList.toggle('hidden', tab !== 'levels');
             document.getElementById('tabProps').classList.toggle('hidden', tab !== 'props');
@@ -1862,7 +1800,6 @@
             if (tab === 'levels') renderLevelList();
         }
 
-        // ---------- 画布缩放 ----------
         function resizeCanvas() {
             const rect = wrap.getBoundingClientRect();
             const pad = 10;
@@ -1881,25 +1818,19 @@
             canvas.style.height = displayH + 'px';
         }
 
-        // ---------- 鼠标坐标 ----------
         function getMousePos(e) {
             const rect = canvas.getBoundingClientRect();
             const scaleX = canvas.width / rect.width;
             const scaleY = canvas.height / rect.height;
             const clientX = e.clientX || (e.touches && e.touches[0].clientX);
             const clientY = e.clientY || (e.touches && e.touches[0].clientY);
-            return {
-                x: clamp((clientX - rect.left) * scaleX, 0, W),
-                y: clamp((clientY - rect.top) * scaleY, 0, H)
-            };
+            return { x: clamp((clientX - rect.left) * scaleX, 0, W), y: clamp((clientY - rect.top) * scaleY, 0, H) };
         }
 
-        // ---------- 渲染 ----------
         function render() {
             ctx.clearRect(0, 0, W, H);
             ctx.fillStyle = '#2d5a2d';
             ctx.fillRect(0, 0, W, H);
-
             ctx.strokeStyle = 'rgba(255,255,255,0.04)';
             ctx.lineWidth = 1;
             for (let x = 0; x <= W; x += 50) {
@@ -1914,43 +1845,33 @@
                 ctx.lineTo(W, y);
                 ctx.stroke();
             }
-
             const level = getCurrentLevel();
             if (level.path.length > 1) {
                 ctx.beginPath();
                 ctx.moveTo(level.path[0].x, level.path[0].y);
-                for (let i = 1; i < level.path.length; i++) {
-                    ctx.lineTo(level.path[i].x, level.path[i].y);
-                }
+                for (let i = 1; i < level.path.length; i++) { ctx.lineTo(level.path[i].x, level.path[i].y); }
                 ctx.strokeStyle = '#1a3a1a';
                 ctx.lineWidth = PATH_WIDTH * 2 + 8;
                 ctx.lineCap = 'round';
                 ctx.lineJoin = 'round';
                 ctx.stroke();
-
                 ctx.beginPath();
                 ctx.moveTo(level.path[0].x, level.path[0].y);
-                for (let i = 1; i < level.path.length; i++) {
-                    ctx.lineTo(level.path[i].x, level.path[i].y);
-                }
+                for (let i = 1; i < level.path.length; i++) { ctx.lineTo(level.path[i].x, level.path[i].y); }
                 ctx.strokeStyle = '#3a5a3a';
                 ctx.lineWidth = PATH_WIDTH * 2;
                 ctx.lineCap = 'round';
                 ctx.lineJoin = 'round';
                 ctx.stroke();
-
                 ctx.strokeStyle = '#7a9a7a';
                 ctx.lineWidth = 2;
                 ctx.setLineDash([8, 12]);
                 ctx.beginPath();
                 ctx.moveTo(level.path[0].x, level.path[0].y);
-                for (let i = 1; i < level.path.length; i++) {
-                    ctx.lineTo(level.path[i].x, level.path[i].y);
-                }
+                for (let i = 1; i < level.path.length; i++) { ctx.lineTo(level.path[i].x, level.path[i].y); }
                 ctx.stroke();
                 ctx.setLineDash([]);
             }
-
             const s = level.start;
             ctx.font = '900 20px "Font Awesome 6 Free"';
             ctx.fillStyle = '#fbbf24';
@@ -1970,7 +1891,6 @@
                 ctx.stroke();
                 ctx.setLineDash([]);
             }
-
             const e = level.end;
             const grd = ctx.createRadialGradient(e.x, e.y, 0, e.x, e.y, 40);
             grd.addColorStop(0, 'rgba(96, 165, 250, 0.2)');
@@ -2000,7 +1920,6 @@
                 ctx.stroke();
                 ctx.setLineDash([]);
             }
-
             for (let i = 0; i < level.checkpoints.length; i++) {
                 const cp = level.checkpoints[i];
                 const isSelected = selectedId === pointToKey('cp', i);
@@ -2028,7 +1947,7 @@
                 ctx.fillStyle = 'rgba(255,255,255,0.3)';
                 ctx.textAlign = 'center';
                 ctx.textBaseline = 'top';
-                ctx.fillText(`CP${i + 1}`, cp.x, cp.y + r + 6);
+                ctx.fillText('CP' + (i + 1), cp.x, cp.y + r + 6);
                 if (isSelected) {
                     ctx.strokeStyle = 'rgba(96,165,250,0.3)';
                     ctx.lineWidth = 1;
@@ -2039,7 +1958,6 @@
                     ctx.setLineDash([]);
                 }
             }
-
             for (let i = 0; i < level.enemies.length; i++) {
                 const en = level.enemies[i];
                 const isSelected = selectedId === pointToKey('enemy', i);
@@ -2053,7 +1971,7 @@
                 ctx.arc(en.x, en.y, r * pulse, 0, Math.PI * 2);
                 ctx.fill();
                 ctx.shadowBlur = 0;
-                ctx.font = `900 16px "Font Awesome 6 Free"`;
+                ctx.font = '900 16px "Font Awesome 6 Free"';
                 ctx.fillStyle = 'rgba(255,255,255,0.8)';
                 ctx.textAlign = 'center';
                 ctx.textBaseline = 'middle';
@@ -2061,7 +1979,7 @@
                 ctx.font = '8px "Segoe UI", monospace';
                 ctx.fillStyle = 'rgba(255,255,255,0.3)';
                 ctx.textBaseline = 'top';
-                ctx.fillText(`⚡${en.speed.toFixed(1)}`, en.x, en.y + r + 4);
+                ctx.fillText('⚡' + en.speed.toFixed(1), en.x, en.y + r + 4);
                 if (isSelected) {
                     ctx.strokeStyle = 'rgba(248,113,113,0.5)';
                     ctx.lineWidth = 2;
@@ -2072,14 +1990,13 @@
                     ctx.setLineDash([]);
                 }
             }
-
             for (let i = 0; i < level.boostZones.length; i++) {
                 const b = level.boostZones[i];
                 const isSelected = selectedId === pointToKey('boost', i);
                 const isHovered = hoveredId === pointToKey('boost', i);
                 const r = b.radius;
                 const gradB = ctx.createRadialGradient(b.cx, b.cy, 0, b.cx, b.cy, r);
-                gradB.addColorStop(0, `rgba(74, 222, 128, ${isSelected ? 0.35 : 0.15})`);
+                gradB.addColorStop(0, 'rgba(74, 222, 128, ' + (isSelected ? 0.35 : 0.15) + ')');
                 gradB.addColorStop(1, 'rgba(74, 222, 128, 0)');
                 ctx.fillStyle = gradB;
                 ctx.beginPath();
@@ -2100,7 +2017,7 @@
                 ctx.font = '8px "Segoe UI", monospace';
                 ctx.fillStyle = 'rgba(74,222,128,0.4)';
                 ctx.textBaseline = 'top';
-                ctx.fillText(`r=${Math.round(r)}`, b.cx, b.cy + r + 6);
+                ctx.fillText('r=' + Math.round(r), b.cx, b.cy + r + 6);
                 if (isSelected) {
                     ctx.strokeStyle = 'rgba(74,222,128,0.3)';
                     ctx.lineWidth = 1;
@@ -2111,14 +2028,13 @@
                     ctx.setLineDash([]);
                 }
             }
-
             for (let i = 0; i < level.brakeZones.length; i++) {
                 const b = level.brakeZones[i];
                 const isSelected = selectedId === pointToKey('brake', i);
                 const isHovered = hoveredId === pointToKey('brake', i);
                 const r = b.radius;
                 const gradB = ctx.createRadialGradient(b.cx, b.cy, 0, b.cx, b.cy, r);
-                gradB.addColorStop(0, `rgba(248, 113, 113, ${isSelected ? 0.35 : 0.15})`);
+                gradB.addColorStop(0, 'rgba(248, 113, 113, ' + (isSelected ? 0.35 : 0.15) + ')');
                 gradB.addColorStop(1, 'rgba(248, 113, 113, 0)');
                 ctx.fillStyle = gradB;
                 ctx.beginPath();
@@ -2139,7 +2055,7 @@
                 ctx.font = '8px "Segoe UI", monospace';
                 ctx.fillStyle = 'rgba(248,113,113,0.4)';
                 ctx.textBaseline = 'top';
-                ctx.fillText(`r=${Math.round(r)}`, b.cx, b.cy + r + 6);
+                ctx.fillText('r=' + Math.round(r), b.cx, b.cy + r + 6);
                 if (isSelected) {
                     ctx.strokeStyle = 'rgba(248,113,113,0.3)';
                     ctx.lineWidth = 1;
@@ -2150,7 +2066,6 @@
                     ctx.setLineDash([]);
                 }
             }
-
             for (let i = 0; i < level.path.length; i++) {
                 const p = level.path[i];
                 const isSelected = selectedId === pointToKey('path', i);
@@ -2188,7 +2103,6 @@
                     ctx.setLineDash([]);
                 }
             }
-
             if (level.path.length < 2) {
                 ctx.fillStyle = 'rgba(255,255,255,0.1)';
                 ctx.font = '16px "Segoe UI", Arial, sans-serif';
@@ -2196,97 +2110,95 @@
                 ctx.textBaseline = 'middle';
                 ctx.fillText('点击路径工具添加路径点 (至少2个)', W / 2, H - 40);
             }
-
             updateStatus();
         }
 
-        // ---------- 渲染属性面板 ----------
         function renderProps() {
             const level = getCurrentLevel();
             if (!selectedId) {
-                propContent.innerHTML = `
-                    <div class="empty-state">
-                        <i class="fas fa-mouse-pointer"></i>
-                        点击画布上的元素<br />查看和编辑属性
-                    </div>
-                `;
+                propContent.innerHTML =
+                    '<div class="empty-state"><i class="fas fa-mouse-pointer"></i> 点击画布上的元素<br />查看和编辑属性</div>';
                 return;
             }
-
             const el = findElement(selectedId);
-            if (!el) {
-                propContent.innerHTML = `<div class="empty-state">元素不存在</div>`;
-                return;
-            }
-
+            if (!el) { propContent.innerHTML = '<div class="empty-state">元素不存在</div>'; return; }
             let html = '';
             const { type, ref } = el;
-
-            html += `<div class="info-row"><span>类型</span><span class="val">${typeLabel(type)}</span></div>`;
-
+            html += '<div class="info-row"><span>类型</span><span class="val">' + typeLabel(type) + '</span></div>';
             if (type === 'start' || type === 'end') {
-                html += `<div class="info-row"><span>坐标</span><span class="val">(${Math.round(ref.x)}, ${Math.round(ref.y)})</span></div>`;
-                html += `<div class="prop-group"><div class="prop-label">位置</div>`;
+                html += '<div class="info-row"><span>坐标</span><span class="val">(' + Math.round(ref.x) + ', ' + Math
+                    .round(ref.y) + ')</span></div>';
+                html += '<div class="prop-group"><div class="prop-label">位置</div>';
+                html += '<div class="prop-row"><label>X</label><span class="coord">' + Math.round(ref.x) +
+                    '</span><label>Y</label><span class="coord">' + Math.round(ref.y) + '</span></div>';
+                html += '</div>';
                 html +=
-                    `<div class="prop-row"><label>X</label><span class="coord">${Math.round(ref.x)}</span><label>Y</label><span class="coord">${Math.round(ref.y)}</span></div>`;
-                html += `</div>`;
-                html += `<button class="btn-delete" disabled style="opacity:0.3;cursor:default;">不可删除</button>`;
+                    '<button class="btn-delete" disabled style="opacity:0.3;cursor:default;">不可删除</button>';
             } else if (type === 'path') {
-                html += `<div class="info-row"><span>索引</span><span class="val">#${el.index + 1}</span></div>`;
-                html += `<div class="info-row"><span>坐标</span><span class="val">(${Math.round(ref.x)}, ${Math.round(ref.y)})</span></div>`;
-                html += `<div class="prop-group"><div class="prop-label">位置</div>`;
-                html +=
-                    `<div class="prop-row"><label>X</label><span class="coord">${Math.round(ref.x)}</span><label>Y</label><span class="coord">${Math.round(ref.y)}</span></div>`;
-                html += `</div>`;
-                html += `<button class="btn-delete" onclick="deleteElement('${selectedId}')"><i class="fas fa-trash"></i> 删除此路径点</button>`;
+                html += '<div class="info-row"><span>索引</span><span class="val">#' + (el.index + 1) + '</span></div>';
+                html += '<div class="info-row"><span>坐标</span><span class="val">(' + Math.round(ref.x) + ', ' + Math
+                    .round(ref.y) + ')</span></div>';
+                html += '<div class="prop-group"><div class="prop-label">位置</div>';
+                html += '<div class="prop-row"><label>X</label><span class="coord">' + Math.round(ref.x) +
+                    '</span><label>Y</label><span class="coord">' + Math.round(ref.y) + '</span></div>';
+                html += '</div>';
+                html += '<button class="btn-delete" onclick="deleteElement(\'' + selectedId +
+                    '\')"><i class="fas fa-trash"></i> 删除此路径点</button>';
             } else if (type === 'cp') {
-                html += `<div class="info-row"><span>索引</span><span class="val">#${el.index + 1}</span></div>`;
-                html += `<div class="info-row"><span>坐标</span><span class="val">(${Math.round(ref.x)}, ${Math.round(ref.y)})</span></div>`;
-                html += `<div class="prop-group"><div class="prop-label">半径: ${Math.round(ref.radius)}</div>`;
-                html += `<div class="prop-row">`;
-                html +=
-                    `<input type="range" min="${MIN_RADIUS}" max="${MAX_RADIUS}" value="${ref.radius}" oninput="updateProp('${selectedId}','radius',parseInt(this.value))" />`;
-                html += `<span class="val-display">${Math.round(ref.radius)}</span>`;
-                html += `</div></div>`;
-                html += `<button class="btn-delete" onclick="deleteElement('${selectedId}')"><i class="fas fa-trash"></i> 删除检查点</button>`;
+                html += '<div class="info-row"><span>索引</span><span class="val">#' + (el.index + 1) + '</span></div>';
+                html += '<div class="info-row"><span>坐标</span><span class="val">(' + Math.round(ref.x) + ', ' + Math
+                    .round(ref.y) + ')</span></div>';
+                html += '<div class="prop-group"><div class="prop-label">半径: ' + Math.round(ref.radius) + '</div>';
+                html += '<div class="prop-row">';
+                html += '<input type="range" min="' + MIN_RADIUS + '" max="' + MAX_RADIUS + '" value="' + ref.radius +
+                    '" oninput="updateProp(\'' + selectedId + '\',\'radius\',parseInt(this.value))" />';
+                html += '<span class="val-display">' + Math.round(ref.radius) + '</span>';
+                html += '</div></div>';
+                html += '<button class="btn-delete" onclick="deleteElement(\'' + selectedId +
+                    '\')"><i class="fas fa-trash"></i> 删除检查点</button>';
             } else if (type === 'enemy') {
-                html += `<div class="info-row"><span>索引</span><span class="val">#${el.index + 1}</span></div>`;
-                html += `<div class="info-row"><span>坐标</span><span class="val">(${Math.round(ref.x)}, ${Math.round(ref.y)})</span></div>`;
-                html += `<div class="prop-group"><div class="prop-label">半径: ${Math.round(ref.radius)}</div>`;
-                html += `<div class="prop-row">`;
-                html +=
-                    `<input type="range" min="10" max="50" value="${ref.radius}" oninput="updateProp('${selectedId}','radius',parseInt(this.value))" />`;
-                html += `<span class="val-display">${Math.round(ref.radius)}</span>`;
-                html += `</div></div>`;
-                html += `<div class="prop-group"><div class="prop-label">速度: ${ref.speed.toFixed(2)}</div>`;
-                html += `<div class="prop-row">`;
-                html +=
-                    `<input type="range" min="0.2" max="2.0" step="0.05" value="${ref.speed}" oninput="updateProp('${selectedId}','speed',parseFloat(this.value))" />`;
-                html += `<span class="val-display">${ref.speed.toFixed(2)}</span>`;
-                html += `</div></div>`;
-                html += `<button class="btn-delete" onclick="deleteElement('${selectedId}')"><i class="fas fa-trash"></i> 删除敌人</button>`;
+                html += '<div class="info-row"><span>索引</span><span class="val">#' + (el.index + 1) + '</span></div>';
+                html += '<div class="info-row"><span>坐标</span><span class="val">(' + Math.round(ref.x) + ', ' + Math
+                    .round(ref.y) + ')</span></div>';
+                html += '<div class="prop-group"><div class="prop-label">半径: ' + Math.round(ref.radius) + '</div>';
+                html += '<div class="prop-row">';
+                html += '<input type="range" min="10" max="50" value="' + ref.radius + '" oninput="updateProp(\'' +
+                    selectedId + '\',\'radius\',parseInt(this.value))" />';
+                html += '<span class="val-display">' + Math.round(ref.radius) + '</span>';
+                html += '</div></div>';
+                html += '<div class="prop-group"><div class="prop-label">速度: ' + ref.speed.toFixed(2) + '</div>';
+                html += '<div class="prop-row">';
+                html += '<input type="range" min="0.2" max="2.0" step="0.05" value="' + ref.speed +
+                    '" oninput="updateProp(\'' + selectedId + '\',\'speed\',parseFloat(this.value))" />';
+                html += '<span class="val-display">' + ref.speed.toFixed(2) + '</span>';
+                html += '</div></div>';
+                html += '<button class="btn-delete" onclick="deleteElement(\'' + selectedId +
+                    '\')"><i class="fas fa-trash"></i> 删除敌人</button>';
             } else if (type === 'boost') {
-                html += `<div class="info-row"><span>索引</span><span class="val">#${el.index + 1}</span></div>`;
-                html += `<div class="info-row"><span>坐标</span><span class="val">(${Math.round(ref.cx)}, ${Math.round(ref.cy)})</span></div>`;
-                html += `<div class="prop-group"><div class="prop-label">半径: ${Math.round(ref.radius)}</div>`;
-                html += `<div class="prop-row">`;
-                html +=
-                    `<input type="range" min="${MIN_RADIUS}" max="${MAX_RADIUS}" value="${ref.radius}" oninput="updateProp('${selectedId}','radius',parseInt(this.value))" />`;
-                html += `<span class="val-display">${Math.round(ref.radius)}</span>`;
-                html += `</div></div>`;
-                html += `<button class="btn-delete" onclick="deleteElement('${selectedId}')"><i class="fas fa-trash"></i> 删除加速区</button>`;
+                html += '<div class="info-row"><span>索引</span><span class="val">#' + (el.index + 1) + '</span></div>';
+                html += '<div class="info-row"><span>坐标</span><span class="val">(' + Math.round(ref.cx) + ', ' + Math
+                    .round(ref.cy) + ')</span></div>';
+                html += '<div class="prop-group"><div class="prop-label">半径: ' + Math.round(ref.radius) + '</div>';
+                html += '<div class="prop-row">';
+                html += '<input type="range" min="' + MIN_RADIUS + '" max="' + MAX_RADIUS + '" value="' + ref.radius +
+                    '" oninput="updateProp(\'' + selectedId + '\',\'radius\',parseInt(this.value))" />';
+                html += '<span class="val-display">' + Math.round(ref.radius) + '</span>';
+                html += '</div></div>';
+                html += '<button class="btn-delete" onclick="deleteElement(\'' + selectedId +
+                    '\')"><i class="fas fa-trash"></i> 删除加速区</button>';
             } else if (type === 'brake') {
-                html += `<div class="info-row"><span>索引</span><span class="val">#${el.index + 1}</span></div>`;
-                html += `<div class="info-row"><span>坐标</span><span class="val">(${Math.round(ref.cx)}, ${Math.round(ref.cy)})</span></div>`;
-                html += `<div class="prop-group"><div class="prop-label">半径: ${Math.round(ref.radius)}</div>`;
-                html += `<div class="prop-row">`;
-                html +=
-                    `<input type="range" min="${MIN_RADIUS}" max="${MAX_RADIUS}" value="${ref.radius}" oninput="updateProp('${selectedId}','radius',parseInt(this.value))" />`;
-                html += `<span class="val-display">${Math.round(ref.radius)}</span>`;
-                html += `</div></div>`;
-                html += `<button class="btn-delete" onclick="deleteElement('${selectedId}')"><i class="fas fa-trash"></i> 删除刹车区</button>`;
+                html += '<div class="info-row"><span>索引</span><span class="val">#' + (el.index + 1) + '</span></div>';
+                html += '<div class="info-row"><span>坐标</span><span class="val">(' + Math.round(ref.cx) + ', ' + Math
+                    .round(ref.cy) + ')</span></div>';
+                html += '<div class="prop-group"><div class="prop-label">半径: ' + Math.round(ref.radius) + '</div>';
+                html += '<div class="prop-row">';
+                html += '<input type="range" min="' + MIN_RADIUS + '" max="' + MAX_RADIUS + '" value="' + ref.radius +
+                    '" oninput="updateProp(\'' + selectedId + '\',\'radius\',parseInt(this.value))" />';
+                html += '<span class="val-display">' + Math.round(ref.radius) + '</span>';
+                html += '</div></div>';
+                html += '<button class="btn-delete" onclick="deleteElement(\'' + selectedId +
+                    '\')"><i class="fas fa-trash"></i> 删除刹车区</button>';
             }
-
             propContent.innerHTML = html;
         }
 
@@ -2298,7 +2210,6 @@
             renderProps();
         }
 
-        // ---------- 元数据 ----------
         function renderMeta() {
             metaLevelsName.value = levelSet.levelsName || '';
             metaAuthor.value = levelSet.author || '';
@@ -2311,17 +2222,15 @@
         function updateMeta(field, value) {
             levelSet[field] = value;
             SoundManager.play('click');
-            showToast(`✏️ 已更新 ${field}`);
+            showToast('<i class="fas fa-pen"></i> 已更新 ' + field);
         }
 
-        // ---------- 鼠标事件 ----------
         function onMouseDown(e) {
             e.preventDefault();
             const pos = getMousePos(e);
             const mx = pos.x,
                 my = pos.y;
-            coordStatus.textContent = `x: ${Math.round(mx)}, y: ${Math.round(my)}`;
-
+            coordStatus.textContent = 'x: ' + Math.round(mx) + ', y: ' + Math.round(my);
             if (currentTool === 'select') {
                 const hit = getElementAt(mx, my);
                 if (hit) {
@@ -2342,39 +2251,26 @@
                         }
                     }
                     canvas.style.cursor = 'grabbing';
-                } else {
-                    clearSelection();
-                }
+                } else { clearSelection(); }
                 return;
             }
-
             if (currentTool === 'delete') {
                 const hit = getElementAt(mx, my);
-                if (hit) {
-                    deleteElement(hit.key);
-                }
+                if (hit) deleteElement(hit.key);
                 return;
             }
-
             const addActions = {
-                'path': addPathPoint,
-                'checkpoint': addCheckpoint,
-                'enemy': addEnemy,
-                'boost': addBoostZone,
+                'path': addPathPoint, 'checkpoint': addCheckpoint, 'enemy': addEnemy, 'boost': addBoostZone,
                 'brake': addBrakeZone
             };
-            if (addActions[currentTool]) {
-                addActions[currentTool](mx, my);
-                return;
-            }
-
+            if (addActions[currentTool]) { addActions[currentTool](mx, my); return; }
             if (currentTool === 'start') {
                 const level = getCurrentLevel();
                 level.start.x = clamp(mx, 0, W);
                 level.start.y = clamp(my, 0, H);
                 SoundManager.play('click');
                 render();
-                showToast('📍 起点已更新');
+                showToast('<i class="fas fa-location-dot"></i> 起点已更新');
                 return;
             }
             if (currentTool === 'end') {
@@ -2383,7 +2279,7 @@
                 level.end.y = clamp(my, 0, H);
                 SoundManager.play('click');
                 render();
-                showToast('🏁 终点已更新');
+                showToast('<i class="fas fa-flag-checkered"></i> 终点已更新');
                 return;
             }
         }
@@ -2393,8 +2289,7 @@
             const pos = getMousePos(e);
             const mx = pos.x,
                 my = pos.y;
-            coordStatus.textContent = `x: ${Math.round(mx)}, y: ${Math.round(my)}`;
-
+            coordStatus.textContent = 'x: ' + Math.round(mx) + ', y: ' + Math.round(my);
             if (currentTool === 'select' || currentTool === 'delete') {
                 const hit = getElementAt(mx, my);
                 const newHover = hit ? hit.key : null;
@@ -2406,7 +2301,6 @@
                 if (currentTool === 'select' && hit) canvas.style.cursor = 'pointer';
                 if (currentTool === 'delete') canvas.style.cursor = 'not-allowed';
             }
-
             if (isDragging && currentTool === 'select' && dragTargetId) {
                 const el = findElement(dragTargetId);
                 if (el) {
@@ -2445,7 +2339,6 @@
             render();
         }
 
-        // ---------- 键盘 ----------
         function onKeyDown(e) {
             if (e.key === 'Delete' || e.key === 'Backspace') {
                 if (selectedId && selectedId !== 'start' && selectedId !== 'end') {
@@ -2454,15 +2347,8 @@
                 }
             }
             const toolMap = {
-                'v': 'select',
-                'p': 'path',
-                'c': 'checkpoint',
-                'e': 'enemy',
-                'b': 'boost',
-                'r': 'brake',
-                'd': 'delete',
-                's': 'start',
-                'f': 'end'
+                'v': 'select', 'p': 'path', 'c': 'checkpoint', 'e': 'enemy', 'b': 'boost', 'r': 'brake',
+                'd': 'delete', 's': 'start', 'f': 'end'
             };
             const key = e.key.toLowerCase();
             if (toolMap[key]) {
@@ -2475,7 +2361,6 @@
             }
         }
 
-        // ---------- 关卡列表 ----------
         function renderLevelList() {
             levelListContainer.innerHTML = '';
             levelSet.levels.forEach((level, idx) => {
@@ -2483,12 +2368,10 @@
                 item.className = 'list-item' + (idx === currentLevelIndex ? ' active' : '');
                 item.draggable = true;
                 item.dataset.index = idx;
-
                 const nameSpan = document.createElement('span');
                 nameSpan.className = 'item-name';
-                nameSpan.textContent = `${idx + 1}. ${level.name || '未命名'}`;
+                nameSpan.textContent = (idx + 1) + '. ' + (level.name || '未命名');
                 item.appendChild(nameSpan);
-
                 const closeBtn = document.createElement('button');
                 closeBtn.className = 'item-close';
                 closeBtn.innerHTML = '<i class="fas fa-times"></i>';
@@ -2498,13 +2381,7 @@
                     deleteLevel(idx);
                 });
                 item.appendChild(closeBtn);
-
-                item.addEventListener('click', () => {
-                    if (idx !== currentLevelIndex) {
-                        switchLevel(idx);
-                    }
-                });
-
+                item.addEventListener('click', () => { if (idx !== currentLevelIndex) switchLevel(idx); });
                 item.addEventListener('dragstart', (e) => {
                     e.dataTransfer.setData('text/plain', idx);
                     item.classList.add('dragging');
@@ -2518,9 +2395,7 @@
                     document.querySelectorAll('.list-item.drag-over').forEach(el => el.classList.remove('drag-over'));
                     item.classList.add('drag-over');
                 });
-                item.addEventListener('dragleave', () => {
-                    item.classList.remove('drag-over');
-                });
+                item.addEventListener('dragleave', () => { item.classList.remove('drag-over'); });
                 item.addEventListener('drop', (e) => {
                     e.preventDefault();
                     item.classList.remove('drag-over');
@@ -2537,22 +2412,18 @@
                     updateCounters();
                     render();
                     updateStatus();
-                    showToast('↕️ 已移动关卡');
+                    showToast('<i class="fas fa-arrows-up-down"></i> 已移动关卡');
                 });
-
                 levelListContainer.appendChild(item);
             });
-
             const addBtn = document.createElement('button');
             addBtn.className = 'add-level-btn';
             addBtn.innerHTML = '<i class="fas fa-plus"></i> 添加关卡';
             addBtn.addEventListener('click', addLevel);
             levelListContainer.appendChild(addBtn);
-
             levelCountBadge.textContent = levelSet.levels.length;
         }
 
-        // ---------- 关卡管理 ----------
         function switchLevel(index) {
             if (index < 0 || index >= levelSet.levels.length) return;
             currentLevelIndex = index;
@@ -2563,11 +2434,11 @@
             updateStatus();
             renderLevelList();
             renderMeta();
-            showToast(`📂 切换至: ${levelSet.levels[index].name || '未命名'}`);
+            showToast('<i class="fas fa-folder-open"></i> 切换至: ' + (levelSet.levels[index].name || '未命名'));
         }
 
         function addLevel() {
-            const newLevel = createDefaultLevel(`关卡 ${levelSet.levels.length + 1}`);
+            const newLevel = createDefaultLevel('关卡 ' + (levelSet.levels.length + 1));
             levelSet.levels.push(newLevel);
             currentLevelIndex = levelSet.levels.length - 1;
             SoundManager.play('click');
@@ -2577,16 +2448,16 @@
             render();
             updateStatus();
             renderMeta();
-            showToast(`✅ 添加新关卡: ${newLevel.name}`);
+            showToast('<i class="fas fa-check"></i> 添加新关卡: ' + newLevel.name);
         }
 
         function deleteLevel(index) {
             if (levelSet.levels.length <= 1) {
-                showToast('⚠️ 至少保留一个关卡', 1200);
-                return;
+                showToast('<i class="fas fa-triangle-exclamation"></i> 至少保留一个关卡',
+                    1200); return;
             }
             const name = levelSet.levels[index].name || '未命名';
-            if (!confirm(`确定删除关卡 "${name}" 吗？`)) return;
+            if (!confirm('确定删除关卡 "' + name + '" 吗？')) return;
             levelSet.levels.splice(index, 1);
             if (currentLevelIndex >= levelSet.levels.length) currentLevelIndex = levelSet.levels.length - 1;
             if (index < currentLevelIndex) currentLevelIndex--;
@@ -2597,7 +2468,7 @@
             render();
             updateStatus();
             renderMeta();
-            showToast(`🗑️ 已删除关卡: ${name}`);
+            showToast('<i class="fas fa-trash"></i> 已删除关卡: ' + name);
         }
 
         function renameLevel(newName) {
@@ -2608,21 +2479,28 @@
             renderLevelList();
             renderMeta();
             render();
-            showToast(`✏️ 已重命名为: ${level.name}`);
+            showToast('<i class="fas fa-pen"></i> 已重命名为: ' + level.name);
         }
 
-        // ---------- 导出 / 导入 ----------
         function exportSet() {
-            const data = JSON.stringify(levelSet, null, 2);
-            const blob = new Blob([data], { type: 'application/json' });
+            // 构建数组：[元数据, 关卡1, 关卡2, ...]
+            const meta = {
+                levelsName: levelSet.levelsName,
+                author: levelSet.author || '',
+                author_link: levelSet.author_link || '',
+                levelsDescription: levelSet.levelsDescription || ''
+            };
+            const data = [meta, ...levelSet.levels];
+            const json = JSON.stringify(data, null, 2);
+            const blob = new Blob([json], { type: 'application/json' });
             const url = URL.createObjectURL(blob);
             const a = document.createElement('a');
             a.href = url;
-            a.download = `levelset_${levelSet.levelsName || 'gravocar'}.gcms`;
+            a.download = 'levelset_' + (levelSet.levelsName || 'gravocar') + '.gcms';
             a.click();
             URL.revokeObjectURL(url);
             SoundManager.play('click');
-            showToast(`✅ 已导出 .gcms: ${a.download}`);
+            showToast('<i class="fas fa-check"></i> 已导出 .gcms: ' + a.download);
         }
 
         function importSet(event) {
@@ -2632,14 +2510,29 @@
             reader.onload = (e) => {
                 try {
                     const data = JSON.parse(e.target.result);
-                    if (!data.levels || !Array.isArray(data.levels)) {
-                        throw new Error('缺少 levels 数组');
+
+                    // 只支持数组格式：[元数据, 关卡1, 关卡2, ...]
+                    if (!Array.isArray(data) || data.length === 0) {
+                        throw new Error('数据必须是非空数组，第一个元素为元数据对象');
                     }
-                    levelSet = data;
-                    if (levelSet.levels.length === 0) {
-                        levelSet.levels = [createDefaultLevel()];
+
+                    const meta = data[0];
+                    if (!meta.levelsName) {
+                        throw new Error('第一个元素必须包含 levelsName 字段');
                     }
+
+                    const levels = data.slice(1);
+                    if (levels.length === 0) {
+                        throw new Error('至少需要一个关卡');
+                    }
+
+                    levelSet.levelsName = meta.levelsName || '未命名';
+                    levelSet.author = meta.author || '';
+                    levelSet.author_link = meta.author_link || '';
+                    levelSet.levelsDescription = meta.levelsDescription || '';
+                    levelSet.levels = levels;
                     currentLevelIndex = 0;
+
                     SoundManager.play('click');
                     renderLevelList();
                     clearSelection();
@@ -2647,9 +2540,9 @@
                     render();
                     updateStatus();
                     renderMeta();
-                    showToast(`📂 已导入 .gcms: ${levelSet.levelsName || '未命名'}`);
+                    showToast('<i class="fas fa-folder-open"></i> 已导入: ' + levelSet.levelsName + ' (' + levels.length + ' 个关卡)');
                 } catch (err) {
-                    showToast(`❌ 导入失败: ${err.message}`, 2000);
+                    showToast('<i class="fas fa-times"></i> 导入失败: ' + err.message, 2000);
                     console.error(err);
                 }
             };
@@ -2667,19 +2560,34 @@
         function importFromText() {
             const text = document.getElementById('importTextArea').value.trim();
             if (!text) {
-                showToast('⚠️ 请粘贴 JSON 数据', 1200);
+                showToast('<i class="fas fa-triangle-exclamation"></i> 请粘贴 JSON 数据', 1200);
                 return;
             }
             try {
                 const data = JSON.parse(text);
-                if (!data.levels || !Array.isArray(data.levels)) {
-                    throw new Error('缺少 levels 数组');
+
+                // 只支持数组格式：[元数据, 关卡1, 关卡2, ...]
+                if (!Array.isArray(data) || data.length === 0) {
+                    throw new Error('数据必须是非空数组，第一个元素为元数据对象');
                 }
-                levelSet = data;
-                if (levelSet.levels.length === 0) {
-                    levelSet.levels = [createDefaultLevel()];
+
+                const meta = data[0];
+                if (!meta.levelsName) {
+                    throw new Error('第一个元素必须包含 levelsName 字段');
                 }
+
+                const levels = data.slice(1);
+                if (levels.length === 0) {
+                    throw new Error('至少需要一个关卡');
+                }
+
+                levelSet.levelsName = meta.levelsName || '未命名';
+                levelSet.author = meta.author || '';
+                levelSet.author_link = meta.author_link || '';
+                levelSet.levelsDescription = meta.levelsDescription || '';
+                levelSet.levels = levels;
                 currentLevelIndex = 0;
+
                 SoundManager.play('click');
                 renderLevelList();
                 clearSelection();
@@ -2687,10 +2595,10 @@
                 render();
                 updateStatus();
                 renderMeta();
-                showToast(`✅ 文本导入成功: ${levelSet.levelsName || '未命名'}`);
+                showToast('<i class="fas fa-check"></i> 导入成功: ' + levelSet.levelsName + ' (' + levels.length + ' 个关卡)');
                 closeModal('importTextModal');
             } catch (err) {
-                showToast(`❌ 解析失败: ${err.message}`, 2000);
+                showToast('<i class="fas fa-times"></i> 解析失败: ' + err.message, 2000);
                 console.error(err);
             }
         }
@@ -2705,18 +2613,16 @@
             const text = document.getElementById('previewTextArea').value;
             if (!text) return;
             navigator.clipboard.writeText(text).then(() => {
-                showToast('📋 已复制到剪贴板');
+                showToast('<i class="fas fa-clipboard"></i> 已复制到剪贴板');
             }).catch(() => {
                 const ta = document.getElementById('previewTextArea');
                 ta.select();
                 document.execCommand('copy');
-                showToast('📋 已复制');
+                showToast('<i class="fas fa-clipboard"></i> 已复制');
             });
         }
 
-        function closeModal(id) {
-            document.getElementById(id).classList.remove('open');
-        }
+        function closeModal(id) { document.getElementById(id).classList.remove('open'); }
 
         function clearAll() {
             if (!confirm('确定要清空所有关卡数据吗？')) return;
@@ -2729,7 +2635,7 @@
             render();
             updateStatus();
             renderMeta();
-            showToast('🗑️ 已清空，保留一个默认关卡');
+            showToast('<i class="fas fa-trash"></i> 已清空，保留一个默认关卡');
         }
 
         function resetToDefault() {
@@ -2739,96 +2645,12 @@
                 author_link: 'https://baike.baidu.com/item/%E6%B3%95%E5%A4%96%E7%8B%82%E5%BE%92%E5%BC%A0%E4%B8%89',
                 levelsDescription: '不小心开车撞死撒，完了倒车又撞死两个',
                 levels: [{
-                    name: '初试弯道',
+                    name: '新建关卡',
                     start: { x: 140, y: 310 },
                     end: { x: 860, y: 310 },
                     path: [{ x: 140, y: 310 }, { x: 280, y: 280 }, { x: 420, y: 240 }, { x: 560, y: 260 },
                     { x: 700, y: 320 }, { x: 860, y: 310 }],
                     checkpoints: [],
-                    enemies: [],
-                    boostZones: [],
-                    brakeZones: []
-                }, {
-                    name: 'S型迂回',
-                    start: { x: 120, y: 400 },
-                    end: { x: 880, y: 200 },
-                    path: [{ x: 120, y: 400 }, { x: 240, y: 350 }, { x: 360, y: 270 }, { x: 480, y: 330 },
-                    { x: 600, y: 240 }, { x: 720, y: 200 }, { x: 880, y: 200 }],
-                    checkpoints: [],
-                    enemies: [],
-                    boostZones: [],
-                    brakeZones: []
-                }, {
-                    name: '陡峭急弯',
-                    start: { x: 100, y: 120 },
-                    end: { x: 900, y: 500 },
-                    path: [{ x: 100, y: 120 }, { x: 200, y: 180 }, { x: 300, y: 280 }, { x: 420, y: 340 },
-                    { x: 550, y: 290 }, { x: 680, y: 380 }, { x: 820, y: 460 }, { x: 900, y: 500 }],
-                    checkpoints: [],
-                    enemies: [],
-                    boostZones: [],
-                    brakeZones: []
-                }, {
-                    name: '检查点挑战',
-                    start: { x: 140, y: 310 },
-                    end: { x: 860, y: 310 },
-                    path: [{ x: 140, y: 310 }, { x: 280, y: 280 }, { x: 420, y: 240 }, { x: 560, y: 260 },
-                    { x: 700, y: 320 }, { x: 860, y: 310 }],
-                    checkpoints: [{ x: 350, y: 250, radius: 28 }, { x: 530, y: 235, radius: 28 },
-                    { x: 720, y: 285, radius: 28 }],
-                    enemies: [],
-                    boostZones: [],
-                    brakeZones: []
-                }, {
-                    name: '追逐敌人',
-                    start: { x: 120, y: 380 },
-                    end: { x: 880, y: 220 },
-                    path: [{ x: 120, y: 380 }, { x: 240, y: 340 }, { x: 360, y: 280 }, { x: 480, y: 320 },
-                    { x: 600, y: 250 }, { x: 720, y: 220 }, { x: 880, y: 220 }],
-                    checkpoints: [],
-                    enemies: [{ x: 280, y: 440, radius: 22, speed: 0.8 }],
-                    boostZones: [],
-                    brakeZones: []
-                }, {
-                    name: '速度与激情',
-                    start: { x: 141.11111111111111, y: 286.66666666666663 },
-                    end: { x: 860, y: 310 },
-                    path: [{ x: 140, y: 286.66666666666663 }, { x: 352.2222222222222, y: 292.22222222222234 },
-                    { x: 491.111111111111, y: 224.44444444444446 }, { x: 621.1111111111115, y: 262.2222222222222 },
-                    { x: 747.7777777777779, y: 296.66666666666663 }, { x: 860, y: 310 }
-                    ],
-                    checkpoints: [],
-                    enemies: [{ x: 44.444444444444436, y: 486.66666666666674, radius: 22, speed: 3 }],
-                    boostZones: [],
-                    brakeZones: []
-                }, {
-                    name: '超级回环',
-                    start: { x: 140, y: 310 },
-                    end: { x: 734.4444444444445, y: 95.55555555555553 },
-                    path: [{ x: 138.88888888888889, y: 310 }, { x: 305.5555555555556, y: 248.88888888888889 },
-                    { x: 517.7777777777777, y: 241.11111111111111 }, { x: 697.7777777777777, y: 397.77777777777777 },
-                    { x: 552.2222222222223, y: 562.2222222222224 }, { x: 374.4444444444444, y: 426.6666666666666 },
-                    { x: 577.7777777777777, y: 142.22222222222223 }, { x: 632.2222222222223, y: 97.77777777777779 },
-                    { x: 734.4444444444445, y: 95.55555555555556 }
-                    ],
-                    checkpoints: [{ x: 553.3333333333333, y: 556.6666666666666, radius: 35 }],
-                    enemies: [],
-                    boostZones: [],
-                    brakeZones: []
-                }, {
-                    name: '微软大战代码！',
-                    start: { x: 202.2222222222222, y: 356.6666666666667 },
-                    end: { x: 204.44444444444437, y: 193.33333333333331 },
-                    path: [{ x: 200, y: 357.7777777777778 }, { x: 740, y: 78.88888888888884 }, {
-                        x: 738.8888888888889,
-                        y: 488.8888888888889
-                    },
-                    { x: 202.22222222222229, y: 192.22222222222223 }
-                    ],
-                    checkpoints: [{ x: 353.33333333333337, y: 275.55555555555554, radius: 35 },
-                    { x: 738.8888888888889, y: 488.8888888888889, radius: 35 },
-                    { x: 738.8888888888889, y: 77.77777777777779, radius: 35 }
-                    ],
                     enemies: [],
                     boostZones: [],
                     brakeZones: []
@@ -2842,86 +2664,67 @@
             render();
             updateStatus();
             renderMeta();
-            showToast('📋 已重置完整示例关卡集');
+            showToast('<i class="fas fa-clipboard"></i> 已重置完整示例关卡集');
         }
 
         function updateStatus() {
             const level = getCurrentLevel();
-            const total = level.path.length + level.checkpoints.length +
-                level.enemies.length + level.boostZones.length + level.brakeZones.length;
-            statusText.textContent =
-                `关卡 ${currentLevelIndex + 1}/${levelSet.levels.length}  "${level.name}"  |  元素: ${total}  |  路径: ${level.path.length}  检查点: ${level.checkpoints.length}  敌人: ${level.enemies.length}  加速: ${level.boostZones.length}  刹车: ${level.brakeZones.length}`;
+            const total = level.path.length + level.checkpoints.length + level.enemies.length + level.boostZones.length +
+                level.brakeZones.length;
+            statusText.textContent = '关卡 ' + (currentLevelIndex + 1) + '/' + levelSet.levels.length + '  "' + level.name +
+                '"  |  元素: ' + total + '  |  路径: ' + level.path.length + '  检查点: ' + level.checkpoints.length +
+                '  敌人: ' + level.enemies.length + '  加速: ' + level.boostZones.length + '  刹车: ' + level.brakeZones
+                    .length;
             document.getElementById('statusDot').className = 'dot ready';
         }
 
-        // ---------- 动画循环 ----------
         function animate() {
             const level = getCurrentLevel();
-            if (level.enemies.length > 0) {
-                render();
-            }
+            if (level.enemies.length > 0) render();
             requestAnimationFrame(animate);
         }
 
-        // ---------- 初始化 ----------
         function init() {
+            let scale = 1;
+            try {
+                const saved = localStorage.getItem('gravoCarUIScale');
+                if (saved !== null) {
+                    const val = parseFloat(saved); if (!isNaN(val) && val >= 1 && val <= 4) scale =
+                        val;
+                }
+            } catch (_) { }
+            document.body.style.zoom = scale;
             SoundManager.init();
             resetToDefault();
-
             resizeCanvas();
             window.addEventListener('resize', resizeCanvas);
-
             canvas.addEventListener('mousedown', onMouseDown);
             canvas.addEventListener('mousemove', onMouseMove);
             canvas.addEventListener('mouseup', onMouseUp);
             canvas.addEventListener('mouseleave', onMouseLeave);
             document.addEventListener('keydown', onKeyDown);
             canvas.addEventListener('contextmenu', (e) => e.preventDefault());
-
             document.querySelectorAll('.modal-overlay').forEach(el => {
-                el.addEventListener('click', (e) => {
-                    if (e.target === el) el.classList.remove('open');
-                });
+                el.addEventListener('click', (e) => { if (e.target === el) el.classList.remove('open'); });
             });
-
-            // ============================================================
-            //  ✨ 新增：标签页滚轮切换（悬浮在标签页头部时生效）
-            // ============================================================
             const tabHeader = document.getElementById('tabHeader');
             const tabOrder = ['levels', 'props', 'meta'];
-
             tabHeader.addEventListener('wheel', function (e) {
-                // 只处理垂直滚动
                 if (e.deltaY === 0) return;
                 e.preventDefault();
-
                 const currentIndex = tabOrder.indexOf(activeTab);
                 if (currentIndex === -1) return;
-
-                let newIndex;
-                if (e.deltaY > 0) {
-                    // 向下滚动 → 下一个标签页
-                    newIndex = (currentIndex + 1) % tabOrder.length;
-                } else {
-                    // 向上滚动 → 上一个标签页
-                    newIndex = (currentIndex - 1 + tabOrder.length) % tabOrder.length;
-                }
-
-                // 如果新旧不同才切换（防止重复触发）
-                if (tabOrder[newIndex] !== activeTab) {
-                    switchTab(tabOrder[newIndex]);
-                }
+                let newIndex = (currentIndex + (e.deltaY > 0 ? 1 : -1) + tabOrder.length) % tabOrder.length;
+                if (tabOrder[newIndex] !== activeTab) switchTab(tabOrder[newIndex]);
             }, { passive: false });
-
             updateCounters();
             render();
             updateStatus();
             renderMeta();
-            showToast('🎮 三标签页 · 滚轮切换 · 带音效', 1400);
+            showToast('<i class="fas fa-gamepad"></i> 三标签页 · 滚轮切换 · 带音效', 1400);
             animate();
         }
 
-        // 暴露全局
         window.setTool = setTool;
         window.selectElement = selectElement;
         window.clearSelection = clearSelection;
@@ -2946,12 +2749,9 @@
         window.switchTab = switchTab;
         window.closeMenu = closeMenu;
         window.toggleMenu = toggleMenu;
-
         init();
-
-        console.log('🎮 关卡集编辑器 · 全屏菜单已集成 · 滚轮切换标签页');
-        console.log('📖 快捷键: V-选择 P-路径 C-检查点 E-敌人 B-加速 R-刹车 D-删除 S-起点 F-终点');
-        console.log('🖱 鼠标悬浮在标签页头部时，滚动滚轮即可切换标签页');
+        console.log('关卡集编辑器 · 所有 Emoji 已替换为 Font Awesome 图标');
+        console.log('快捷键: V-选择 P-路径 C-检查点 E-敌人 B-加速 R-刹车 D-删除 S-起点 F-终点');
     </script>
 
 </body>
